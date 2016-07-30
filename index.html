@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)http://www.rzds.net/?c=flash&a=tools -->
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>软装大师</title>
+		<link href="css/global.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body scroll="no">
+		<script type="text/javascript">
+			$(function() {
+				//显示下拉
+				$(".login-name").hover(function() {
+						$("#brg").show();
+						$(".login-show").show();
+					},
+					function() {
+						$(".login-show").hide();
+					});
+
+				//移动显示
+				$(".login-show").hover(function() {
+						$(".login-show").show();
+
+					},
+					function() {
+						$(".login-show").hide();
+						$(".login-name span").addClass("smjt1");
+					});
+
+			});
+		</script>
+		<div class="top-nav">
+			<div class="w1200" style="position:relative;">
+				<div class="logo fl">
+					<a href="http://www.rzds.net/" target="_blank"><img src="img/logo.jpg"></a>
+				</div>
+				<div class="top-nav-nav1 fl">
+					<ul>
+						<li>
+							<a href="http://www.rzds.net/?a=product&amp;c=product" target="_blank">产品中心</a>
+						</li>
+
+						<li>
+							<a href="http://www.rzds.net/?a=scheme&amp;c=scheme&amp;type=1" target="_blank">方案资源</a>
+						</li>
+
+						<li>
+							<a href="http://www.rzds.net/?a=scheme&amp;c=match" target="_blank">搭配资源</a>
+						</li>
+
+						<li>
+							<a href="http://www.rzds.net/?a=scheme&amp;c=photo" target="_blank">家居灵感</a>
+						</li>
+
+						<li>
+							<a href="http://www.rzds.net/?a=scheme&amp;c=house" target="_blank">户型图</a>
+						</li>
+
+					</ul>
+				</div>
+				<div class="top-nav-nav2 fl">
+					<ul>
+						<li>
+							<a href="http://www.rzds.net/?c=flash&amp;a=tools" class="dp" target="_blank">2D搭配&nbsp;</a>
+						</li>
+						<li>
+							<a href="http://rzds.admin.3vjia.com/" class="sd" target="_blank">3D设计&nbsp;</a>
+						</li>
+						<li>
+							<a href="http://www.rzds.net/?c=video#a" class="help" target="_blank">帮助视频</a>
+						</li>
+						<li style="width:150px;">
+							<a href="http://www.rzds.net/?c=flash&amp;a=tools">&nbsp;</a>
+						</li>
+					</ul>
+				</div>
+				<!--大赛链接-->
+				<div style="position:absolute;left:890px;top:0px;z-index:9">
+					<a href="http://design.rzds.net/" target="_blank"><img src="img/btn-dasai.png" alt="" style="height:70px;"></a>
+				</div>
+
+				<div class="top-nav-rt fr" style="text-align:right;">
+
+					<a class="login-name"><span class="smjt1">
+            qqq2233            </span></a>
+					<div class="login-show" style="display: none;">
+						<div class="login-info">
+							<a href="http://www.rzds.net/?c=setting&amp;a=designer" class="bt" target="_blank">个人信息</a>
+							<a href="http://www.rzds.net/?c=cases&amp;t=match&amp;a=designer" target="_blank">作品集</a>
+							<a href="http://www.rzds.net/?c=scheme&amp;a=designer" target="_blank">我的方案</a>
+							<a href="http://www.rzds.net/?c=match&amp;a=designer" target="_blank">我的搭配</a>
+							<a href="http://www.rzds.net/?c=house&amp;a=designer" target="_blank">我的户型图</a>
+							<a href="http://www.rzds.net/?c=photo&amp;a=designer" target="_blank">我的资料</a>
+							<a href="http://www.rzds.net/?c=favorite&amp;a=designer" target="_blank">收藏夹</a>
+							<a href="http://www.rzds.net/?c=cart&amp;a=designer" target="_blank">购物车</a>
+							<a href="http://www.rzds.net/?c=sale&amp;a=designer" class="bt" target="_blank">订单</a>
+							<a href="http://www.rzds.net/?a=login&amp;c=user&amp;m=logout">退出</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="height: 919px; width: 100%;" id="software">
+			<!--画布-->
+			<div class="g-menu clearfix" id="j-menu">
+				<ul class="fl">
+					<li class="u-menu_item">
+						<a href="javascript:"><i class="icon icon-new" ></i>新建</a>
+						<div class="g-submenu">
+							<i class="icon icon-uptriangle"></i>
+							<a href="javascript:">搭配</a>
+							<a href="javascript:">方案</a>
+						</div>
+					</li>
+					<li>
+						<a href="javascript:"><i class="icon icon-open"></i>打开</a>
+					</li>
+					<li class="u-menu_item">
+						<a href="javascript:"><i class="icon icon-save"></i>保存</a>
+						<div class="g-submenu">
+							<i class="icon icon-uptriangle"></i>
+							<a href="javascript:">搭配</a>
+							<a href="javascript:">方案</a>
+						</div>
+					</li>
+					<li class="u-menu_item">
+						<a href="javascript:"><i class="icon icon-saveas"></i>另存为</a>
+						<div class="g-submenu">
+							<i class="icon icon-uptriangle"></i>
+							<a href="javascript:">搭配</a>
+							<a href="javascript:">方案</a>
+						</div>
+					</li>
+					<li>
+						<a href="javascript:"><i class="icon icon-undo"></i>撤销</a>
+					</li>
+					<li>
+						<a href="javascript:"><i class="icon icon-reset"></i>重做</a>
+					</li>
+				</ul>
+				<ul class="fr">
+					<li>
+						<a href="javascript:"><i class="icon icon-export" ></i>导出</a>
+					</li>
+					<li class="u-menu_item">
+						<a href="javascript:"><i class="icon icon-release"></i>发布</a>
+						<div class="g-submenu">
+							<i class="icon icon-uptriangle"></i>
+							<a href="javascript:">搭配</a>
+							<a href="javascript:">方案</a>
+						</div>
+					</li>
+					<li>
+						<a id="j-full_screen" href="javascript:"><i class="icon icon-fullscreen"></i>全屏</a>
+					</li>
+					<li>
+						<a href="javascript"><i class="icon icon-music"></i>音乐</a>
+					</li>
+				</ul>
+			</div>
+			<div class="g-cvs_tab" id="j-cvs_tab">
+				<div class="m-cvs_tabl"><i class="icon icon-tooloff"></i></div>
+				<div class="m-cvs_tabc">
+					<div class="u-tabc_pagebt"><i class="icon icon-left" id="j-page_left"></i><i class="icon icon-right" id="j-page_right"></i></div>
+					<div class="m-tabc_wrap">
+						<ul class="clearfix" id="j-tabc">
+							<li class="active">
+								<input type="text" value="空白页" readonly="readonly" />
+								<div class="u-tabc_chbt">
+									<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>
+									<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>
+									<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>
+									<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>
+								</div>
+							</li>
+							<li>
+								<input type="text" value="空白页" readonly="readonly" />
+								<div class="u-tabc_chbt">
+									<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>
+									<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>
+									<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>
+									<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>
+								</div>
+							</li>
+							<li>
+								<input type="text" value="空白页" readonly="readonly" />
+								<div class="u-tabc_chbt">
+									<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>
+									<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>
+									<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>
+									<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>
+								</div>
+							</li>
+							<li>
+								<input type="text" value="空白页" readonly="readonly" />
+								<div class="u-tabc_chbt">
+									<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>
+									<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>
+									<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>
+									<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>
+								</div>
+							</li>
+							<li>
+								<input type="text" value="空白页" readonly="readonly" />
+								<div class="u-tabc_chbt">
+									<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>
+									<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>
+									<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>
+									<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>
+								</div>
+							</li>
+							<li>
+								<input type="text" value="空白页" readonly="readonly" />
+								<div class="u-tabc_chbt">
+									<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>
+									<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>
+									<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>
+									<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>
+								</div>
+							</li>
+							<li>
+								<input type="text" value="空白页" readonly="readonly" />
+								<div class="u-tabc_chbt">
+									<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>
+									<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>
+									<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>
+									<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>
+								</div>
+							</li>
+							<li>
+								<input type="text" value="空白页" readonly="readonly" />
+								<div class="u-tabc_chbt">
+									<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>
+									<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>
+									<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>
+									<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>
+								</div>
+							</li>
+							<li>
+								<input type="text" value="空白页" readonly="readonly" />
+								<div class="u-tabc_chbt">
+									<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>
+									<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>
+									<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>
+									<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>
+								</div>
+							</li>
+							<li>
+								<input type="text" value="空白页" readonly="readonly" />
+								<div class="u-tabc_chbt">
+									<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>
+									<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>
+									<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>
+									<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>
+								</div>
+							</li>
+							<li>
+								<input type="text" value="空白页" readonly="readonly" />
+								<div class="u-tabc_chbt">
+									<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>
+									<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>
+									<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>
+									<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>
+								</div>
+							</li>
+							<li>
+								<input type="text" value="空白页" readonly="readonly" />
+								<div class="u-tabc_chbt">
+									<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>
+									<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>
+									<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>
+									<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>
+								</div>
+							</li>
+							<li>
+								<input type="text" value="空白页" readonly="readonly" />
+								<div class="u-tabc_chbt">
+									<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>
+									<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>
+									<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>
+									<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="m-cvs_tabr"><i class="icon icon-liboff"></i></div>
+			</div>
+			<div class="g-cvs_main" id="j-cvs_main">
+				<div class="g-tools" id="j-tools">
+					<a href="javascript:" name="删除"><i class="icon icon-delete"></i></a>
+					<a href="javascript:" name="复制"><i class="icon icon-copy"></i></a>
+					<a href="javascript:" name="水平镜像"><i class="icon icon-horizontal"></i></a>
+					<a href="javascript:" name="垂直镜像"><i class="icon icon-vertical"></i></a>
+					<a href="javascript:" name="顶层"><i class="icon icon-layertop"></i></a>
+					<a href="javascript:" name="上移一层"><i class="icon icon-layerforward"></i></a>
+					<a href="javascript:" name="下移一层"><i class="icon icon-layerbackward"></i></a>
+					<a href="javascript:" name="底层"><i class="icon icon-layerbottom"></i></a>
+					<a href="javascript:" name="成组"><i class="icon icon-group"></i></a>
+					<a href="javascript:" name="解组"><i class="icon icon-part"></i></a>
+					<a href="javascript:" name="锁定"><i class="icon icon-lock"></i></a>
+				</div>
+				<span class="u-tool_name" id="j-tool_name"></span>
+				<div class="g-library">
+					<ul class="g-lib_tab">
+						<li class="active">产品库</li>
+						<li>公共库</li>
+						<li>户型库</li>
+						<li>我的收藏</li>
+						<li>个人素材</li>
+						<li>产品清单</li>
+					</ul>
+					<div class="g-search">
+						<a href="javascript:" class="u-back"><i class="icon icon-leftarrow"></i></a>
+						<div class="m-search"><input type="text" placeholder="搜索" /><i class="icon icon-search"></i></div>
+						<div class="m-others m-other_item1">
+							<a href="javascript:"><i class="icon icon-list"></i></a><a href="javascript:"><i class="icon icon-filter"></i></a>
+						</div>
+						<div class="m-others m-other_item2">
+							<a href="javascript:"><i class="icon icon-file"></i></a><a href="javascript:"><i class="icon icon-upload"></i></a><a href="javascript:"><i class="icon icon-refresh"></i></a>
+						</div>
+						<div class="m-others m-other_item3">
+							<a href="javascript:"><i class="icon icon-cart"></i></a><a href="javascript:"><i class="icon icon-print"></i></a>
+						</div>
+					</div>
+					<div id="j-lib_content" class="g-lib_content">
+						
+					</div>
+					<ul class="g-lib_bar">
+						<li>
+							<a href="javascript:"><i class="icon icon-bg"></i></a>
+							<p>背景图</p>
+						</li>
+						<li>
+							<a href="javascript:" class="g-bar_item"><i class="icon icon-color"></i></a>
+							<p>色卡</p>
+						</li>
+						<li>
+							<a href="javascript:"><i class="icon icon-graph"></i></a>
+							<p>图形</p>
+						</li>
+						<li>
+							<a href="javascript:"><i class="icon icon-word"></i></a>
+							<p>文字</p>
+						</li>
+						<li>
+							<a  href="javascript:"  class="g-bar_item"><i class="icon icon-light"></i></a>
+							<p>灯光</p>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>
