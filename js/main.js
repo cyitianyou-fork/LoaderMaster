@@ -17,13 +17,15 @@ $(function(){
 		
 		//库面板列表主体区的高度
 		var libh=$('#j-lib_content').parent('.g-library').height();
-		console.log(libh)
 		$('#j-lib_content').siblings().each(function(i,ele){
 			libh-=$(ele).outerHeight(true);
 		});
 		if (libh>0) {
 			$('#j-lib_content').height(libh);
 		}
+		
+		//库面板产品类分类列表高度
+		$('.g-procs_wrap').height($('#j-lib_content').height());
 	}
 	//所有dom元素绑定事件
 	function bind(){
@@ -35,6 +37,8 @@ $(function(){
 		moveCvsTab();
 		//工具栏事件
 		showToolName();
+		//库面板事件
+		library();
 	}
 	
 	function resizeWindow(){
@@ -46,7 +50,7 @@ $(function(){
 		//全屏显示
 		$(document).on('click','#j-full_screen',function(){
 			if (!fulloff) {
-				$('#software').css({position:'absolute','left':0,'top':0});
+				$('#software').css({position:'absolute','left':0,'top':0,'zIndex':100});
 				fulloff=true;
 			}else{
 				$('#software').css({position:'static'});
@@ -173,7 +177,34 @@ $(function(){
 		});
 	}
 	
-	//
-	function
-	
+	//库面板中的一些按钮点击事件
+	function library(){
+		//产品类中点击切换显示二级类目
+		$(document).on('click','#j-procs_cg .icon-downarrow',function(){
+			var tarLi=$(this).parents('li');
+			tarLi.addClass('active').siblings().removeClass('active');
+		});
+		
+		//在产品库详情下，鼠标放上显示详情信息
+		$(document).on('mouseover','#j-procs_detail li',function(){
+			var l=$(this).position().left;
+			if($(this).index()%4==0&&$(this).index()!=0){
+				l+=68-$('#j-proc_info').outerWidth();
+			}
+			var t=$(this).position().top+60;
+			console.log()
+			$('#j-proc_info').css({left:l,top:t});
+			console.log($('#j-proc_info').position().left)
+			$('#j-proc_info').show();
+		});
+		$(document).on('mouseout','#j-procs_detail li',function(){
+			$('#j-proc_info').hide();
+		});
+		$(document).on('mouseover','#j-proc_info',function(){
+			$('#j-proc_info').show();
+		});
+		$(document).on('mouseout','#j-proc_info',function(){
+			$('#j-proc_info').hide();
+		});
+	}
 });
