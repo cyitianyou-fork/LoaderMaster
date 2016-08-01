@@ -230,6 +230,8 @@ input{background:none;}
 .g-search{ display: -moz-box; display: -webkit-box; display: box; width: 406px; height: 35px; margin: 0 10px; margin-bottom: 5px; color: #c1c1c1;}
 .g-search a{display: inline-block; width: 33px; height: 33px; margin-right: 2px; border: 1px solid #fff; line-height: 33px; text-align: center; border-radius: 3px; background: #fff; }
 .g-search a:hover{border: 1px solid #02afcf;}
+.g-search .u-back{display: none;}
+.g-search .u-back.show{display: inline-block;}
 .g-search i{font-size: 20px; color: #c1c1c1;}
 .m-search{-moz-box-flex: 1; -webkit-box-flex: 1; box-flex: 1; position: relative; height: 100%; margin-right: 6px; line-height: 35px;}
 .m-search input{width: 100%; height: 100%; line-height: 35px; padding-left: 12px; box-sizing: border-box; border-radius: 3px; background: #fff;}
@@ -250,13 +252,12 @@ input{background:none;}
 .g-lib_bar li:hover a{border-color: #00b0d0;}
 .g-lib_content{position: relative; width: 406px; margin: 0 auto; border-radius: 3px; background: #fff;}
 .g-lib_wrap{overflow-y: auto;}
-.g-procs_wrap{display: none;}
 .m-procs_cg  h3{position: relative; height: 30px; padding-left: 20px; margin: 0; line-height: 30px; font-weight: normal; font-size: 12px; color: #333; border-bottom: 2px solid #f5f5f5;}
 .m-procs_cg h3 i{position: absolute; right: 0px; width: 24px; height: 30px; color: #9ea6ab; cursor: pointer;}
 .m-lib_list{padding: 8px 12px 25px 20px; overflow: hidden;}
-.m-lib_list2{padding-bottom: 50px; border-bottom: 2px solid #f5f5f5;}
+.m-lib_list2{padding-bottom: 50px;}
 .m-subprocs_cg{display: none;}
-.m-procs_cg li.active .m-subprocs_cg{display: block;}
+.m-procs_cg li.active .m-subprocs_cg{display: block; border-bottom: 2px solid #f5f5f5;}
 .m-lib_list li{width: 20%; float: left; margin-bottom: 4px;}
 .m-lib_list a{display: block; position: relative; width: 66px; height: 66px; line-height: 66px; text-align: center; border: 1px solid #ececec; border-radius: 3px;}
 .m-lib_list a:hover{border: 1px solid #00b0d0;}
@@ -266,6 +267,7 @@ input{background:none;}
 .u-proc_info h4{font-size: 12px; color: #333; margin: 0;}
 .u-proc_info strong{color: #f56934;}
 .u-proc_info p{line-height: 20px;}
+.g-procs_detail{display: none;}
 .g-procs_detail li a{background: #f1f1f1;}
 .m-lib_list span{position: absolute; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 2px; border: 1px solid #c3c3c3; background: #fff;}
 .u-love{display: none; right: 1px; top: 1px;}
@@ -281,7 +283,6 @@ input{background:none;}
 .g-lib_bts input{width: 30px; height: 20px; line-height: 20px; text-align: center; border: 1px solid #676767;}
 .g-lib_bts i{color: #fff;}
 .g-lib_bts .icon-tooloff,.g-lib_bts .icon-liboff{font-size: 10px;}
-.g-lib_con{display: none;}
 .m-other_list .icon-close{color: #7db408;}
 .m-other_list .icon-down{color: #00afd1;}
 .u-close{right: 1px; top: 1px;}
