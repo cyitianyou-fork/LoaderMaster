@@ -252,12 +252,14 @@ input{background:none;}
 .g-lib_bar li:hover a{border-color: #00b0d0;}
 .g-lib_content{position: relative; width: 406px; margin: 0 auto; border-radius: 3px; background: #fff;}
 .g-lib_wrap{overflow-y: auto;}
-.m-procs_cg  h3{position: relative; height: 30px; padding-left: 20px; margin: 0; line-height: 30px; font-weight: normal; font-size: 12px; color: #333; border-bottom: 2px solid #f5f5f5;}
+.m-procs_cg h3{position: relative; height: 30px; padding-left: 20px; margin: 0; line-height: 30px; font-weight: normal; font-size: 12px; color: #333; border-bottom: 2px solid #f5f5f5; cursor: pointer;}
 .m-procs_cg h3 i{position: absolute; right: 0px; width: 24px; height: 30px; color: #9ea6ab; cursor: pointer;}
 .m-lib_list{padding: 8px 12px 25px 20px; overflow: hidden;}
 .m-lib_list2{padding-bottom: 50px;}
 .m-subprocs_cg{display: none;}
-.m-procs_cg li.active .m-subprocs_cg{display: block; border-bottom: 2px solid #f5f5f5;}
+.m-procs_cg li.active .m-subprocs_cg{border-bottom: 2px solid #f5f5f5;}
+.m-procs_cg li:first-child .m-subprocs_cg{ display: block;}
+
 .m-lib_list li{width: 20%; float: left; margin-bottom: 4px;}
 .m-lib_list a{display: block; position: relative; width: 66px; height: 66px; line-height: 66px; text-align: center; border: 1px solid #ececec; border-radius: 3px;}
 .m-lib_list a:hover{border: 1px solid #00b0d0;}

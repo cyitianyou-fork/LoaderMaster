@@ -1,11 +1,96 @@
 $(function() {
+	
+	function LibList(obj){
+		this.obj=obj;
+		this.context=null;
+	}
+	LibList.prototype.getDatas=function(){
+		var _this=this;
+		$.ajax({
+			type: "get",
+			url: _this.obj.url,
+			async: true,
+			success: function(data) {
+				if(data.status == 200) {
+					_this.context=data;
+					_this.toList();
+				} else {
+					_this.obj.container.html('<h2 style="margin:30px; color:#000">' + data.msg + '</h2>');
+				}
+			},
+			error: function() {
+				_this.obj.container.html('<h2 style="margin:30px; color:#000">404! 网络出错了...</h2>');
+			}
+		});
+	}
+	LibList.prototype.toList=function(){
+		var template = this.obj.template.html();
+		var compiledTemplate = Template7.compile(template);
+		var html = compiledTemplate(this.context);
+		this.obj.container.html(html);
+	}
+	
+	function myextend(sub,sup){
+		function F(){}
+		F.prototype=sup.prototype;  
+		sub.prototype=new F();
+		sub.prototype.constructor=sub;
+	}
+	
+	function SubLibList(obj){
+		LibList.call(SubLibList,obj);
+		this.totalData=null;
+	}
+	
+	myextend(SubLibList,LibList);
+	
+	SubLibList.prototype.getData=function(){
+		var _this=this;
+		$.ajax({
+			type: "get",
+			url: _this.obj.url,
+			async: true,
+			success: function(data) {
+				if(data.status == 200) {
+					_this.totalData=data;
+					var row=$('#j-lib_content').height()/68);
+					console.log(row)
+					
+					_this.toList();
+				} else {
+					_this.obj.container.html('<h2 style="margin:30px; color:#000">' + data.msg + '</h2>');
+				}
+			},
+			error: function() {
+				_this.obj.container.html('<h2 style="margin:30px; color:#000">404! 网络出错了...</h2>');
+			}
+		});
+	}
+	
+	
+	
 	function init() {
 		initCvsHeight(false);
 		initCvsTab();
 		//库面板加载数据
-		getData({template:$('#j-item1_cg'),container:$('#j-procs_cg'),url:"tmp/proc_cg.json"});
+		var newll=new LibList({
+			template: $('#j-item1_cg'),
+			container: $('#j-procs_cg'),
+			url: "tmp/proc_cg.json"
+		});
+		console.log(newll)
+		newll.getDatas();
+//		getData({
+//			template: $('#j-item1_cg'),
+//			container: $('#j-procs_cg'),
+//			url: "tmp/proc_cg.json"
+//		});
 		//加载筛选条件一的数据
-		getData({template:$('#j-cond1_template'),container:$('#j-cond1_list'),url:"tmp/cond1_data.json"});
+		getData({
+			template: $('#j-cond1_template'),
+			container: $('#j-cond1_list'),
+			url: "tmp/cond1_data.json"
+		});
 		bind();
 	}
 	init();
@@ -24,14 +109,14 @@ $(function() {
 		$('#j-lib_content').siblings().each(function(i, ele) {
 			libh -= $(ele).outerHeight(true);
 		});
-		libh=libh<114?114:libh;  //这里设置最小高度的原因是，如果高度低于114，且子级存在分页时，页面布局看着上不美观
+		libh = libh < 114 ? 114 : libh; //这里设置最小高度的原因是，如果高度低于114，且子级存在分页时，页面布局看着上不美观
 		$('#j-lib_content').height(libh);
-		
+
 		//产品类条件筛选框的高度,不能高于列表区的高度
-		if ($('#j-cond1').height()>libh) {
+		if($('#j-cond1').height() > libh) {
 			$('#j-cond1').height(libh);
 		}
-		
+
 		//库面板产品类分类列表高度
 		$('.g-procs_wrap').height($('#j-lib_content').height());
 	}
@@ -201,11 +286,13 @@ $(function() {
 
 	//库面板中的一些按钮点击事件
 	function library() {
-		var num =0;  //记录当前tab栏，用于选择条件筛选框弹出
+		var num = 0; //记录当前tab栏，用于选择条件筛选框弹出
 		//产品类中点击切换显示二级类目
 		$(document).on('click', '#j-procs_cg h3', function() {
 			var tarLi = $(this).parents('li');
 			tarLi.addClass('active').siblings().removeClass('active');
+			$("#j-procs_cg ul").hide()
+			$(this).siblings("ul").fadeIn()
 		});
 
 		//在产品库详情下，鼠标放上显示详情信息
@@ -235,8 +322,8 @@ $(function() {
 
 		//tab栏切换
 		$(document).on('click', '.tab-bt li', function() {
-			$('.pop-cond').hide();//隐藏所有的tab栏
-			
+			$('.pop-cond').hide(); //隐藏所有的tab栏
+
 			num = parseInt($(this).attr('href'));
 			$('#j-lib_tab li').removeClass('active');
 			$('.m-others').hide();
@@ -257,16 +344,24 @@ $(function() {
 			}
 			$('#j-lib_content .content').addClass('hide');
 			$('#j-lib_content .content').eq(num).removeClass('hide');
-			
+
 		});
-		
-		var isdetail=false;  //是否进入产品类的详情页
+
+		var isdetail = false; //是否进入产品类的详情页
 		//产品类下的子目录类点击切换到详情页
 		$(document).on('click', '.m-subprocs_cg li', function() {
 			$('#j-procs_wrap').hide();
 			$('#j-detail_wrap').fadeIn();
 			$('#j-back').addClass('show');
-			isdetail=true;
+			isdetail = true;
+
+			//产品分类下数据列表
+			getData({
+				template: $('#j-item1_detail'),
+				container: $('#j-procs_detail'),
+				url: "tmp/proc_detail.json"
+			});
+
 		});
 
 		//返回产品分类
@@ -274,36 +369,38 @@ $(function() {
 			$('#j-detail_wrap').hide();
 			$('#j-procs_wrap').fadeIn();
 			$('#j-back').removeClass('show');
-			isdetail=false;
+			isdetail = false;
 		});
-		
+
 		//点击按钮显示cond1和cond2的筛选条件
-		$(document).on('click','#j-cond1_off',function(){
+		$(document).on('click', '#j-cond1_off', function() {
 			$('.pop-cond').hide();
-			if (num==0&&!isdetail) {
+			if(num == 0 && !isdetail) {
 				$('#j-cond1').show();
 			}
 		});
 	}
+	
+	
 
-	function getData(obj) {
-		$.ajax({
-			type: "get",
-			url: obj.url,
-			async: true,
-			success: function(data) {
-				if (data.status==200) {
-					var template = obj.template.html();
-					var compiledTemplate = Template7.compile(template);
-					var html = compiledTemplate(data);
-					obj.container.html(html);
-				}else{
-					obj.container.html('<h2 style="margin:30px; color:#000">'+data.msg+'</h2>');
-				}
-			},
-			error:function(){
-				obj.container.html('<h2 style="margin:30px; color:#000">404! 网络出错了...</h2>');
-			}
-		});
-	}
+//	function getData(obj) {
+//		$.ajax({
+//			type: "get",
+//			url: obj.url,
+//			async: true,
+//			success: function(data) {
+//				if(data.status == 200) {
+//					var template = obj.template.html();
+//					var compiledTemplate = Template7.compile(template);
+//					var html = compiledTemplate(data);
+//					obj.container.html(html);
+//				} else {
+//					obj.container.html('<h2 style="margin:30px; color:#000">' + data.msg + '</h2>');
+//				}
+//			},
+//			error: function() {
+//				obj.container.html('<h2 style="margin:30px; color:#000">404! 网络出错了...</h2>');
+//			}
+//		});
+//	}
 });

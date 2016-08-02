@@ -7,7 +7,8 @@
 		<title>软装大师</title>
 		<link href="css/global.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="js/jquery.js"></script>
-		<script src="js/template7.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/template7.min.js" type="text/javascript" charset="utf-8"></script>
+		
 		<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 
@@ -268,9 +269,11 @@
 						</div>
 					</div>
 
-					<!--列表区-->
+					<!--列表区内容区域-->
 					<div id="j-lib_content" class="g-lib_content">
+						<!-- 产品库 -->
 						<div class="content">
+							<!--产品分类列表-->
 							<div id="j-procs_wrap" class="g-lib_wrap g-procs_wrap">
 								<ul id="j-procs_cg" class="m-procs_cg">
 									<!--<li class="active">
@@ -299,14 +302,15 @@
 									</script>
 								</ul>
 							</div>
+							<!-- 产品分类下的数据列表 -->
 							<div id="j-detail_wrap" class="g-procs_detail">
 								<ul id="j-procs_detail" class="m-lib_list m-procs_detail">
-									<!--<li>
+									<li>
 										<a href="javascript:">
 											<img src="tmp/proc01.png" />
 											<span class="u-love"><i class="icon icon-love"></i></span>
 										</a>
-									</li>-->
+									</li>
 									<script id="j-item1_detail" type="text/template7">
 										{{#each list}}
 										<li name="{{name}}" price="{{price}}" spec="{{spec}}" material="{{material}}" traigle="{{traigle}}">
@@ -344,6 +348,7 @@
 								</div>
 							</div>
 						</div>
+						<!-- 公共库  -->
 						<div class="hide content">
 							<ul class="m-lib_list m-other_list">
 								<li>
@@ -370,6 +375,7 @@
 								<a class="u-go" href="javascript:">GO</a>
 							</div>
 						</div>
+						<!-- 户型库 -->
 						<div class="hide content">
 							<ul class="m-lib_list m-other_list">
 								<li>
@@ -395,7 +401,9 @@
 								<a class="u-go" href="javascript:">GO</a>
 							</div>
 						</div>
-						<div class="hide content">
+						<!-- 我的收藏 -->
+						
+<div class="hide content">
 							<ul class="m-lib_list m-other_list">
 								<li>
 									<a href="javascript:">
@@ -420,6 +428,7 @@
 								<a class="u-go" href="javascript:">GO</a>
 							</div>
 						</div>
+						<!-- 个人素材 -->
 						<div class="g-lib_wrap hide content">
 							<ul class="m-lib_list2 m-lib_list g-lib_file">
 								<li>
@@ -428,6 +437,7 @@
 								</li>
 							</ul>
 						</div>
+						<!-- 产品清单 --> 
 						<div class="hide content">
 							<ul class="m-proc_bill">
 								<li>
@@ -441,6 +451,7 @@
 								</li>
 							</ul>
 						</div>
+						<!-- 背景图  -->
 						<div class="hide content">
 							<ul class="m-lib_list m-other_list">
 								<li>
@@ -465,6 +476,7 @@
 								<a class="u-go" href="javascript:">GO</a>
 							</div>
 						</div>
+						<!-- 色卡  -->
 						<div class="hide content">
 							<ul class="m-lib_color">
 								<li></li>
@@ -485,9 +497,11 @@
 								<a class="u-go" href="javascript:">GO</a>
 							</div>
 						</div>
+						<!-- 图形  -->
 						<div class="hide content">
 							<a class="u-char" href="javascript:">ABcd</a>
 						</div>
+						<!--文字--> 
 						<div class="hide content">
 							<ul class="m-lib_list m-other_list">
 								<li>
@@ -512,6 +526,7 @@
 								<a class="u-go" href="javascript:">GO</a>
 							</div>
 						</div>
+						<!-- 灯光  -->
 						<div class="hide content">
 							<ul class="m-lib_list m-other_list">
 								<li>
