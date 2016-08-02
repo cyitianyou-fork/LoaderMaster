@@ -209,13 +209,13 @@
 						<li href="4">个人素材</li>
 						<li href="5">产品清单</li>
 					</ul>
-					
+
 					<!--搜索区-->
 					<div class="g-search">
 						<a href="javascript:" id="j-back" class="u-back"><i class="icon icon-leftarrow"></i></a>
 						<div class="m-search"><input type="text" placeholder="搜索" /><i class="icon icon-search"></i></div>
 						<div class="m-others m-other_item1">
-							<a href="javascript:"><i class="icon icon-list"></i></a>
+							<a href="javascript:"><i id="j-cond1_off" class="icon icon-list"></i></a>
 							<a href="javascript:"><i class="icon icon-filter"></i></a>
 						</div>
 						<div class="m-others m-other_item2">
@@ -227,13 +227,47 @@
 							<a href="javascript:"><i class="icon icon-cart"></i></a>
 							<a href="javascript:"><i class="icon icon-print"></i></a>
 						</div>
+						<!--搜索条件列表-->
+						<div id="j-cond1" class="pop-cond1 pop-cond">
+							<ul id="j-cond1_list">
+								<!--<li>
+									<h3>家具</h3>
+									<ul>
+										<li>
+											<strong>沙发</strong>
+											<ul>
+												<li>沙发床</li>
+												<li>组合沙发</li>
+												<li>贵妃沙发</li>
+											</ul>
+										</li>
+									</ul>
+								</li>-->
+								<script id="j-cond1_template" type="text/template7">
+									{{#each list}}
+									<li>
+										<h3>{{title}}</h3>
+										<ul>
+											{{#each sublist}}
+											<li>
+												<strong>{{subtitle}}</strong>
+												{{#if allList}}
+												<ul>
+													{{#each allList}}
+													<li>{{this}}</li>
+													{{/each}}
+												</ul>
+												{{/if}}
+											</li>
+											{{/each}}
+										</ul>
+									</li>
+									{{/each}}
+								</script>
+							</ul>
+						</div>
 					</div>
-					
-					<!--搜索条件列表-->
-					<div class="pop-cond">
-						
-					</div>
-					
+
 					<!--列表区-->
 					<div id="j-lib_content" class="g-lib_content">
 						<div class="content">
@@ -386,23 +420,22 @@
 								<a class="u-go" href="javascript:">GO</a>
 							</div>
 						</div>
-						<div class="g-lib_wrap hide content" >
+						<div class="g-lib_wrap hide content">
 							<ul class="m-lib_list2 m-lib_list g-lib_file">
 								<li>
 									<a href="javascript:"><img src="tmp/file.png" /></a>
 									<p>文件夹</p>
 								</li>
 							</ul>
-						</div>	
+						</div>
 						<div class="hide content">
 							<ul class="m-proc_bill">
 								<li>
-									<a href="javascript:"><img src="tmp/proc01.png"/></a>
+									<a href="javascript:"><img src="tmp/proc01.png" /></a>
 									<div class="m-proc_word">
-										RONS三人沙发<br />
-										规格：980*2410*1200<br />
-										材质：烨木<br />
-										周期：7-15天
+										RONS三人沙发<br /> 规格：980*2410*1200
+										<br /> 材质：烨木
+										<br /> 周期：7-15天
 									</div>
 									<span>￥38526.00*1</span>
 								</li>
@@ -502,10 +535,10 @@
 								<input type="text" />
 								<a class="u-go" href="javascript:">GO</a>
 							</div>
-						</div>	
+						</div>
 						<!--con end-->
 					</div>
-					
+
 					<!--库面板的工具栏-->
 					<ul id="j-lib_bar" class="g-lib_bar tab-bt">
 						<li href="6">

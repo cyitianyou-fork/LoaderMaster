@@ -4,6 +4,8 @@ $(function() {
 		initCvsTab();
 		//库面板加载数据
 		getData({template:$('#j-item1_cg'),container:$('#j-procs_cg'),url:"tmp/proc_cg.json"});
+		//加载筛选条件一的数据
+		getData({template:$('#j-cond1_template'),container:$('#j-cond1_list'),url:"tmp/cond1_data.json"});
 		bind();
 	}
 	init();
@@ -24,7 +26,12 @@ $(function() {
 		});
 		libh=libh<114?114:libh;  //这里设置最小高度的原因是，如果高度低于114，且子级存在分页时，页面布局看着上不美观
 		$('#j-lib_content').height(libh);
-
+		
+		//产品类条件筛选框的高度,不能高于列表区的高度
+		if ($('#j-cond1').height()>libh) {
+			$('#j-cond1').height(libh);
+		}
+		
 		//库面板产品类分类列表高度
 		$('.g-procs_wrap').height($('#j-lib_content').height());
 	}
@@ -194,8 +201,9 @@ $(function() {
 
 	//库面板中的一些按钮点击事件
 	function library() {
+		var num =0;  //记录当前tab栏，用于选择条件筛选框弹出
 		//产品类中点击切换显示二级类目
-		$(document).on('click', '#j-procs_cg .icon-downarrow', function() {
+		$(document).on('click', '#j-procs_cg h3', function() {
 			var tarLi = $(this).parents('li');
 			tarLi.addClass('active').siblings().removeClass('active');
 		});
@@ -227,7 +235,9 @@ $(function() {
 
 		//tab栏切换
 		$(document).on('click', '.tab-bt li', function() {
-			var num = parseInt($(this).attr('href'));
+			$('.pop-cond').hide();//隐藏所有的tab栏
+			
+			num = parseInt($(this).attr('href'));
 			$('#j-lib_tab li').removeClass('active');
 			$('.m-others').hide();
 			$('#j-back').removeClass('show');
@@ -247,14 +257,16 @@ $(function() {
 			}
 			$('#j-lib_content .content').addClass('hide');
 			$('#j-lib_content .content').eq(num).removeClass('hide');
+			
 		});
 		
-		
+		var isdetail=false;  //是否进入产品类的详情页
 		//产品类下的子目录类点击切换到详情页
 		$(document).on('click', '.m-subprocs_cg li', function() {
 			$('#j-procs_wrap').hide();
 			$('#j-detail_wrap').fadeIn();
 			$('#j-back').addClass('show');
+			isdetail=true;
 		});
 
 		//返回产品分类
@@ -262,6 +274,15 @@ $(function() {
 			$('#j-detail_wrap').hide();
 			$('#j-procs_wrap').fadeIn();
 			$('#j-back').removeClass('show');
+			isdetail=false;
+		});
+		
+		//点击按钮显示cond1和cond2的筛选条件
+		$(document).on('click','#j-cond1_off',function(){
+			$('.pop-cond').hide();
+			if (num==0&&!isdetail) {
+				$('#j-cond1').show();
+			}
 		});
 	}
 
