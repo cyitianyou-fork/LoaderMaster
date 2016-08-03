@@ -300,7 +300,9 @@ input{background:none;}
 .m-lib_color li{float:left; width: 68px; height: 68px; margin-right: 5px; margin-bottom: 5px; background: red; border-radius: 3px;}
 .m-lib_color li:nth-child(5n){margin-right: 0;}
 .u-char{display: inline-block; margin-left: 20px; margin-top: 26px; color: #666; font-size: 16px;}
-.pop-cond1{display: none; position: absolute; left: 0px; top: 40px; z-index: 1; width: 268px; height: 398px; border: 1px solid #00b0d0; border-radius: 3px; background: #fff; overflow-y: auto; }
+.pop-condh{height: 398px;}
+.pop-cond {display: none; position: absolute; left: 0px; top: 40px; z-index: 1; border: 1px solid #00b0d0; border-radius: 3px; background: #fff; overflow-y: auto;}
+.pop-cond1{width: 268px; }
 .pop-cond1 h3{font-size: 14px; color: #f66835; line-height: 24px; margin: 0;}
 .pop-cond1 li{padding-left: 10px; line-height: 24px; color: #666;}
 .pop-cond1 strong{display: block; font-size: 14px; line-height: 24px; font-weight: normal; font-size: 14px;}

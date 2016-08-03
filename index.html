@@ -7,8 +7,8 @@
 		<title>软装大师</title>
 		<link href="css/global.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="js/jquery.js"></script>
-		<script src="js/template7.min.js" type="text/javascript" charset="utf-8"></script>
-		
+		<script src="js/template7.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/LibData.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 
@@ -228,8 +228,8 @@
 							<a href="javascript:"><i class="icon icon-cart"></i></a>
 							<a href="javascript:"><i class="icon icon-print"></i></a>
 						</div>
-						<!--搜索条件列表-->
-						<div id="j-cond1" class="pop-cond1 pop-cond">
+						<!--产品类目录列表条件弹出框-->
+						<div id="j-cond1_cg" class="pop-cond1 pop-cond pop-condh">
 							<ul id="j-cond1_list">
 								<!--<li>
 									<h3>家具</h3>
@@ -266,6 +266,10 @@
 									{{/each}}
 								</script>
 							</ul>
+						</div>
+						<!--产品类下详情页条件弹出框-->
+						<div class="pop-cond1_detail pop-cond pop-cond1">
+							
 						</div>
 					</div>
 
@@ -305,12 +309,12 @@
 							<!-- 产品分类下的数据列表 -->
 							<div id="j-detail_wrap" class="g-procs_detail">
 								<ul id="j-procs_detail" class="m-lib_list m-procs_detail">
-									<li>
+									<!--<li>
 										<a href="javascript:">
 											<img src="tmp/proc01.png" />
 											<span class="u-love"><i class="icon icon-love"></i></span>
 										</a>
-									</li>
+									</li>-->
 									<script id="j-item1_detail" type="text/template7">
 										{{#each list}}
 										<li name="{{name}}" price="{{price}}" spec="{{spec}}" material="{{material}}" traigle="{{traigle}}">
@@ -332,17 +336,17 @@
 									</p>
 								</div>
 								<div class="g-lib_bts">
-									<a href="javascript:"><i class="icon icon-tooloff"></i></a>
-									<a href="javascript:"><i class="icon icon-traigleleft"></i></a>
+									<a class="first" href="javascript:"><i class="icon icon-tooloff"></i></a>
+									<a class="prev" href="javascript:"><i class="icon icon-traigleleft"></i></a>
 									<ol>
-										<li class="active">1</li>
+										<!--<li class="active">1</li>
 										<li>2</li>
 										<li>3</li>
 										<li>4</li>
-										<li>5</li>
+										<li>5</li>-->
 									</ol>
-									<a href="javascript:"><i class="icon icon-traigleright"></i></a>
-									<a href="javascript:"><i class="icon icon-liboff"></i></a>
+									<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
+									<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
 									<input type="text" />
 									<a class="u-go" href="javascript:">GO</a>
 								</div>
