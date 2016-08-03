@@ -8,7 +8,7 @@
 		<link href="css/global.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="js/jquery.js"></script>
 		<script src="js/template7.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/LibData.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/dataloader.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 
@@ -216,21 +216,21 @@
 						<a href="javascript:" id="j-back" class="u-back"><i class="icon icon-leftarrow"></i></a>
 						<div class="m-search"><input type="text" placeholder="搜索" /><i class="icon icon-search"></i></div>
 						<div class="m-others m-other_item1">
-							<a href="javascript:"><i id="j-cond1_off" class="icon icon-list"></i></a>
-							<a href="javascript:"><i class="icon icon-filter"></i></a>
+							<a id="j-cond1_off" href="javascript:"><i class="icon icon-list"></i></a>
+							<a id="j-filter" href="javascript:"><i class="icon icon-filter"></i></a>
 						</div>
 						<div class="m-others m-other_item2">
-							<a href="javascript:"><i class="icon icon-file"></i></a>
-							<a href="javascript:"><i class="icon icon-upload"></i></a>
-							<a href="javascript:"><i class="icon icon-refresh"></i></a>
+							<a id="j-new_file" href="javascript:"><i class="icon icon-file"></i></a>
+							<a id="j-upload" href="javascript:"><i class="icon icon-upload"></i></a>
+							<a id="j-refresh" href="javascript:"><i class="icon icon-refresh"></i></a>
 						</div>
 						<div class="m-others m-other_item3">
 							<a href="javascript:"><i class="icon icon-cart"></i></a>
 							<a href="javascript:"><i class="icon icon-print"></i></a>
 						</div>
 						<!--产品类目录列表条件弹出框-->
-						<div id="j-cond1_cg" class="pop-cond1 pop-cond pop-condh">
-							<ul id="j-cond1_list">
+						<div id="j-cg_wrap" class="pop-cond1 pop-cond">
+							<ul id="j-cond1_cg">
 								<!--<li>
 									<h3>家具</h3>
 									<ul>
@@ -244,32 +244,209 @@
 										</li>
 									</ul>
 								</li>-->
-								<script id="j-cond1_template" type="text/template7">
-									{{#each list}}
-									<li>
-										<h3>{{title}}</h3>
-										<ul>
-											{{#each sublist}}
-											<li>
-												<strong>{{subtitle}}</strong>
-												{{#if allList}}
-												<ul>
-													{{#each allList}}
-													<li>{{this}}</li>
-													{{/each}}
-												</ul>
-												{{/if}}
-											</li>
-											{{/each}}
-										</ul>
-									</li>
-									{{/each}}
-								</script>
 							</ul>
+							<script id="t-cond1_cg" type="text/template7">
+								{{#each list}}
+								<li>
+									<h3>{{title}}</h3>
+									<ul>
+										{{#each sublist}}
+										<li>
+											<strong>{{subtitle}}</strong>
+											{{#if allList}}
+											<ul>
+												{{#each allList}}
+												<li>{{this}}</li>
+												{{/each}}
+											</ul>
+											{{/if}}
+										</li>
+										{{/each}}
+									</ul>
+								</li>
+								{{/each}}
+							</script>
 						</div>
 						<!--产品类下详情页条件弹出框-->
-						<div class="pop-cond1_detail pop-cond pop-cond1">
-							
+						<div id="j-dt_wrap" class="pop-cond pop-cond1 pop-cond1_dt">
+							<ul id="j-cond1_dt">
+								<!--<li>
+									<strong>沙发</strong>
+									<ul>
+										<li>沙发床</li>
+										<li>组合沙发</li>
+									</ul>
+								</li>-->
+							</ul>
+							<script id="t-cond1_dt" type="text/template7">
+							{{#each list}}
+								<li>
+									<strong>{{title}}</strong>
+									{{#if sublist}}
+									<ul>
+										{{#each sublist}}
+										<li>{{this}}</li>
+										{{/each}}
+									</ul>
+									{{/if}}
+								</li>
+							{{/each}}
+							</script>
+						</div>
+						
+						<!--过滤条件弹出框-->
+						<div id="j-cond2" class="pop-cond2 pop-cond">
+							<div class="pop-cond2_inner">
+								<a class="close close-pop" href="javascript:"><i class="icon icon-close"></i></a>
+								<div class="row first-row">
+									<div class="col col-1">尺寸：</div>
+									<div class="col col-2"><input type="text" />cm-&nbsp;&nbsp;&nbsp;<input type="text" />cm</div>
+								</div>
+								<div class="row sec-row">
+									<div class="col col-1">价格：</div>
+									<div class="col col-2">
+										<label><input type="radio" name="price" />不限</label><br />
+										<label><input type="radio" name="price" />1-5000</label><br />
+										<label><input type="radio" name="price" />5001-10000</label><br />
+										<label><input type="radio" name="price" />10001-50000</label><br />
+									</div>
+								</div>
+								<div class="row thr-row">
+									<div class="col col-1">风格：</div>
+									<div class="col col-2">
+										<label><input type="radio" name="style" />不限</label>
+										<label><input type="radio" name="style" />意大利</label>
+										<label><input type="radio" name="style" />美式</label><br />
+										<label><input type="radio" name="style" />法式</label>
+										<label><input type="radio" name="style" />简欧</label>
+										<label><input type="radio" name="style" />现代</label><br />
+										<label><input type="radio" name="style" />后现代</label>
+										<label><input type="radio" name="style" />中式</label>
+										<label><input type="radio" name="style" />英式</label><br />
+										<label><input type="radio" name="style" />地中海</label>
+										<label><input type="radio" name="style" />东南亚</label>
+										<label><input type="radio" name="style" />新古典</label><br />
+										<label><input type="radio" name="style" />韩式</label>
+										<label><input type="radio" name="style" />日式</label>
+										<label><input type="radio" name="style" />其他</label><br />
+										<label><input type="radio" name="style" />田园</label>
+									</div>
+								</div>
+								<div class="row four-row">
+									<div class="col col-1">颜色：</div>
+									<div class="col col-2">
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+									</div>
+								</div>
+								<div class="row-bt">
+									<a class="close-pop" href="javascript:">确定</a>
+								</div>
+							</div>
+						</div>
+						<!--过滤条件弹出框：选择城市-->
+						<div id="j-cond2_sl" class="pop-cond2 pop-cond pop-cond2_sl">
+							<div class="pop-cond2_inner">
+								<a class="close close-pop" href="javascript:"><i class="icon icon-close"></i></a>
+								<div class="row">
+									<div class="col col-1">省：</div>
+									<div class="col col-2">
+										<select id="j-province" name="">
+										</select>
+										<script id="t-province" type="text/template7">
+											{{#each list}}
+												<option value="{{this}}">{{this}}</option>
+											{{/each}}
+										</script>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col col-1">市：</div>
+									<div class="col col-2">
+										<select id="j-city" name="">
+											
+										</select>
+										<script id="t-city" type="text/template7">
+											{{#each list}}
+												<option value="{{this}}">{{this}}</option>
+											{{/each}}
+										</script>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col col-1">区：</div>
+									<div class="col col-2">
+										<select id="j-area" name="">
+											
+										</select>
+										<script id="t-area" type="text/template7">
+											{{#each list}}
+												<option value="{{this}}">{{this}}</option>
+											{{/each}}
+										</script>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col col-1">楼盘：</div>
+									<div class="col col-2">
+										<select id="j-floor" name="">
+											
+										</select>
+										<script id="t-floor" type="text/template7">
+											{{#each list}}
+												<option value="{{this}}">{{this}}</option>
+											{{/each}}
+										</script>
+									</div>
+								</div>
+								<div class="row-bt">
+									<a class="close-pop" href="javascript:">确定</a>
+								</div>
+							</div>
 						</div>
 					</div>
 
@@ -289,22 +466,22 @@
 											</li>
 										</ul>
 									</li>-->
-									<script id="j-item1_cg" type="text/template7">
-										{{#each list}}
-										<li class="{{active}}">
-											<h3>{{title}}<i class="icon icon-downarrow"></i></h3>
-											<ul class="m-subprocs_cg m-lib_list m-lib_list2">
-												{{#each sublist}}
-												<li>
-													<a href="javascript:"><img src="{{url}}" /></a>
-													<p>{{name}}</p>
-												</li>
-												{{/each}}
-											</ul>
-										</li>
-										{{/each}}
-									</script>
 								</ul>
+								<script id="t-item1_cg" type="text/template7">
+									{{#each list}}
+									<li class="{{active}}">
+										<h3>{{title}}<i class="icon icon-downarrow"></i></h3>
+										<ul class="m-subprocs_cg m-lib_list m-lib_list2">
+											{{#each sublist}}
+											<li data-id={{id}}>
+												<a href="javascript:"><img src="{{url}}" /></a>
+												<p>{{name}}</p>
+											</li>
+											{{/each}}
+										</ul>
+									</li>
+									{{/each}}
+								</script>
 							</div>
 							<!-- 产品分类下的数据列表 -->
 							<div id="j-detail_wrap" class="g-procs_detail">
@@ -315,24 +492,24 @@
 											<span class="u-love"><i class="icon icon-love"></i></span>
 										</a>
 									</li>-->
-									<script id="j-item1_detail" type="text/template7">
-										{{#each list}}
-										<li name="{{name}}" price="{{price}}" spec="{{spec}}" material="{{material}}" traigle="{{traigle}}">
-											<a href="javascript:">
-												<img src="{{url}}" />
-												<span class="u-love"><i class="icon icon-love"></i></span>
-											</a>
-										</li>
-										{{/each}}
-									</script>
 								</ul>
+								<script id="t-item1_detail" type="text/template7">
+									{{#each list}}
+									<li data-id="{{id}}" data-name="{{name}}" data-price="{{price}}" data-spec="{{spec}}" data-material="{{material}}" data-traigle="{{traigle}}">
+										<a href="javascript:">
+											<img src="{{url}}" />
+											<span class="u-love {{islove}}"><i class="icon icon-love"></i></span>
+										</a>
+									</li>
+									{{/each}}
+								</script>
 								<div class="u-proc_info" id="j-proc_info">
 									<h4>RoNS-双人沙发</h4>
 									<strong>￥32098.50</strong>
 									<p>
-										规格：1880990122
-										<br /> 材质：叶木垭克力
-										<br /> 角度：3
+										<span>规格：1880990122</span>
+										<span>材质：叶木垭克力</span>
+										<span> 角度：3</span>
 									</p>
 								</div>
 								<div class="g-lib_bts">
@@ -359,7 +536,7 @@
 									<a href="javascript:">
 										<img src="tmp/proc01.png" />
 										<span class="u-close"><i class="icon icon-close"></i></span>
-										<span class="u-down"><i class="icon icon-down"></i></span>
+										<a class="u-down"><i class="icon icon-down"></i></a>
 									</a>
 								</li>
 							</ul>
@@ -407,7 +584,7 @@
 						</div>
 						<!-- 我的收藏 -->
 						
-<div class="hide content">
+						<div class="hide content">
 							<ul class="m-lib_list m-other_list">
 								<li>
 									<a href="javascript:">
@@ -434,10 +611,10 @@
 						</div>
 						<!-- 个人素材 -->
 						<div class="g-lib_wrap hide content">
-							<ul class="m-lib_list2 m-lib_list g-lib_file">
+							<ul id="j-fodder" class="m-lib_list2 m-lib_list g-lib_file">
 								<li>
 									<a href="javascript:"><img src="tmp/file.png" /></a>
-									<p>文件夹</p>
+									<input type="text" value="文件夹" readonly="readonly" />
 								</li>
 							</ul>
 						</div>

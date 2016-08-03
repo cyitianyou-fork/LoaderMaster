@@ -1,5 +1,5 @@
 //库面板数据加载类
-function LibList(obj) {
+function DataLoader(obj) {
 	this.obj = obj;
 	//表示模板当前需要加载的数据集
 	this.context = {
@@ -7,15 +7,17 @@ function LibList(obj) {
 	};
 }
 //获取数据
-LibList.prototype.getDatas = function() {
+DataLoader.prototype.getData = function() {
 		var _this = this;
 		$.ajax({
 			type: "get",
 			url: _this.obj.url,
 			async: true,
 			success: function(data) {
+				//console.log(data)
 				if(data.status == 200) {
 					_this.context = data;
+					
 					_this.toList();
 				} else {
 					_this.obj.container.html('<h2 style="margin:30px; color:#000">' + data.msg + '</h2>');
@@ -27,7 +29,8 @@ LibList.prototype.getDatas = function() {
 		});
 	}
 	//编译模板，显示数据
-LibList.prototype.toList = function() {
+DataLoader.prototype.toList = function() {
+	
 		var template = this.obj.template.html();
 		var compiledTemplate = Template7.compile(template);
 		var html = compiledTemplate(this.context);
@@ -41,19 +44,22 @@ function myextend(sub, sup) {
 	sub.prototype.constructor = sub;
 }
 //子类，在获取数据，编译模板，输出的功能上增加了分页的功能
-function SubLibList(obj) {
-	LibList.call(this, obj);
+function SubDataLoader(obj) {
+	DataLoader.call(this, obj);
 	//存放所有的数据
 	this.totalData = new Array();
 	//总共页数
 	this.pages = 0;
 	//当前页码
 	this.curPage = 0;
+
+	//页码数量是动态加载的，给页面和其它按钮注册点击事件
+
 }
 //继承
-myextend(SubLibList, LibList);
+myextend(SubDataLoader, DataLoader);
 //重写父类获取数据集
-SubLibList.prototype.getData = function() {
+SubDataLoader.prototype.getData = function() {
 		var _this = this;
 		$.ajax({
 			type: "get",
@@ -95,74 +101,79 @@ SubLibList.prototype.getData = function() {
 		});
 	}
 	//封装更改当前数据集，并编译模板显示
-SubLibList.prototype.getList = function() {
-		this.context = this.totalData[this.curPage];
-		this.toList();
-	}
-	//页码数量是动态加载的，给页面和其它按钮注册点击事件
-SubLibList.prototype.clickPages = function() {
+SubDataLoader.prototype.getList = function() {
+	this.context = this.totalData[this.curPage];
+	this.toList();
+}
+
+SubDataLoader.prototype.clickPages = function() {
 	//所有按钮的父级
 	var parDom = this.obj.container.siblings('.g-lib_bts');
-	//页码的父级
-	var pageDom = parDom.find('ol');
-	//页码集合
-	var pageLi = pageDom.find('li');
-	//页码输入框
-	var inputPage = parDom.find('input');
-	var _this = this;
-	//动态添加页码
-	for(var i = 0; i < this.pages; i++) {
-		pageDom.append('<li>' + (i + 1) + '</li>');
-	}
-	pageLi.eq(0).addClass('active');
-	//给每个页码注册点击事件
-	pageLi.each(function(i, ele) {
-		$(ele).on('click', function() {
-			_this.curPage = i;
+	if(this.pages > 1) {
+		//页码的父级
+		var pageDom = parDom.find('ol');
+		pageDom.children().remove();
+		//页码输入框
+		var inputPage = parDom.find('input');
+		var _this = this;
+		//动态添加页码
+		for(var i = 0; i < this.pages; i++) {
+			pageDom.append('<li>' + (i + 1) + '</li>');
+		}
+		//页码集合
+		var pageLi = pageDom.find('li');
+		pageLi.eq(0).addClass('active');
+		//给每个页码注册点击事件
+		pageLi.each(function(i, ele) {
+			$(ele).on('click', function() {
+				_this.curPage = i;
+				_this.getList();
+				pageLi.removeClass('active');
+				pageLi.eq(_this.curPage).addClass('active');
+			});
+		});
+		//前一页
+		parDom.find('.prev').on('click', function() {
+			if(_this.curPage > 0) {
+				_this.curPage--;
+				_this.getList();
+				pageLi.removeClass('active');
+				pageLi.eq(_this.curPage).addClass('active');
+			}
+		});
+		//后一页
+		parDom.find('.next').on('click', function() {
+			if(_this.curPage < _this.pages - 1) {
+				_this.curPage++;
+				_this.getList();
+				pageLi.removeClass('active');
+				pageLi.eq(_this.curPage).addClass('active');
+			}
+		});
+		//第一页
+		parDom.find('.first').on('click', function() {
+			_this.curPage = 0;
 			_this.getList();
 			pageLi.removeClass('active');
 			pageLi.eq(_this.curPage).addClass('active');
 		});
-	});
-	//前一页
-	parDom.find('.prev').on('click', function() {
-		if(_this.curPage > 0) {
-			_this.curPage--;
+		//最后一页
+		parDom.find('.last').on('click', function() {
+			_this.curPage = _this.pages - 1;
 			_this.getList();
 			pageLi.removeClass('active');
 			pageLi.eq(_this.curPage).addClass('active');
-		}
-	});
-	//后一页
-	parDom.find('.next').on('click', function() {
-		if(_this.curPage < _this.pages - 1) {
-			_this.curPage++;
-			_this.getList();
-			pageLi.removeClass('active');
-			pageLi.eq(_this.curPage).addClass('active');
-		}
-	});
-	//第一页
-	parDom.find('.first').on('click', function() {
-		_this.curPage = 0;
-		_this.getList();
-		pageLi.removeClass('active');
-		pageLi.eq(_this.curPage).addClass('active');
-	});
-	//最后一页
-	parDom.find('.last').on('click', function() {
-		_this.curPage = _this.pages - 1;
-		_this.getList();
-		pageLi.removeClass('active');
-		pageLi.eq(_this.curPage).addClass('active');
-	});
-	//跳到指定页码
-	parDom.find('.u-go').on('click', function() {
-		if(parseInt(inputPage.val()) > 0) {
-			_this.curPage = parseInt(inputPage.val()) - 1;
-			_this.getList();
-			pageLi.removeClass('active');
-			pageLi.eq(_this.curPage).addClass('active');
-		}
-	});
+		});
+		//跳到指定页码
+		parDom.find('.u-go').on('click', function() {
+			if(parseInt(inputPage.val()) > 0) {
+				_this.curPage = parseInt(inputPage.val()) - 1;
+				_this.getList();
+				pageLi.removeClass('active');
+				pageLi.eq(_this.curPage).addClass('active');
+			}
+		});
+	} else {
+		parDom.hide();
+	}
 }
