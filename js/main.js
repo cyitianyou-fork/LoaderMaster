@@ -354,14 +354,48 @@ $(function() {
 			toProcDetail();
 			showInfoInProc();
 			myCollection();
+			remove();
 		}
 
 		function switchTab() {
 			//tab栏切换
 			$(document).on('click', '.tab-bt li', function() {
 				$('.pop-cond').hide(); //隐藏所有的筛选条件弹出框
-
 				libContent.num = parseInt($(this).attr('href'));
+				var param={};
+				switch (libContent.num){
+					case 1:
+						param={template:$('#t-comment'),container:$('#j-comment'),url:"tmp/common.json"};
+						break;
+					case 2:
+						param={template:$('#t-user'),container:$('#j-user'),url:"tmp/common.json"};
+						break;
+					case 3:
+						param={template:$('#t-collect'),container:$('#j-collect'),url:"tmp/common.json"};
+						break;
+					case 4:
+						param={template:$('#t-fodder'),container:$('#j-fodder'),url:"tmp/file.json"};
+						break;
+					case 6:
+						param={template:$('#t-bg'),container:$('#j-bg'),url:"tmp/bg.json"};
+						break;
+					case 7:
+						param={template:$('#t-color'),container:$('#j-color'),url:"tmp/color.json"};
+						break;
+					case 9:
+						param={template:$('#t-graph'),container:$('#j-graph'),url:"tmp/bg.json"};
+						break;
+					case 10:
+						param={template:$('#t-light'),container:$('#j-light'),url:"tmp/bg.json"};
+						break;
+					default:
+						break;
+				}
+				if (param.url) {
+					var data=new SubDataLoader(param);
+					data.getData();
+				}
+				
 				$('#j-lib_tab li').removeClass('active');
 				$('.m-others').hide();
 				$('#j-back').removeClass('show');
@@ -463,6 +497,13 @@ $(function() {
 					 * 根据父级li的id,将该产品标志位收藏，且添加到收藏夹中
 					 */
 				}
+			});
+		}
+		
+		//点击close,删除li
+		function remove(){
+			$(document).on('click','#j-lib_content .u-close',function(){
+				$(this).parents('li').remove();
 			});
 		}
 

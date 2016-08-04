@@ -53,8 +53,6 @@ function SubDataLoader(obj) {
 	//当前页码
 	this.curPage = 0;
 
-	//页码数量是动态加载的，给页面和其它按钮注册点击事件
-
 }
 //继承
 myextend(SubDataLoader, DataLoader);
@@ -106,6 +104,7 @@ SubDataLoader.prototype.getList = function() {
 	this.toList();
 }
 
+//页码数量是动态加载的，给页面和其它按钮注册点击事件
 SubDataLoader.prototype.clickPages = function() {
 	//所有按钮的父级
 	var parDom = this.obj.container.siblings('.g-lib_bts');
@@ -134,6 +133,8 @@ SubDataLoader.prototype.clickPages = function() {
 		});
 		//前一页
 		parDom.find('.prev').on('click', function() {
+			console.log(0)
+			console.log(_this.curPage)
 			if(_this.curPage > 0) {
 				_this.curPage--;
 				_this.getList();

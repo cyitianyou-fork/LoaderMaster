@@ -252,8 +252,7 @@
 									<ul>
 										{{#each sublist}}
 										<li>
-											<strong>{{subtitle}}</strong>
-											{{#if allList}}
+											<strong>{{subtitle}}</strong> {{#if allList}}
 											<ul>
 												{{#each allList}}
 												<li>{{this}}</li>
@@ -279,10 +278,9 @@
 								</li>-->
 							</ul>
 							<script id="t-cond1_dt" type="text/template7">
-							{{#each list}}
+								{{#each list}}
 								<li>
-									<strong>{{title}}</strong>
-									{{#if sublist}}
+									<strong>{{title}}</strong> {{#if sublist}}
 									<ul>
 										{{#each sublist}}
 										<li>{{this}}</li>
@@ -290,10 +288,10 @@
 									</ul>
 									{{/if}}
 								</li>
-							{{/each}}
+								{{/each}}
 							</script>
 						</div>
-						
+
 						<!--过滤条件弹出框-->
 						<div id="j-cond2" class="pop-cond2 pop-cond">
 							<div class="pop-cond2_inner">
@@ -399,7 +397,7 @@
 										</select>
 										<script id="t-province" type="text/template7">
 											{{#each list}}
-												<option value="{{this}}">{{this}}</option>
+											<option value="{{this}}">{{this}}</option>
 											{{/each}}
 										</script>
 									</div>
@@ -408,11 +406,11 @@
 									<div class="col col-1">市：</div>
 									<div class="col col-2">
 										<select id="j-city" name="">
-											
+
 										</select>
 										<script id="t-city" type="text/template7">
 											{{#each list}}
-												<option value="{{this}}">{{this}}</option>
+											<option value="{{this}}">{{this}}</option>
 											{{/each}}
 										</script>
 									</div>
@@ -421,11 +419,11 @@
 									<div class="col col-1">区：</div>
 									<div class="col col-2">
 										<select id="j-area" name="">
-											
+
 										</select>
 										<script id="t-area" type="text/template7">
 											{{#each list}}
-												<option value="{{this}}">{{this}}</option>
+											<option value="{{this}}">{{this}}</option>
 											{{/each}}
 										</script>
 									</div>
@@ -434,11 +432,11 @@
 									<div class="col col-1">楼盘：</div>
 									<div class="col col-2">
 										<select id="j-floor" name="">
-											
+
 										</select>
 										<script id="t-floor" type="text/template7">
 											{{#each list}}
-												<option value="{{this}}">{{this}}</option>
+											<option value="{{this}}">{{this}}</option>
 											{{/each}}
 										</script>
 									</div>
@@ -531,80 +529,99 @@
 						</div>
 						<!-- 公共库  -->
 						<div class="hide content">
-							<ul class="m-lib_list m-other_list">
-								<li>
+							<ul id="j-comment" class="m-lib_list m-other_list">
+								<!--<li>
 									<a href="javascript:">
 										<img src="tmp/proc01.png" />
 										<span class="u-close"><i class="icon icon-close"></i></span>
-										<a class="u-down"><i class="icon icon-down"></i></a>
+										<span class="u-down"><i class="icon icon-down"></i></span>
+									</a>
+								</li>-->
+							</ul>
+							<script id="t-comment" type="text/template7">
+								{{#each list}}
+								<li data-id="{{id}}">
+									<a href="javascript:">
+										<img src="{{url}}" />
+										<span class="u-close"><i class="icon icon-close"></i></span>
+										<span class="u-down"><i class="icon icon-down"></i></span>
 									</a>
 								</li>
-							</ul>
+								{{/each}}
+							</script>
 							<div class="g-lib_bts">
-								<a href="javascript:"><i class="icon icon-tooloff"></i></a>
-								<a href="javascript:"><i class="icon icon-traigleleft"></i></a>
+								<a class="first" href="javascript:"><i class="icon icon-tooloff"></i></a>
+								<a class="prev" href="javascript:"><i class="icon icon-traigleleft"></i></a>
 								<ol>
-									<li class="active">1</li>
-									<li>2</li>
-									<li>3</li>
-									<li>4</li>
-									<li>5</li>
+
 								</ol>
-								<a href="javascript:"><i class="icon icon-traigleright"></i></a>
-								<a href="javascript:"><i class="icon icon-liboff"></i></a>
+								<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
+								<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
 								<input type="text" />
 								<a class="u-go" href="javascript:">GO</a>
 							</div>
 						</div>
 						<!-- 户型库 -->
 						<div class="hide content">
-							<ul class="m-lib_list m-other_list">
-								<li>
+							<ul id="j-user" class="m-lib_list m-other_list">
+								<!--<li>
 									<a href="javascript:">
 										<img src="tmp/proc01.png" />
 										<span class="u-close"><i class="icon icon-close"></i></span>
 									</a>
-								</li>
+								</li>-->
 							</ul>
+							<script id="t-user" type="text/template7">
+								{{#each list}}
+								<li data-id="id">
+									<a href="javascript:">
+										<img src="{{url}}" />
+										<span class="u-close"><i class="icon icon-close"></i></span>
+									</a>
+								</li>
+								{{/each}}
+							</script>
 							<div class="g-lib_bts">
-								<a href="javascript:"><i class="icon icon-tooloff"></i></a>
-								<a href="javascript:"><i class="icon icon-traigleleft"></i></a>
+								<a class="first" href="javascript:"><i class="icon icon-tooloff"></i></a>
+								<a class="prev" href="javascript:"><i class="icon icon-traigleleft"></i></a>
 								<ol>
-									<li class="active">1</li>
-									<li>2</li>
-									<li>3</li>
-									<li>4</li>
-									<li>5</li>
+
 								</ol>
-								<a href="javascript:"><i class="icon icon-traigleright"></i></a>
-								<a href="javascript:"><i class="icon icon-liboff"></i></a>
+								<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
+								<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
 								<input type="text" />
 								<a class="u-go" href="javascript:">GO</a>
 							</div>
 						</div>
 						<!-- 我的收藏 -->
-						
+
 						<div class="hide content">
-							<ul class="m-lib_list m-other_list">
-								<li>
+							<ul id="j-collect" class="m-lib_list m-other_list">
+								<!--<li>
 									<a href="javascript:">
 										<img src="tmp/proc01.png" />
 										<span class="u-close"><i class="icon icon-close"></i></span>
 									</a>
-								</li>
+								</li>-->
 							</ul>
+							<script id="t-collect" type="text/template7">
+								{{#each list}}
+								<li data-id="{{id}}">
+									<a href="javascript:">
+										<img src="{{url}}" />
+										<span class="u-close"><i class="icon icon-close"></i></span>
+									</a>
+								</li>
+								{{/each}}
+							</script>
 							<div class="g-lib_bts">
-								<a href="javascript:"><i class="icon icon-tooloff"></i></a>
-								<a href="javascript:"><i class="icon icon-traigleleft"></i></a>
+								<a class="first" href="javascript:"><i class="icon icon-tooloff"></i></a>
+								<a class="prev" href="javascript:"><i class="icon icon-traigleleft"></i></a>
 								<ol>
-									<li class="active">1</li>
-									<li>2</li>
-									<li>3</li>
-									<li>4</li>
-									<li>5</li>
+
 								</ol>
-								<a href="javascript:"><i class="icon icon-traigleright"></i></a>
-								<a href="javascript:"><i class="icon icon-liboff"></i></a>
+								<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
+								<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
 								<input type="text" />
 								<a class="u-go" href="javascript:">GO</a>
 							</div>
@@ -612,13 +629,32 @@
 						<!-- 个人素材 -->
 						<div class="g-lib_wrap hide content">
 							<ul id="j-fodder" class="m-lib_list2 m-lib_list g-lib_file">
-								<li>
+								<!--<li>
 									<a href="javascript:"><img src="tmp/file.png" /></a>
 									<input type="text" value="文件夹" readonly="readonly" />
-								</li>
+								</li>-->
 							</ul>
+							<script id="t-fodder" type="text/template7">
+								{{#each list}}
+								<li>
+									<a href="javascript:"><img src="{{url}}" /></a>
+									<input type="text" value="{{filename}}" readonly="readonly" />
+								</li>
+								{{/each}}
+							</script>
+							<div class="g-lib_bts">
+								<a class="first" href="javascript:"><i class="icon icon-tooloff"></i></a>
+								<a class="prev" href="javascript:"><i class="icon icon-traigleleft"></i></a>
+								<ol>
+
+								</ol>
+								<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
+								<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
+								<input type="text" />
+								<a class="u-go" href="javascript:">GO</a>
+							</div>
 						</div>
-						<!-- 产品清单 --> 
+						<!-- 产品清单 -->
 						<div class="hide content">
 							<ul class="m-proc_bill">
 								<li>
@@ -634,100 +670,116 @@
 						</div>
 						<!-- 背景图  -->
 						<div class="hide content">
-							<ul class="m-lib_list m-other_list">
-								<li>
+							<ul id="j-bg" class="m-lib_list m-other_list">
+								<!--<li>
 									<a href="javascript:">
 										<img src="tmp/proc01.png" />
 									</a>
-								</li>
+								</li>-->
 							</ul>
+							<script id="t-bg" type="text/template7">
+								{{#each list}}
+								<li>
+									<a href="javascript:">
+										<img src="{{this}}" />
+									</a>
+								</li>
+								{{/each}}
+							</script>
 							<div class="g-lib_bts">
-								<a href="javascript:"><i class="icon icon-tooloff"></i></a>
-								<a href="javascript:"><i class="icon icon-traigleleft"></i></a>
+								<a class="first" href="javascript:"><i class="icon icon-tooloff"></i></a>
+								<a class="prev" href="javascript:"><i class="icon icon-traigleleft"></i></a>
 								<ol>
-									<li class="active">1</li>
-									<li>2</li>
-									<li>3</li>
-									<li>4</li>
-									<li>5</li>
+
 								</ol>
-								<a href="javascript:"><i class="icon icon-traigleright"></i></a>
-								<a href="javascript:"><i class="icon icon-liboff"></i></a>
+								<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
+								<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
 								<input type="text" />
 								<a class="u-go" href="javascript:">GO</a>
 							</div>
 						</div>
 						<!-- 色卡  -->
 						<div class="hide content">
-							<ul class="m-lib_color">
-								<li></li>
+							<ul id="j-color" class="m-lib_color">
+								<!--<li style="background: red;"></li>-->
 							</ul>
+							<script id="t-color" type="text/template7">
+								{{#each list}}
+								<li style="background: {{this}};"></li>
+								{{/each}}
+							</script>
 							<div class="g-lib_bts">
-								<a href="javascript:"><i class="icon icon-tooloff"></i></a>
-								<a href="javascript:"><i class="icon icon-traigleleft"></i></a>
+								<a class="first" href="javascript:"><i class="icon icon-tooloff"></i></a>
+								<a class="prev" href="javascript:"><i class="icon icon-traigleleft"></i></a>
 								<ol>
-									<li class="active">1</li>
-									<li>2</li>
-									<li>3</li>
-									<li>4</li>
-									<li>5</li>
+
 								</ol>
-								<a href="javascript:"><i class="icon icon-traigleright"></i></a>
-								<a href="javascript:"><i class="icon icon-liboff"></i></a>
+								<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
+								<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
 								<input type="text" />
 								<a class="u-go" href="javascript:">GO</a>
 							</div>
 						</div>
-						<!-- 图形  -->
+						<!-- 文字  -->
 						<div class="hide content">
 							<a class="u-char" href="javascript:">ABcd</a>
 						</div>
-						<!--文字--> 
+						<!--图形-->
 						<div class="hide content">
-							<ul class="m-lib_list m-other_list">
-								<li>
+							<ul id="j-graph" class="m-lib_list m-other_list">
+								<!--<li>
 									<a href="javascript:">
 										<img src="tmp/proc01.png" />
 									</a>
-								</li>
+								</li>-->
 							</ul>
+							<script id="t-graph" type="text/template7">
+								{{#each list}}
+								<li>
+									<a href="javascript:">
+										<img src="{{this}}" />
+									</a>
+								</li>
+								{{/each}}
+							</script>
 							<div class="g-lib_bts">
-								<a href="javascript:"><i class="icon icon-tooloff"></i></a>
-								<a href="javascript:"><i class="icon icon-traigleleft"></i></a>
+								<a class="first" href="javascript:"><i class="icon icon-tooloff"></i></a>
+								<a class="prev" href="javascript:"><i class="icon icon-traigleleft"></i></a>
 								<ol>
-									<li class="active">1</li>
-									<li>2</li>
-									<li>3</li>
-									<li>4</li>
-									<li>5</li>
+
 								</ol>
-								<a href="javascript:"><i class="icon icon-traigleright"></i></a>
-								<a href="javascript:"><i class="icon icon-liboff"></i></a>
+								<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
+								<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
 								<input type="text" />
 								<a class="u-go" href="javascript:">GO</a>
 							</div>
 						</div>
 						<!-- 灯光  -->
 						<div class="hide content">
-							<ul class="m-lib_list m-other_list">
-								<li>
+							<ul id="j-light" class="m-lib_list m-other_list">
+								<!--<li>
 									<a href="javascript:">
 										<img src="tmp/proc01.png" />
 									</a>
-								</li>
+								</li>-->
 							</ul>
+							<script id="t-light" type="text/template7">
+								{{#each list}}
+								<li>
+									<a href="javascript:">
+										<img src="{{this}}" />
+									</a>
+								</li>
+								{{/each}}
+							</script>
 							<div class="g-lib_bts">
-								<a href="javascript:"><i class="icon icon-tooloff"></i></a>
-								<a href="javascript:"><i class="icon icon-traigleleft"></i></a>
+								<a class="first" href="javascript:"><i class="icon icon-tooloff"></i></a>
+								<a class="prev" href="javascript:"><i class="icon icon-traigleleft"></i></a>
 								<ol>
-									<li class="active">1</li>
-									<li>2</li>
-									<li>3</li>
-									<li>4</li>
-									<li>5</li>
+
 								</ol>
-								<a href="javascript:"><i class="icon icon-traigleright"></i></a>
-								<a href="javascript:"><i class="icon icon-liboff"></i></a>
+								<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
+								<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
 								<input type="text" />
 								<a class="u-go" href="javascript:">GO</a>
 							</div>
@@ -747,17 +799,40 @@
 						</li>
 						<li href="8">
 							<a href="javascript:"><i class="icon icon-graph"></i></a>
-							<p>图形</p>
+							<p>文字</p>
 						</li>
 						<li href="9">
 							<a href="javascript:"><i class="icon icon-word"></i></a>
-							<p>文字</p>
+							<p>图形</p>
 						</li>
 						<li href="10">
 							<a href="javascript:" class="g-bar_item"><i class="icon icon-light"></i></a>
 							<p>灯光</p>
 						</li>
 					</ul>
+				</div>
+			</div>
+
+			<!--个人素材，点击上传，弹出框-->
+			<div class="pop pop-upload">
+				<div class="pop-inner">
+					<h3>上传</h3>
+					<i class="icon icon-close"></i>
+					<div class="pop-content">
+						<div class="pop-input">
+							<input type="text" readonly="readonly" />
+							<input type="file" />
+						</div>
+						<div class="pop-select">
+							<select name="">
+								<option value="">文件夹</option>
+							</select>
+						</div>
+						<div class="pop-bts">
+							<a href="javascript">取消</a>
+							<a href="javascript:">确定</a>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

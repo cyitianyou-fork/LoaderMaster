@@ -1,0 +1,34 @@
+{
+	"status":200,
+	"msg":"请求成功",
+	"list":
+	[
+		
+		{
+			"url":"tmp/file.png",
+			"filename":"文件夹"
+			
+		},
+		{
+			"url":"tmp/file.png",
+			"filename":"文件夹"
+			
+		},
+		{
+			"url":"tmp/file.png",
+			"filename":"文件夹"
+			
+		},
+		{
+			"url":"tmp/file.png",
+			"filename":"文件夹"
+			
+		},
+		{
+			"url":"tmp/file.png",
+			"filename":"文件夹"
+			
+		}
+	
+	]
+}
