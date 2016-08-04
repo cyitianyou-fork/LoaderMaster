@@ -107,7 +107,7 @@
 				</div>
 			</div>
 		</div>
-		<div style="height: 919px; width: 100%;" id="software">
+		<div style="height: 919px; width: 100%;" id="software" class="g-software">
 			<!--画布-->
 			<div class="g-menu clearfix" id="j-menu">
 				<ul class="fl">
@@ -166,7 +166,7 @@
 				</ul>
 			</div>
 			<div class="g-cvs_tab" id="j-cvs_tab">
-				<div class="m-cvs_tabl"><i class="icon icon-tooloff"></i></div>
+				<div class="m-cvs_tabl"><i id="j-tooloff" class="icon icon-tooloff"></i></div>
 				<div class="m-cvs_tabc">
 					<div class="u-tabc_pagebt"><i class="icon icon-left" id="j-page_left"></i><i class="icon icon-right" id="j-page_right"></i></div>
 					<div class="m-tabc_wrap">
@@ -183,7 +183,7 @@
 						</ul>
 					</div>
 				</div>
-				<div class="m-cvs_tabr"><i class="icon icon-liboff"></i></div>
+				<div class="m-cvs_tabr"><i id="j-liboff" class="icon icon-liboff"></i></div>
 			</div>
 			<div class="g-cvs_main" id="j-cvs_main">
 				<div class="g-tools" id="j-tools">
@@ -200,7 +200,7 @@
 					<a href="javascript:" name="锁定"><i class="icon icon-lock"></i></a>
 				</div>
 				<span class="u-tool_name" id="j-tool_name"></span>
-				<div class="g-library">
+				<div id="j-library" class="g-library">
 					<!--库面板的tab栏-->
 					<ul id="j-lib_tab" class="g-lib_tab tab-bt">
 						<li href="0" class="active">产品库</li>
@@ -811,25 +811,28 @@
 						</li>
 					</ul>
 				</div>
+				
 			</div>
 
 			<!--个人素材，点击上传，弹出框-->
-			<div class="pop pop-upload">
+			<div id="j-pop_upload" class="pop pop-upload">
 				<div class="pop-inner">
 					<h3>上传</h3>
-					<i class="icon icon-close"></i>
+					<i class="icon icon-close pop-close"></i>
 					<div class="pop-content">
 						<div class="pop-input">
-							<input type="text" readonly="readonly" />
-							<input type="file" />
+							<input class="showfile" type="text" readonly="readonly" />
+							<label for=""><input type="file" /><a href="javascript:">浏览</a></label>
 						</div>
 						<div class="pop-select">
 							<select name="">
 								<option value="">文件夹</option>
+								<option value="">文件夹</option>
+								<option value="">文件夹</option>
 							</select>
 						</div>
 						<div class="pop-bts">
-							<a href="javascript">取消</a>
+							<a class="pop-close" href="javascript:">取消</a>
 							<a href="javascript:">确定</a>
 						</div>
 					</div>

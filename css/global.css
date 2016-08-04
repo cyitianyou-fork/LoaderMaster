@@ -178,6 +178,7 @@ input{background:none;}
 .icon-light:after{content: '\e648';}
 .icon-love:after{content: '\e649';}
 .icon-traigledown:after{content: '\e650';}
+.g-software{position: relative;}
 /*画布的菜单栏*/
 .g-menu{width: 100%; padding: 0 2px; margin-top: 1px; box-sizing: border-box; background: #595959;}
 .g-menu ul{margin: 0; padding: 0;}
@@ -207,7 +208,7 @@ input{background:none;}
 .u-tabc_chbt a:hover{background: #d4d4d4; border-color: #a9a9a9;}
 .m-tabc_wrap li.active{background: #c1c1c1;}
 .m-tabc_wrap li.active .u-tabc_chbt{display: block;}
-
+.icon-tooloff,.icon-liboff{cursor: pointer;}
 /*画布区域*/
 .g-cvs_main{position: relative; width: 100%; background: -webkit-linear-gradient(top, transparent 25px, #f2f2f2 26px),-webkit-linear-gradient(left, transparent 25px, #f2f2f2 26px); 
     background: -moz-linear-gradient(top, transparent 25px, #f2f2f2 26px),-moz-linear-gradient(left, transparent 25px, #f2f2f2 26px);
@@ -379,10 +380,22 @@ input{background:none;}
 .pop-cond2_sl .col-2{width: 260px; height: 29px; line-height: 29px; border: 1px solid #e4e4e4; border-radius: 2px;}
 .pop-cond2_sl select{width: 260px; padding-left: 10px; height: 27px; padding-bottom: 2px;}
 
-.pop{display: flex; justify-content: center; align-items: center; position: absolute; left: 0; top: 0; z-index: 10000; width: 100%; height: 100%; background: rgba(0,0,0,.5);}
+.pop{display: flex; display: -webkit-flex; justify-content: center; align-items: center; position: absolute; left: 0; top: 0; z-index: 10000; width: 100%; height: 100%; background: rgba(0,0,0,.5);}
 .pop-inner{position: relative; padding: 0 8px; padding-bottom: 8px; border-radius: 5px; background: #65707a;}
-.pop-inner h3{height: 32px; line-height: 32px; text-align: center; color: #fff; font-size: 13px;}
-.pop-inner .icon-close{position: absolute; right: 5px; top: 5px; color: #c1c1c1;}
-.pop-content{width: 100%; border-radius: 5px; background: #fff;}
+.pop-inner h3{height: 32px; margin: 0; line-height: 32px; text-align: center; color: #fff; font-size: 14px; font-weight: bold;}
+.pop-inner .icon-close{position: absolute; right: 5px; top: 5px; cursor: pointer;}
+.pop-inner .icon-close:after{color: #ccc;}
+.pop-content{width: 100%; box-sizing: border-box; border-radius: 5px; background: #fff;}
+.pop-upload .pop-content{height: 190px; padding-left: 15px; padding-top: 25px;}
 .pop-upload .pop-inner{width: 304px; height: 222px;}
-.pop-input input:first{width: 180px; height: 28px; padding-left: 8px; line-height: 28px; border-radius: 3px; border: 1px solid #ccc;}
+.pop-input{margin-bottom: 18px;}
+.pop-input .showfile{position: relative; top: -1px; width: 180px; height: 28px; padding-left: 8px; line-height: 28px; border-radius: 3px; border: 1px solid #ccc;}
+.pop-input label{position: relative; width: 70px; height: 30px; }
+.pop-input label input{position: absolute; left: 0; top: 0;  width: 70px; height: 30px; opacity: 0;}
+.pop-input label a{display: inline-block; width: 70px; height: 30px; line-height: 30px; text-align: center; color: #fff; background: #00b0d0; border-radius: 3px;}
+.pop-select{margin-bottom: 18px;}
+.pop-select select{width: 257px; height: 28px; padding-left: 8px; border: 1px solid #ccc; border-radius: 3px; line-height: 28px; background: #fff;}
+.pop-bts{display: flex; display: -webkit-flex; justify-content: space-between; width: 150px; height: 30px; margin: 0 auto;}
+.pop-bts a{width: 72px; height: 100%; border-radius: 3px; text-align: center; line-height: 30px; color: #fff;}
+.pop-bts a:first-child{background: #65707a;}
+.pop-bts a:last-child{background: #00b0d0;}

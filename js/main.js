@@ -127,6 +127,8 @@ $(function() {
 			activeTab();
 			editTabName();
 			closeTab();
+			closeTool();
+			closeLib();
 		}
 		//设置应画布tab栏宽度
 		function setTabWidth() {
@@ -217,6 +219,18 @@ $(function() {
 					}, 300);
 				}
 				return false;
+			});
+		}
+		//点击tooloff按钮，切换打开和关闭tool面板
+		function closeTool(){
+			$(document).on('click','#j-tooloff',function(){
+				$('#j-tools').toggle();
+			});
+		}
+		//点击liboff按钮，切换打开和关闭library面板
+		function closeLib(){
+			$(document).on('click','#j-liboff',function(){
+				$('#j-library').toggle();
 			});
 		}
 		return{
@@ -355,6 +369,7 @@ $(function() {
 			showInfoInProc();
 			myCollection();
 			remove();
+			downImg();
 		}
 
 		function switchTab() {
@@ -506,7 +521,13 @@ $(function() {
 				$(this).parents('li').remove();
 			});
 		}
-
+		//下载图片
+		function downImg(){
+			$(document).on('click','.u-down',function(){
+				var url=$(this).siblings('img').src;
+				window.open(url,"_blank");
+			});
+		}
 		return {
 			num: num,
 			isdetail: isdetail,
@@ -519,6 +540,7 @@ $(function() {
 	var libPop = (function() {
 		//初始化
 		function init() {
+			$('.pop').hide();
 			//加载筛选条件一的数据
 			var cond1 = new DataLoader({
 				template: $('#t-cond1_cg'),
@@ -533,6 +555,7 @@ $(function() {
 			showCond1();
 			showCond2();
 			newFile();
+			fileUpload();
 		}
 
 		function backProcCg() {
@@ -580,6 +603,16 @@ $(function() {
 				var newLi=$('<li><a href="javascript:"><img src="tmp/file.png" /></a><input type="text" value="文件夹" /></li>');
 				$('#j-fodder').append(newLi);
 				newLi.find('input').focus();
+			});
+		}
+		//个人素材，点击上传，显示弹出框
+		function fileUpload(){
+			$(document).on('click','#j-upload',function(){
+				$('.pop').hide();
+				$('#j-pop_upload').fadeIn();
+			});
+			$(document).on('click','.pop-close',function(){
+				$('.pop').hide();
 			});
 		}
 
