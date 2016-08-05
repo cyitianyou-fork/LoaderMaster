@@ -17,6 +17,7 @@ $(function() {
 	//全局模块
 	var win = (function() {
 		var flag = false; //flag代表是否全屏化，若全屏化，则头部高度为0
+		var products=new Products();
 		function init() {
 			initCvsHeight();
 			initLibHeight();
@@ -29,9 +30,9 @@ $(function() {
 		//初始化画布主体区的高度
 		function initCvsHeight() {
 			var winHeight = $(window).height();
-			var toph = flag ? 0 : 60;
+			var toph = flag ? 6 : 60;
 			$('#software').css('height', (winHeight - toph));
-			var h = $('#software').height() - $('#j-cvs_tab').height() - $('#j-menu').height();
+			var h = $('#software').height() - $('#j-menu').height();
 			$('#j-cvs_main').css('height', h);
 		}
 
@@ -62,6 +63,7 @@ $(function() {
 		}
 
 		function fullScreen() {
+			var val = 0; //差值
 			//全屏显示
 			$(document).on('click', '#j-full_screen', function() {
 				if(!flag) {
@@ -69,21 +71,33 @@ $(function() {
 						position: 'absolute',
 						'left': 0,
 						'top': 0,
-						'zIndex': 100
+						'zIndex': 10007
 					});
+					val = -54;
 					flag = true;
 				} else {
 					$('#software').css({
 						position: 'static'
 					});
+					val = 54;
 					flag = false;
 				}
 				init();
+				$('#j-cvs_tab').css('top', $('#j-cvs_tab').offset().top + val);
+				$('#j-tools').css({
+					top: $('#j-tools').offset().top + val,
+					height: $('#j-tools').height() - val
+				});
+				$('#j-library').css({
+					top: $('#j-library').offset().top + val,
+					height: $('#j-library').height() - val
+				});
+				initLibHeight();
 			});
 		}
 
 		return {
-			flag: flag,
+			products: products,
 			init: init,
 			bind: bind
 		}
@@ -117,7 +131,7 @@ $(function() {
 			bind: bind
 		}
 	})();
-	
+
 	//画板tab栏模块
 	var cvsTab = (function() {
 		var cur = 0; //表示位于最左边的那个tab栏的索引值
@@ -158,7 +172,7 @@ $(function() {
 			});
 		}
 		//激活tab栏
-		function activeTab(){
+		function activeTab() {
 			//前一个（后一个tab栏）
 			$(document).on('click', '.u-tabc_chbt .u-next', function() {
 				if(curActive < $('#j-tabc li').length - 1) {
@@ -191,7 +205,7 @@ $(function() {
 			});
 		}
 		//修改tab栏的名字
-		function editTabName(){
+		function editTabName() {
 			//点击icon-edit可修改tab栏Li的名字
 			$(document).on('click', '.u-tabc_chbt .u-rename', function() {
 				$(this).parents('.u-tabc_chbt').siblings('input').removeAttr('readonly').focus();
@@ -199,7 +213,7 @@ $(function() {
 			});
 		}
 		//关闭tab
-		function closeTab(){
+		function closeTab() {
 			//点击close关闭当前tab栏中的li
 			$(document).on('click', '.u-tabc_chbt .u-close', function() {
 				if($('#j-tabc li').length < 2) {
@@ -222,25 +236,25 @@ $(function() {
 			});
 		}
 		//点击tooloff按钮，切换打开和关闭tool面板
-		function closeTool(){
-			$(document).on('click','#j-tooloff',function(){
+		function closeTool() {
+			$(document).on('click', '#j-tooloff', function() {
 				$('#j-tools').toggle();
 			});
 		}
 		//点击liboff按钮，切换打开和关闭library面板
-		function closeLib(){
-			$(document).on('click','#j-liboff',function(){
+		function closeLib() {
+			$(document).on('click', '#j-liboff', function() {
 				$('#j-library').toggle();
 			});
 		}
-		return{
-			setTabWidth:setTabWidth,
-			bind:bind
+		return {
+			setTabWidth: setTabWidth,
+			bind: bind
 		}
 	})();
 
-	var tool=(function(){
-		function bind(){
+	var tool = (function() {
+		function bind() {
 			showToolName();
 		}
 		//鼠标放在工具栏上显示工具的名称
@@ -260,11 +274,10 @@ $(function() {
 				$('#j-tool_name').hide();
 			});
 		}
-		return{
-			bind:bind
+		return {
+			bind: bind
 		}
 	})();
-	
 
 	//areaSelection表示地区选择弹出框
 	var areaSelection = (function() {
@@ -370,6 +383,7 @@ $(function() {
 			myCollection();
 			remove();
 			downImg();
+			drag();
 		}
 
 		function switchTab() {
@@ -377,40 +391,72 @@ $(function() {
 			$(document).on('click', '.tab-bt li', function() {
 				$('.pop-cond').hide(); //隐藏所有的筛选条件弹出框
 				libContent.num = parseInt($(this).attr('href'));
-				var param={};
-				switch (libContent.num){
+				var param = {};
+				switch(libContent.num) {
 					case 1:
-						param={template:$('#t-comment'),container:$('#j-comment'),url:"tmp/common.json"};
+						param = {
+							template: $('#t-comment'),
+							container: $('#j-comment'),
+							url: "tmp/common.json"
+						};
 						break;
 					case 2:
-						param={template:$('#t-user'),container:$('#j-user'),url:"tmp/common.json"};
+						param = {
+							template: $('#t-user'),
+							container: $('#j-user'),
+							url: "tmp/common.json"
+						};
 						break;
 					case 3:
-						param={template:$('#t-collect'),container:$('#j-collect'),url:"tmp/common.json"};
+						param = {
+							template: $('#t-collect'),
+							container: $('#j-collect'),
+							url: "tmp/common.json"
+						};
 						break;
 					case 4:
-						param={template:$('#t-fodder'),container:$('#j-fodder'),url:"tmp/file.json"};
+						param = {
+							template: $('#t-fodder'),
+							container: $('#j-fodder'),
+							url: "tmp/file.json"
+						};
 						break;
 					case 6:
-						param={template:$('#t-bg'),container:$('#j-bg'),url:"tmp/bg.json"};
+						param = {
+							template: $('#t-bg'),
+							container: $('#j-bg'),
+							url: "tmp/bg.json"
+						};
 						break;
 					case 7:
-						param={template:$('#t-color'),container:$('#j-color'),url:"tmp/color.json"};
+						param = {
+							template: $('#t-color'),
+							container: $('#j-color'),
+							url: "tmp/color.json"
+						};
 						break;
 					case 9:
-						param={template:$('#t-graph'),container:$('#j-graph'),url:"tmp/bg.json"};
+						param = {
+							template: $('#t-graph'),
+							container: $('#j-graph'),
+							url: "tmp/bg.json"
+						};
 						break;
 					case 10:
-						param={template:$('#t-light'),container:$('#j-light'),url:"tmp/bg.json"};
+						param = {
+							template: $('#t-light'),
+							container: $('#j-light'),
+							url: "tmp/bg.json"
+						};
 						break;
 					default:
 						break;
 				}
-				if (param.url) {
-					var data=new SubDataLoader(param);
+				if(param.url) {
+					var data = new SubDataLoader(param);
 					data.getData();
 				}
-				
+
 				$('#j-lib_tab li').removeClass('active');
 				$('.m-others').hide();
 				$('#j-back').removeClass('show');
@@ -514,20 +560,69 @@ $(function() {
 				}
 			});
 		}
-		
+
 		//点击close,删除li
-		function remove(){
-			$(document).on('click','#j-lib_content .u-close',function(){
+		function remove() {
+			$(document).on('click', '#j-lib_content .u-close', function(e) {
 				$(this).parents('li').remove();
 			});
 		}
 		//下载图片
-		function downImg(){
-			$(document).on('click','.u-down',function(){
-				var url=$(this).siblings('img').src;
-				window.open(url,"_blank");
+		function downImg() {
+			$(document).on('click', '.u-down', function() {
+				var url = $(this).siblings('img').src;
+				window.open(url, "_blank");
+				return false;
 			});
 		}
+
+		//库面板列表下的单元可拖动，松开后再画布区生产一个cvs-item元素
+		function drag() {
+			var $img = $('<img  src="" />');
+			var w, h, l, t, src, off = false; //off设置为false,只有当lib-drag li点击后才设置为true,防止其它元素点击通过冒泡触发document的mouseup事件
+			$(document).on('mousedown', '.lib-drag li', function(e) {
+				off = true;
+				src = $(this).find('img').eq(0).attr('src')
+				w = $(this).find('a').eq(0).width();
+				h = $(this).find('a').eq(0).width();
+				l = e.pageX - (w + 20);
+				t = e.pageY - (h + 20);;
+				$img.attr({
+					'src': src,
+					class: 'dImg'
+				});
+				$img.css({
+					left: l,
+					top: t,
+					width: w * .8,
+					height: h * .8
+				});
+			});
+			$(document).on('mousemove', function(e) {
+				if (off) {
+					l = e.pageX - (w + 20);
+					t = e.pageY - (h + 20);
+					$img.css({
+						left: l,
+						top: t
+					});
+					$('body').append($img);
+					return false;
+			 	}
+			
+			});
+			$(document).on('mouseup', function(e) {
+				var yoff = (e.pageY > $('#j-cvs_core').offset().top) && (e.pageY < $('body').height());
+				var xoff = (e.pageX > $('#j-tools').width()) && (e.pageX < $('body').width() - $('#j-library').width());
+				if(off && yoff && xoff) {
+					win.products.addProduct(e.pageX,e.pageY,src);
+				}
+				$img.remove();
+				off = false;
+			});
+
+		}
+
 		return {
 			num: num,
 			isdetail: isdetail,
@@ -597,21 +692,21 @@ $(function() {
 				$('.pop-cond').hide();
 			});
 		}
-		
-		function newFile(){
-			$(document).on('click','#j-new_file',function(){
-				var newLi=$('<li><a href="javascript:"><img src="tmp/file.png" /></a><input type="text" value="文件夹" /></li>');
+
+		function newFile() {
+			$(document).on('click', '#j-new_file', function() {
+				var newLi = $('<li><a href="javascript:"><img src="tmp/file.png" /></a><input type="text" value="文件夹" /></li>');
 				$('#j-fodder').append(newLi);
 				newLi.find('input').focus();
 			});
 		}
 		//个人素材，点击上传，显示弹出框
-		function fileUpload(){
-			$(document).on('click','#j-upload',function(){
+		function fileUpload() {
+			$(document).on('click', '#j-upload', function() {
 				$('.pop').hide();
 				$('#j-pop_upload').fadeIn();
 			});
-			$(document).on('click','.pop-close',function(){
+			$(document).on('click', '.pop-close', function() {
 				$('.pop').hide();
 			});
 		}
@@ -639,6 +734,6 @@ $(function() {
 			bind: bind
 		}
 	})();
-
+	
 	init();
 });

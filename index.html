@@ -9,6 +9,7 @@
 		<script type="text/javascript" src="js/jquery.js"></script>
 		<script src="js/template7.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/dataloader.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/procduct.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 
@@ -165,27 +166,28 @@
 					</li>
 				</ul>
 			</div>
-			<div class="g-cvs_tab" id="j-cvs_tab">
-				<div class="m-cvs_tabl"><i id="j-tooloff" class="icon icon-tooloff"></i></div>
-				<div class="m-cvs_tabc">
-					<div class="u-tabc_pagebt"><i class="icon icon-left" id="j-page_left"></i><i class="icon icon-right" id="j-page_right"></i></div>
-					<div class="m-tabc_wrap">
-						<ul class="clearfix" id="j-tabc">
-							<li class="active">
-								<input type="text" value="空白页" readonly="readonly" />
-								<div class="u-tabc_chbt">
-									<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>
-									<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>
-									<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>
-									<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>
-								</div>
-							</li>
-						</ul>
-					</div>
-				</div>
-				<div class="m-cvs_tabr"><i id="j-liboff" class="icon icon-liboff"></i></div>
-			</div>
+			
 			<div class="g-cvs_main" id="j-cvs_main">
+				<div class="g-cvs_tab" id="j-cvs_tab">
+					<div class="m-cvs_tabl"><i id="j-tooloff" class="icon icon-tooloff"></i></div>
+					<div class="m-cvs_tabc">
+						<div class="u-tabc_pagebt"><i class="icon icon-left" id="j-page_left"></i><i class="icon icon-right" id="j-page_right"></i></div>
+						<div class="m-tabc_wrap">
+							<ul class="clearfix" id="j-tabc">
+								<li class="active">
+									<input type="text" value="空白页" readonly="readonly" />
+									<div class="u-tabc_chbt">
+										<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>
+										<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>
+										<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>
+										<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="m-cvs_tabr"><i id="j-liboff" class="icon icon-liboff"></i></div>
+				</div>
 				<div class="g-tools" id="j-tools">
 					<a href="javascript:" name="删除"><i class="icon icon-delete"></i></a>
 					<a href="javascript:" name="复制"><i class="icon icon-copy"></i></a>
@@ -483,7 +485,7 @@
 							</div>
 							<!-- 产品分类下的数据列表 -->
 							<div id="j-detail_wrap" class="g-procs_detail">
-								<ul id="j-procs_detail" class="m-lib_list m-procs_detail">
+								<ul id="j-procs_detail" class="m-lib_list m-procs_detail lib-drag">
 									<!--<li>
 										<a href="javascript:">
 											<img src="tmp/proc01.png" />
@@ -529,7 +531,7 @@
 						</div>
 						<!-- 公共库  -->
 						<div class="hide content">
-							<ul id="j-comment" class="m-lib_list m-other_list">
+							<ul id="j-comment" class="m-lib_list m-other_list lib-drag">
 								<!--<li>
 									<a href="javascript:">
 										<img src="tmp/proc01.png" />
@@ -563,7 +565,7 @@
 						</div>
 						<!-- 户型库 -->
 						<div class="hide content">
-							<ul id="j-user" class="m-lib_list m-other_list">
+							<ul id="j-user" class="m-lib_list m-other_list lib-drag">
 								<!--<li>
 									<a href="javascript:">
 										<img src="tmp/proc01.png" />
@@ -596,7 +598,7 @@
 						<!-- 我的收藏 -->
 
 						<div class="hide content">
-							<ul id="j-collect" class="m-lib_list m-other_list">
+							<ul id="j-collect" class="m-lib_list m-other_list lib-drag">
 								<!--<li>
 									<a href="javascript:">
 										<img src="tmp/proc01.png" />
@@ -670,7 +672,7 @@
 						</div>
 						<!-- 背景图  -->
 						<div class="hide content">
-							<ul id="j-bg" class="m-lib_list m-other_list">
+							<ul id="j-bg" class="m-lib_list m-other_list lib-drag">
 								<!--<li>
 									<a href="javascript:">
 										<img src="tmp/proc01.png" />
@@ -700,7 +702,7 @@
 						</div>
 						<!-- 色卡  -->
 						<div class="hide content">
-							<ul id="j-color" class="m-lib_color">
+							<ul id="j-color" class="m-lib_color lib-drag">
 								<!--<li style="background: red;"></li>-->
 							</ul>
 							<script id="t-color" type="text/template7">
@@ -722,11 +724,13 @@
 						</div>
 						<!-- 文字  -->
 						<div class="hide content">
-							<a class="u-char" href="javascript:">ABcd</a>
+							<ul class="lib-drag">
+								<li><a class="u-char" href="javascript:"><img src="img/ABcd.png"/></a></li>
+							</ul>
 						</div>
 						<!--图形-->
 						<div class="hide content">
-							<ul id="j-graph" class="m-lib_list m-other_list">
+							<ul id="j-graph" class="m-lib_list m-other_list lib-drag">
 								<!--<li>
 									<a href="javascript:">
 										<img src="tmp/proc01.png" />
@@ -756,7 +760,7 @@
 						</div>
 						<!-- 灯光  -->
 						<div class="hide content">
-							<ul id="j-light" class="m-lib_list m-other_list">
+							<ul id="j-light" class="m-lib_list m-other_list lib-drag">
 								<!--<li>
 									<a href="javascript:">
 										<img src="tmp/proc01.png" />
@@ -811,7 +815,11 @@
 						</li>
 					</ul>
 				</div>
-				
+				<div id="j-cvs_core" class="g-cvs_core">
+					<div class="cvs-item">
+						<img src="tmp/proc01.png"/>
+					</div>
+				</div>
 			</div>
 
 			<!--个人素材，点击上传，弹出框-->
