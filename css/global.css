@@ -82,7 +82,7 @@ input{background:none;}
 .logo{padding-top: 5px; height: 54px; box-sizing: border-box; overflow: hidden;}
 .logo img{padding-top:5px;}
 .ipt{ background:#5b5b5b;padding:5px 10px;color:#8b8b8b;width:120px;}
-.top-nav { background: none repeat scroll 0 0 #181818;width:100%;height: 54px;}
+.top-nav { position: relative; z-index: 10006; background: none repeat scroll 0 0 #181818;width:100%;height: 54px;}
 .top-nav-nav1{padding-left:50px;}
 .top-nav-nav1 li{float:left;padding-top:15px;}
 .top-nav-nav1 li a{ text-align: center;color: #FFFFFF;font-size: 14px;padding:0 10px;float: left;}
@@ -110,7 +110,7 @@ input{background:none;}
 .login-info a{width:60px;float:left;color:#fff;padding:2px 10px;text-align:left;}
 .login-info a:hover{background:#666;}
 .login-info .bt{border-bottom: 1px solid #7b7b7b;}
-
+html,body{height: 100%;}
 /*画布*/
 @font-face {font-family: 'iconfont';
     src: url('../font/iconfont.eot'); /* IE9*/
@@ -178,9 +178,8 @@ input{background:none;}
 .icon-light:after{content: '\e648';}
 .icon-love:after{content: '\e649';}
 .icon-traigledown:after{content: '\e650';}
-.g-software{position: relative;}
 /*画布的菜单栏*/
-.g-menu{width: 100%; padding: 0 2px; margin-top: 1px; box-sizing: border-box; background: #595959;}
+.g-menu{position: relative; z-index: 10004; width: 100%; padding: 0 2px; margin-top: 1px; box-sizing: border-box; background: #595959;}
 .g-menu ul{margin: 0; padding: 0;}
 .g-menu li{position: relative; float: left; height: 20px; padding: 0 18px; margin: 12px 0; color: #e1e1df; line-height: 20px; border-left: 1px solid #d6d6d6; }
 .g-menu ul li:first-child{border: none;}
@@ -193,7 +192,7 @@ input{background:none;}
 .g-submenu i{position: absolute; top: -13px; left: 32px; margin: 0 auto;}
 
 /*画布的tab切换栏*/
-.g-cvs_tab{display: -moz-box; display: -webkit-box; display: box; width: 100%; height: 26px; line-height: 26px; background: #888;}
+.g-cvs_tab{position:absolute; left: 0; top: 99px; z-index: 10003; display: -moz-box; display: -webkit-box; display: box; width: 100%; height: 26px; line-height: 26px; background: #888;}
 .m-cvs_tabl{width: 22px; padding-left: 8px; height: 100%;}
 .m-cvs_tabr{width: 410px; padding-right: 8px; height: 100%; text-align: right;}
 .m-cvs_tabc{-moz-box-flex: 1; -webkit-box-flex: 1; box-flex: 1; position: relative; height: 100%;}
@@ -210,21 +209,21 @@ input{background:none;}
 .m-tabc_wrap li.active .u-tabc_chbt{display: block;}
 .icon-tooloff,.icon-liboff{cursor: pointer;}
 /*画布区域*/
-.g-cvs_main{position: relative; width: 100%; background: -webkit-linear-gradient(top, transparent 25px, #f2f2f2 26px),-webkit-linear-gradient(left, transparent 25px, #f2f2f2 26px); 
+.g-cvs_main{width: 100%; background: -webkit-linear-gradient(top, transparent 25px, #f2f2f2 26px),-webkit-linear-gradient(left, transparent 25px, #f2f2f2 26px); 
     background: -moz-linear-gradient(top, transparent 25px, #f2f2f2 26px),-moz-linear-gradient(left, transparent 25px, #f2f2f2 26px);
     background: linear-gradient(top, transparent 25px, #f2f2f2 26px),linear-gradient(left, transparent 25px, #f2f2f2 26px);
 	background-size: 26px 26px; background-color: #fff;}
 	
 /*工具栏*/
-.g-tools{position: absolute; left: 0; top: 1px; width: 34px; height: calc(100% - 1px); background: #c1c1c1;}
+.g-tools{position: absolute; left: 0; top: 127px; z-index: 10001; width: 34px; height: calc(100% - 132px); background: #c1c1c1;}
 .g-tools a{display: block; width: 22px; height: 29px; margin: 0 auto; text-align: center; line-height: 29px; border-bottom: 1px solid #838383; cursor: pointer;}
 .g-tools a:last-child{border: none;}
 .g-tools i{color: #585858; font-size: 20px;}
 .g-tools a:hover i{color: #00b0d0;}
-.u-tool_name{display: none; position: absolute; left: 0; top: 0; padding: 4px 5px; border-radius: 3px; color: #595959; border: 1px solid #00b0d0; background: #e0f5ef;}
+.u-tool_name{position: absolute; left: 0; top: 0; z-index: 10009; padding: 4px 5px; border-radius: 3px; color: #595959; border: 1px solid #00b0d0; background: #e0f5ef;}
 
 /*库面板*/
-.g-library{position: absolute; top: 1px; right: 5px; width: 426px; height: calc(100% - 1px); background: #c1c1c1;}
+.g-library{position: absolute; z-index: 10002; top: 127px; right: 0; width: 426px; height: calc(100% - 130px); background: #c1c1c1;}
 .g-lib_tab{display: flex; display: -webkit-flex; width: 100%; height: 31px; margin-bottom: 9px;}
 .g-lib_tab li{width: 16.6%; box-sizing: border-box; line-height: 29px; text-align: center; color: #e1e1df; border: 1px solid #000; border-color: #cfd2d4 #000 #7d858c #8c949b; background: #66707a; cursor: pointer;}
 .g-lib_tab li.active{background: none; border: 1px solid transparent; color: #333;}
@@ -260,7 +259,7 @@ input{background:none;}
 .m-subprocs_cg{display: none;}
 .m-procs_cg li.active .m-subprocs_cg{border-bottom: 2px solid #f5f5f5;}
 .m-procs_cg li:first-child .m-subprocs_cg{ display: block;}
-
+.m-procs_cg p{text-align: center; width: 68px;}
 .m-lib_list li{width: 20%; float: left; margin-bottom: 4px;}
 .m-lib_list a{display: block; position: relative; width: 66px; height: 66px; line-height: 66px; text-align: center; border: 1px solid #ececec; border-radius: 3px;}
 .m-lib_list a:hover{border: 1px solid #00b0d0;}
@@ -380,7 +379,7 @@ input{background:none;}
 .pop-cond2_sl .col-2{width: 260px; height: 29px; line-height: 29px; border: 1px solid #e4e4e4; border-radius: 2px;}
 .pop-cond2_sl select{width: 260px; padding-left: 10px; height: 27px; padding-bottom: 2px;}
 
-.pop{display: flex; display: -webkit-flex; justify-content: center; align-items: center; position: absolute; left: 0; top: 0; z-index: 10000; width: 100%; height: 100%; background: rgba(0,0,0,.5);}
+.pop{display: flex; display: -webkit-flex; justify-content: center; align-items: center; position: absolute; left: 0; top: 54px; z-index: 10010; width: 100%; height: calc(100% - 54px); background: rgba(0,0,0,.5);}
 .pop-inner{position: relative; padding: 0 8px; padding-bottom: 8px; border-radius: 5px; background: #65707a;}
 .pop-inner h3{height: 32px; margin: 0; line-height: 32px; text-align: center; color: #fff; font-size: 14px; font-weight: bold;}
 .pop-inner .icon-close{position: absolute; right: 5px; top: 5px; cursor: pointer;}
@@ -399,3 +398,25 @@ input{background:none;}
 .pop-bts a{width: 72px; height: 100%; border-radius: 3px; text-align: center; line-height: 30px; color: #fff;}
 .pop-bts a:first-child{background: #65707a;}
 .pop-bts a:last-child{background: #00b0d0;}
+
+/*拖动库面板的图片，新建一个img元素*/
+.dImg{position: absolute; z-index: 10005; opacity: .6;}
+
+/*画布区*/
+.g-cvs_core{width: 100%; height: 100%;}
+.g-cvs_set{width: 100%; height: 100%;}
+.cvs-item{position: absolute; padding: 5px; left: 100px; top: 200px; cursor: move;}
+.cvs-item-box{position: absolute;}
+.g-pointctrl{position: absolute; left: 0; top: 0; width: 100%; height: 100%; border: 1px solid #3399ff;}
+.g-pointctrl span{position: absolute; width: 8px; height: 8px;}
+.g-pointctrl span:nth-child(1){width: 20px; height: 20px; left: -15px; top: -15px; background: red; cursor: url(img/tt.ico);}
+.g-pointctrl span:nth-child(2){left: calc(50% - 5px); top: -5px; background: #fff; border: 1px solid #3399ff; cursor: n-resize;}
+.g-pointctrl span:nth-child(3){right: -5px; top: -5px; cursor: ne-resize;}
+.g-pointctrl span:nth-child(4){right: -5px; top: calc(50% - 5px); background: #fff; border: 1px solid #3399ff; cursor: e-resize;}
+.g-pointctrl span:nth-child(5){right: -5px; bottom: -5px; cursor: se-resize;}
+.g-pointctrl span:nth-child(6){left: calc(50% - 5px); background: #fff; border: 1px solid #3399ff; bottom: -5px; cursor: s-resize;}
+.g-pointctrl span:nth-child(7){left: -5px; bottom: -5px; cursor: sw-resize;}
+.g-pointctrl span:nth-child(8){left: -5px; top: calc(50% - 5px); background: #fff; border: 1px solid #3399ff; cursor: w-resize;}
+.g-pointctrl span:nth-child(9){left: calc(50% - 5px); top: calc(50% - 5px); background: #fff; border: 1px solid #3399ff; cursor: move;}
+.g-pointctrl i{position: absolute; width: 8px; height: 8px; background: #fff; border: 1px solid #3399ff;}
+.g-pointctrl span:nth-child(1) i{right: 0; bottom: 0;}
