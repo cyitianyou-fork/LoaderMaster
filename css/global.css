@@ -409,7 +409,7 @@ html,body{height: 100%;}
 .cvs-item-box{position: absolute;}
 .g-pointctrl{position: absolute; left: 0; top: 0; width: 100%; height: 100%; border: 1px solid #3399ff;}
 .g-pointctrl span{position: absolute; width: 8px; height: 8px;}
-.g-pointctrl span:nth-child(1){width: 20px; height: 16px; left: -8px; top: -8px; background: red; cursor: nw-resize;}
+.g-pointctrl span:nth-child(1){width: 20px; height: 20px; left: -15px; top: -15px; background: red; cursor: url(img/lta.ico);}
 .g-pointctrl span:nth-child(2){left: calc(50% - 5px); top: -5px; background: #fff; border: 1px solid #3399ff; cursor: n-resize;}
 .g-pointctrl span:nth-child(3){right: -5px; top: -5px; cursor: ne-resize;}
 .g-pointctrl span:nth-child(4){right: -5px; top: calc(50% - 5px); background: #fff; border: 1px solid #3399ff; cursor: e-resize;}
@@ -418,3 +418,5 @@ html,body{height: 100%;}
 .g-pointctrl span:nth-child(7){left: -5px; bottom: -5px; cursor: sw-resize;}
 .g-pointctrl span:nth-child(8){left: -5px; top: calc(50% - 5px); background: #fff; border: 1px solid #3399ff; cursor: w-resize;}
 .g-pointctrl span:nth-child(9){left: calc(50% - 5px); top: calc(50% - 5px); background: #fff; border: 1px solid #3399ff; cursor: move;}
+.g-pointctrl i{position: absolute; width: 8px; height: 8px; background: #fff; border: 1px solid #3399ff;}
+.g-pointctrl span:nth-child(1) i{right: 0; bottom: 0;}
