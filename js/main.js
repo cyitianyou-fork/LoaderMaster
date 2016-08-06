@@ -25,6 +25,7 @@ $(function() {
 		function bind() {
 			resize();
 			fullScreen();
+			//preventImgDrag();
 		}
 		//初始化画布主体区的高度
 		function initCvsHeight() {
@@ -81,9 +82,14 @@ $(function() {
 				init();
 			});
 		}
+		
+		function preventImgDrag(){
+			$(document).on('drag','#software img',function(){
+				return false;
+			});
+		}
 
 		return {
-			flag: flag,
 			init: init,
 			bind: bind
 		}
@@ -626,12 +632,20 @@ $(function() {
 		function init() {
 			libContent.init();
 			libPop.init();
+			drag();
 		}
 
 		function bind() {
 			libContent.bind();
 			libPop.bind();
 			areaSelection.bind();
+		}
+		
+		function drag(){
+			$(document).on('mousedown','#j-library li',function(e){
+				console.log(0)
+				 e.stopImmediatePropagation() ;
+			})
 		}
 
 		return {
@@ -641,4 +655,4 @@ $(function() {
 	})();
 
 	init();
-});
+}); 
