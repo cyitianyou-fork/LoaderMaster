@@ -168,40 +168,19 @@
 			</div>
 			
 			<div class="g-cvs_main" id="j-cvs_main">
-				<div class="g-cvs_tab" id="j-cvs_tab">
-					<div class="m-cvs_tabl"><i id="j-tooloff" class="icon icon-tooloff"></i></div>
-					<div class="m-cvs_tabc">
-						<div class="u-tabc_pagebt"><i class="icon icon-left" id="j-page_left"></i><i class="icon icon-right" id="j-page_right"></i></div>
-						<div class="m-tabc_wrap">
-							<ul class="clearfix" id="j-tabc">
-								<li class="active">
-									<input type="text" value="空白页" readonly="readonly" />
-									<div class="u-tabc_chbt">
-										<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>
-										<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>
-										<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>
-										<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>
-									</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div class="m-cvs_tabr"><i id="j-liboff" class="icon icon-liboff"></i></div>
-				</div>
 				<div class="g-tools" id="j-tools">
-					<a href="javascript:" name="删除"><i class="icon icon-delete"></i></a>
-					<a href="javascript:" name="复制"><i class="icon icon-copy"></i></a>
-					<a href="javascript:" name="水平镜像"><i class="icon icon-horizontal"></i></a>
-					<a href="javascript:" name="垂直镜像"><i class="icon icon-vertical"></i></a>
-					<a href="javascript:" name="顶层"><i class="icon icon-layertop"></i></a>
-					<a href="javascript:" name="上移一层"><i class="icon icon-layerforward"></i></a>
-					<a href="javascript:" name="下移一层"><i class="icon icon-layerbackward"></i></a>
-					<a href="javascript:" name="底层"><i class="icon icon-layerbottom"></i></a>
-					<a href="javascript:" name="成组"><i class="icon icon-group"></i></a>
-					<a href="javascript:" name="解组"><i class="icon icon-part"></i></a>
-					<a href="javascript:" name="锁定"><i class="icon icon-lock"></i></a>
+					<a href="javascript:" data-name="删除"><i class="icon icon-delete"></i></a>
+					<a href="javascript:" data-name="复制"><i class="icon icon-copy"></i></a>
+					<a href="javascript:" data-name="水平镜像"><i class="icon icon-horizontal"></i></a>
+					<a href="javascript:" data-name="垂直镜像"><i class="icon icon-vertical"></i></a>
+					<a href="javascript:" data-name="顶层"><i class="icon icon-layertop"></i></a>
+					<a href="javascript:" data-name="上移一层"><i class="icon icon-layerforward"></i></a>
+					<a href="javascript:" data-name="下移一层"><i class="icon icon-layerbackward"></i></a>
+					<a href="javascript:" data-name="底层"><i class="icon icon-layerbottom"></i></a>
+					<a href="javascript:" data-name="成组"><i class="icon icon-group"></i></a>
+					<a href="javascript:" data-name="解组"><i class="icon icon-part"></i></a>
+					<a href="javascript:" data-name="锁定"><i class="icon icon-lock"></i></a>
 				</div>
-				<span class="u-tool_name" id="j-tool_name"></span>
 				<div id="j-library" class="g-library">
 					<!--库面板的tab栏-->
 					<ul id="j-lib_tab" class="g-lib_tab tab-bt">
@@ -816,8 +795,33 @@
 					</ul>
 				</div>
 				<div id="j-cvs_core" class="g-cvs_core">
-					<div class="cvs-item">
-						<img src="tmp/proc01.png"/>
+					<!--画布的tab栏-->
+					<div class="g-cvs_tab" id="j-cvs_tab">
+						<div class="m-cvs_tabl"><i id="j-tooloff" class="icon icon-tooloff"></i></div>
+						<div class="m-cvs_tabc">
+							<div class="u-tabc_pagebt"><i class="icon icon-left" id="j-page_left"></i><i class="icon icon-right" id="j-page_right"></i></div>
+							<div class="m-tabc_wrap">
+								<ul class="clearfix" id="j-tabc">
+									<li class="active">
+										<input type="text" value="空白页" readonly="readonly" />
+										<div class="u-tabc_chbt">
+											<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>
+											<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>
+											<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>
+											<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="m-cvs_tabr"><i id="j-liboff" class="icon icon-liboff"></i></div>
+					</div>
+					<!--画布集-->
+					<div class="g-cvs_set">
+						<!--单个元素-->
+						<div class="cvs-item">
+							<img src="tmp/proc01.png"/>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -833,11 +837,16 @@
 							<label for=""><input type="file" /><a href="javascript:">浏览</a></label>
 						</div>
 						<div class="pop-select">
-							<select name="">
+							<select id="j-select_files" name="">
+								<!--<option value="">文件夹</option>
 								<option value="">文件夹</option>
-								<option value="">文件夹</option>
-								<option value="">文件夹</option>
+								<option value="">文件夹</option>-->
 							</select>
+							<script id="t-select_files" type="text/template7">
+								{{#each list}}
+								<option value="">{{filename}}</option>
+								{{/each}}
+							</script>
 						</div>
 						<div class="pop-bts">
 							<a class="pop-close" href="javascript:">取消</a>

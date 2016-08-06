@@ -220,7 +220,7 @@ html,body{height: 100%;}
 .g-tools a:last-child{border: none;}
 .g-tools i{color: #585858; font-size: 20px;}
 .g-tools a:hover i{color: #00b0d0;}
-.u-tool_name{display: none; position: absolute; left: 0; top: 0; padding: 4px 5px; border-radius: 3px; color: #595959; border: 1px solid #00b0d0; background: #e0f5ef;}
+.u-tool_name{position: absolute; left: 0; top: 0; z-index: 10009; padding: 4px 5px; border-radius: 3px; color: #595959; border: 1px solid #00b0d0; background: #e0f5ef;}
 
 /*库面板*/
 .g-library{position: absolute; z-index: 10002; top: 127px; right: 0; width: 426px; height: calc(100% - 130px); background: #c1c1c1;}
@@ -400,20 +400,21 @@ html,body{height: 100%;}
 .pop-bts a:last-child{background: #00b0d0;}
 
 /*拖动库面板的图片，新建一个img元素*/
-.dImg{position: absolute; z-index: 10008; opacity: .6;}
+.dImg{position: absolute; z-index: 10005; opacity: .6;}
 
 /*画布区*/
 .g-cvs_core{width: 100%; height: 100%;}
-.cvs-item{position: absolute; padding: 5px; left: 100px; top: 200px;}
+.g-cvs_set{width: 100%; height: 100%;}
+.cvs-item{position: absolute; padding: 5px; left: 100px; top: 200px; cursor: move;}
 .cvs-item-box{position: absolute;}
 .g-pointctrl{position: absolute; left: 0; top: 0; width: 100%; height: 100%; border: 1px solid #3399ff;}
-.g-pointctrl span{position: absolute; width: 8px; height: 8px; background: #fff; border: 1px solid #3399ff;}
-.g-pointctrl span:nth-child(1){left: -5px; top: -5px;}
-.g-pointctrl span:nth-child(2){left: calc(50% - 5px); top: -5px;}
-.g-pointctrl span:nth-child(3){right: -5px; top: -5px;}
-.g-pointctrl span:nth-child(4){right: -5px; top: calc(50% - 5px);}
-.g-pointctrl span:nth-child(5){right: -5px; bottom: -5px;}
-.g-pointctrl span:nth-child(6){left: calc(50% - 5px); bottom: -5px;}
-.g-pointctrl span:nth-child(7){left: -5px; bottom: -5px;}
-.g-pointctrl span:nth-child(8){left: -5px; top: calc(50% - 5px);}
-.g-pointctrl span:nth-child(9){left: calc(50% - 5px); top: calc(50% - 5px);}
+.g-pointctrl span{position: absolute; width: 8px; height: 8px;}
+.g-pointctrl span:nth-child(1){width: 20px; height: 16px; left: -8px; top: -8px; background: red; cursor: nw-resize;}
+.g-pointctrl span:nth-child(2){left: calc(50% - 5px); top: -5px; background: #fff; border: 1px solid #3399ff; cursor: n-resize;}
+.g-pointctrl span:nth-child(3){right: -5px; top: -5px; cursor: ne-resize;}
+.g-pointctrl span:nth-child(4){right: -5px; top: calc(50% - 5px); background: #fff; border: 1px solid #3399ff; cursor: e-resize;}
+.g-pointctrl span:nth-child(5){right: -5px; bottom: -5px; cursor: se-resize;}
+.g-pointctrl span:nth-child(6){left: calc(50% - 5px); background: #fff; border: 1px solid #3399ff; bottom: -5px; cursor: s-resize;}
+.g-pointctrl span:nth-child(7){left: -5px; bottom: -5px; cursor: sw-resize;}
+.g-pointctrl span:nth-child(8){left: -5px; top: calc(50% - 5px); background: #fff; border: 1px solid #3399ff; cursor: w-resize;}
+.g-pointctrl span:nth-child(9){left: calc(50% - 5px); top: calc(50% - 5px); background: #fff; border: 1px solid #3399ff; cursor: move;}

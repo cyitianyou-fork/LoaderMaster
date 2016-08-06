@@ -17,7 +17,6 @@ $(function() {
 	//全局模块
 	var win = (function() {
 		var flag = false; //flag代表是否全屏化，若全屏化，则头部高度为0
-		var products=new Products();
 		function init() {
 			initCvsHeight();
 			initLibHeight();
@@ -30,7 +29,7 @@ $(function() {
 		//初始化画布主体区的高度
 		function initCvsHeight() {
 			var winHeight = $(window).height();
-			var toph = flag ? 6 : 60;
+			var toph = win.flag ? 6 : 60;
 			$('#software').css('height', (winHeight - toph));
 			var h = $('#software').height() - $('#j-menu').height();
 			$('#j-cvs_main').css('height', h);
@@ -66,7 +65,7 @@ $(function() {
 			var val = 0; //差值
 			//全屏显示
 			$(document).on('click', '#j-full_screen', function() {
-				if(!flag) {
+				if(!win.flag) {
 					$('#software').css({
 						position: 'absolute',
 						'left': 0,
@@ -74,15 +73,16 @@ $(function() {
 						'zIndex': 10007
 					});
 					val = -54;
-					flag = true;
+					win.flag = true;
 				} else {
 					$('#software').css({
 						position: 'static'
 					});
 					val = 54;
-					flag = false;
+					win.flag = false;
 				}
 				init();
+				//库面板、工具栏、tab栏的高度跟着变化
 				$('#j-cvs_tab').css('top', $('#j-cvs_tab').offset().top + val);
 				$('#j-tools').css({
 					top: $('#j-tools').offset().top + val,
@@ -97,7 +97,7 @@ $(function() {
 		}
 
 		return {
-			products: products,
+			flag: flag,
 			init: init,
 			bind: bind
 		}
@@ -260,18 +260,10 @@ $(function() {
 		//鼠标放在工具栏上显示工具的名称
 		function showToolName() {
 			$(document).on('mouseover', '#j-tools a', function(e) {
-				//获取父级的相对位置
-				var left = $('#j-cvs_main').offset().left;
-				var top = $('#j-cvs_main').offset().top;
-				$('#j-tool_name').html($(this).attr('name'));
-				$('#j-tool_name').css({
-					left: e.pageX - left + 10,
-					top: e.pageY - top + 10
-				});
-				$('#j-tool_name').show();
+				$.showName(e.pageX + 5, e.pageY + 5, $(this).attr('data-name'));
 			});
 			$(document).on('mouseout', '#j-tools a', function(e) {
-				$('#j-tool_name').hide();
+				$.hideName();
 			});
 		}
 		return {
@@ -597,9 +589,14 @@ $(function() {
 					width: w * .8,
 					height: h * .8
 				});
+				if(win.flag) {
+					$img.css('zIndex', '10010');
+				} else {
+					$img.css('zIndex', '10005');
+				}
 			});
 			$(document).on('mousemove', function(e) {
-				if (off) {
+				if(off) {
 					l = e.pageX - (w + 20);
 					t = e.pageY - (h + 20);
 					$img.css({
@@ -608,14 +605,14 @@ $(function() {
 					});
 					$('body').append($img);
 					return false;
-			 	}
-			
+				}
+
 			});
 			$(document).on('mouseup', function(e) {
 				var yoff = (e.pageY > $('#j-cvs_core').offset().top) && (e.pageY < $('body').height());
 				var xoff = (e.pageX > $('#j-tools').width()) && (e.pageX < $('body').width() - $('#j-library').width());
 				if(off && yoff && xoff) {
-					win.products.addProduct(e.pageX,e.pageY,src);
+					products.addProduct(e.pageX, e.pageY, src);
 				}
 				$img.remove();
 				off = false;
@@ -705,6 +702,12 @@ $(function() {
 			$(document).on('click', '#j-upload', function() {
 				$('.pop').hide();
 				$('#j-pop_upload').fadeIn();
+				var data = new DataLoader({
+					template: $('#t-select_files'),
+					container: $('#j-select_files'),
+					url: "tmp/file.json"
+				});
+				data.getData();
 			});
 			$(document).on('click', '.pop-close', function() {
 				$('.pop').hide();
@@ -734,6 +737,6 @@ $(function() {
 			bind: bind
 		}
 	})();
-	
+
 	init();
 });
