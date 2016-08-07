@@ -113,7 +113,7 @@
 			<div class="g-menu clearfix" id="j-menu">
 				<ul class="fl">
 					<li class="u-menu_item">
-						<a href="javascript:"><i class="icon icon-new"></i>新建</a>
+						<a id="j-new_cvs" href="javascript:"><i class="icon icon-new"></i>新建</a>
 						<div class="g-submenu">
 							<i class="icon icon-uptriangle"></i>
 							<a href="javascript:">搭配</a>
@@ -166,7 +166,7 @@
 					</li>
 				</ul>
 			</div>
-			
+
 			<div class="g-cvs_main" id="j-cvs_main">
 				<div class="g-tools" id="j-tools">
 					<a href="javascript:" data-name="删除"><i class="icon icon-delete"></i></a>
@@ -704,7 +704,9 @@
 						<!-- 文字  -->
 						<div class="hide content">
 							<ul class="lib-drag">
-								<li><a class="u-char" href="javascript:"><img src="img/ABcd.png"/></a></li>
+								<li>
+									<a class="u-char" href="javascript:"><img src="img/ABcd.png" /></a>
+								</li>
 							</ul>
 						</div>
 						<!--图形-->
@@ -817,11 +819,29 @@
 						<div class="m-cvs_tabr"><i id="j-liboff" class="icon icon-liboff"></i></div>
 					</div>
 					<!--画布集-->
-					<div class="g-cvs_set">
+					<div id="j-cvs_set" class="g-cvs_set">
+						<!--画布-->
+						<ul class="g-cvs_item active">
 						<!--单个元素-->
-						<div class="cvs-item">
-							<img src="tmp/proc01.png"/>
-						</div>
+							<!--<li>
+								<div class="g-pointctrl">
+									<div class="m-rotatepoint">
+										<span></span>
+									</div>
+									<div class="m-pointctrl">
+										<span></span>
+										<span></span>
+										<span></span>
+										<span></span>
+										<span></span>
+										<span></span>
+										<span></span>
+										<span></span>
+									</div>
+								</div>
+								<img src="tmp/proc01.png" />
+							</li>-->
+						</ul>
 					</div>
 				</div>
 			</div>
