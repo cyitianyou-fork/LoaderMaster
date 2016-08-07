@@ -3,6 +3,7 @@ $(function() {
 	function init() {
 		win.init();
 		library.init();
+		cvsSet.init();
 		bind();
 	}
 	//所有dom元素绑定事件
@@ -13,6 +14,8 @@ $(function() {
 		tool.bind();
 		library.bind();
 	}
+	
+	
 
 	//全局模块
 	var win = (function() {
@@ -25,7 +28,7 @@ $(function() {
 		function bind() {
 			resize();
 			fullScreen();
-			//preventImgDrag();
+			//pointCtrsHide()
 		}
 		//初始化画布主体区的高度
 		function initCvsHeight() {
@@ -96,10 +99,10 @@ $(function() {
 				initLibHeight();
 			});
 		}
-		
-		function preventImgDrag(){
-			$(document).on('drag','#software img',function(){
-				return false;
+
+		function pointCtrsHide() {
+			$(document).on('click', function() {
+				$('.g-pointctrl').hide();
 			});
 		}
 
@@ -130,6 +133,33 @@ $(function() {
 				timer = setTimeout(function() {
 					$(_this).find('.g-submenu').hide();
 				}, 300);
+			});
+		}
+		
+		function newCvs(){
+			$(document).on('click','#j-new_cvs',function(){
+				var cvsItem=$('<ul>');
+				var cvsTab=$('<li class="active">'+
+								'<input type="text" value="空白页" readonly="readonly" />'+
+								'<div class="u-tabc_chbt">'+
+									'<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>'+
+									'<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>'+
+									'<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>'+
+									'<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>'+
+								'</div>'+
+							'</li>');
+				$('#j-cvs_set').append(cvsItem);
+				$('#j-tabc').append(cvsTab);
+				
+				var newCvs=new Canvas(cvsTab,cvsItem);
+				
+				cvsSet.set.push(newCvs);
+				cvsSet.cur=cvsSet.set.length-1;
+				
+				$('#j-cvs_set ul').removeClass('active');
+				cvsSet.set[cvsSet.cur].cvs.addClass('active');
+				$('#j-tabc li').removeClass('active');
+				cvsSet.set[cvsSet.cur].tab.addClass('active');
 			});
 		}
 
@@ -266,7 +296,11 @@ $(function() {
 		//鼠标放在工具栏上显示工具的名称
 		function showToolName() {
 			$(document).on('mouseover', '#j-tools a', function(e) {
-				$.showName(e.pageX + 5, e.pageY + 5, $(this).attr('data-name'));
+				$.showName({
+					x: e.pageX + 5,
+					y: e.pageY + 5,
+					text: $(this).attr('data-name')
+				});
 			});
 			$(document).on('mouseout', '#j-tools a', function(e) {
 				$.hideName();
@@ -730,20 +764,12 @@ $(function() {
 		function init() {
 			libContent.init();
 			libPop.init();
-			drag();
 		}
 
 		function bind() {
 			libContent.bind();
 			libPop.bind();
 			areaSelection.bind();
-		}
-		
-		function drag(){
-			$(document).on('mousedown','#j-library li',function(e){
-				console.log(0)
-				 e.stopImmediatePropagation() ;
-			})
 		}
 
 		return {
