@@ -10,9 +10,9 @@ $(function() {
 	function bind() {
 		win.bind();
 		menu.bind();
-		cvsTab.bind();
 		tool.bind();
 		library.bind();
+		cvsSet.bind();
 	}
 	
 	
@@ -117,6 +117,7 @@ $(function() {
 	var menu = (function() {
 		function bind() {
 			showSubMenu();
+			newCvs();
 		}
 		//菜单栏,鼠标置上显示二级菜单，移开隐藏二级菜单
 		function showSubMenu() {
@@ -155,7 +156,6 @@ $(function() {
 				
 				cvsSet.set.push(newCvs);
 				cvsSet.cur=cvsSet.set.length-1;
-				
 				$('#j-cvs_set ul').removeClass('active');
 				cvsSet.set[cvsSet.cur].cvs.addClass('active');
 				$('#j-tabc li').removeClass('active');
@@ -164,127 +164,6 @@ $(function() {
 		}
 
 		return {
-			bind: bind
-		}
-	})();
-
-	//画板tab栏模块
-	var cvsTab = (function() {
-		var cur = 0; //表示位于最左边的那个tab栏的索引值
-		var curActive = 0; //表示当前激活tab栏Li的索引值
-		function bind() {
-			moveCvsTab();
-			activeTab();
-			editTabName();
-			closeTab();
-			closeTool();
-			closeLib();
-		}
-		//设置应画布tab栏宽度
-		function setTabWidth() {
-			var w = $('#j-tabc li').eq(0).outerWidth() * $('#j-tabc li').length;
-			$('#j-tabc').width(w);
-		}
-		//左右移动tab
-		function moveCvsTab() {
-			var cw = $('#j-tabc li').eq(0).outerWidth(); //每个tab栏Li的宽度
-			var fw = $('#j-tabc').parent('.m-tabc_wrap').width(); //父级包裹层的宽度
-			//左右移动tab栏
-			$(document).on('click', '#j-page_right', function() {
-				if(($('#j-tabc').position().left + $('#j-tabc').width()) > fw) {
-					cur++;
-					$('#j-tabc').animate({
-						'left': -cur * cw
-					}, 300);
-				}
-			});
-			$(document).on('click', '#j-page_left', function() {
-				if(cur > 0) {
-					cur--;
-					$('#j-tabc').animate({
-						'left': -cur * cw
-					}, 300);
-				}
-			});
-		}
-		//激活tab栏
-		function activeTab() {
-			//前一个（后一个tab栏）
-			$(document).on('click', '.u-tabc_chbt .u-next', function() {
-				if(curActive < $('#j-tabc li').length - 1) {
-					curActive++;
-					$('#j-tabc li').removeClass('active');
-					$('#j-tabc li').eq(curActive).addClass('active');
-					$('#j-tabc input').attr('readonly', 'readonly');
-				}
-				return false; //阻止冒泡事件
-			});
-			$(document).on('click', '.u-tabc_chbt .u-prev', function() {
-				if(curActive > 0) {
-					curActive--;
-					$('#j-tabc li').removeClass('active');
-					$('#j-tabc li').eq(curActive).addClass('active');
-					$('#j-tabc input').attr('readonly', 'readonly');
-				}
-				return false;
-			});
-
-			//点击tab被激活
-			$(document).on('click', '#j-tabc li', function() {
-				$('#j-tabc li').removeClass('active');
-				$(this).addClass('active');
-				//当点击的不是当前激活的tab栏时，重命名输入框变为只可读
-				if($(this).index() != curActive) {
-					$('#j-tabc input').attr('readonly', 'readonly');
-				}
-				curActive = $(this).index();
-			});
-		}
-		//修改tab栏的名字
-		function editTabName() {
-			//点击icon-edit可修改tab栏Li的名字
-			$(document).on('click', '.u-tabc_chbt .u-rename', function() {
-				$(this).parents('.u-tabc_chbt').siblings('input').removeAttr('readonly').focus();
-				return false;
-			});
-		}
-		//关闭tab
-		function closeTab() {
-			//点击close关闭当前tab栏中的li
-			$(document).on('click', '.u-tabc_chbt .u-close', function() {
-				if($('#j-tabc li').length < 2) {
-					return;
-				}
-				if(curActive == $('#j-tabc li').length - 1) {
-					curActive--;
-				}
-				$(this).parents('li').remove();
-				//更新父级ul的宽度
-				setTabWidth()
-				$('#j-tabc li').eq(curActive).addClass('active');
-				if(cur > 0) {
-					cur--;
-					$('#j-tabc').animate({
-						'left': -cur * cw
-					}, 300);
-				}
-				return false;
-			});
-		}
-		//点击tooloff按钮，切换打开和关闭tool面板
-		function closeTool() {
-			$(document).on('click', '#j-tooloff', function() {
-				$('#j-tools').toggle();
-			});
-		}
-		//点击liboff按钮，切换打开和关闭library面板
-		function closeLib() {
-			$(document).on('click', '#j-liboff', function() {
-				$('#j-library').toggle();
-			});
-		}
-		return {
-			setTabWidth: setTabWidth,
 			bind: bind
 		}
 	})();
@@ -635,7 +514,7 @@ $(function() {
 					$img.css('zIndex', '10005');
 				}
 			});
-			$(document).on('mousemove', function(e) {
+			$(document).on('mousemove.lib', function(e) {
 				if(off) {
 					l = e.pageX - (w + 20);
 					t = e.pageY - (h + 20);
@@ -648,11 +527,11 @@ $(function() {
 				}
 
 			});
-			$(document).on('mouseup', function(e) {
+			$(document).on('mouseup.lib', function(e) {
 				var yoff = (e.pageY > $('#j-cvs_core').offset().top) && (e.pageY < $('body').height());
 				var xoff = (e.pageX > $('#j-tools').width()) && (e.pageX < $('body').width() - $('#j-library').width());
 				if(off && yoff && xoff) {
-					products.addProduct(e.pageX, e.pageY, src);
+					cvsSet.addProduct(e.pageX,e.pageY,src);
 				}
 				$img.remove();
 				off = false;

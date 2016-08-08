@@ -27,6 +27,9 @@ body {
 	line-height:20px;
 	/*max-width:1400px;*/
 	margin:0 auto;	
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select:none;
 }
 ::-moz-selection { background: #ff4629; color: #fff; text-shadow: none; }
 .::selection { background: #ff4629; color: #fff; text-shadow: none; }
@@ -403,12 +406,13 @@ html,body{height: 100%;}
 .dImg{position: absolute; z-index: 10005; opacity: .6;}
 
 /*画布区*/
-.g-cvs_core,.g-cvs_set,.g-cvs_item{width: 100%; height: 100%;}
-.g-cvs_item{display: none;}
-.g-cvs_item.active{display: block;}
-.g-cvs_item li{position: absolute; padding: 5px; left: 100px; top: 200px; cursor: move;}
+.g-cvs_core,.g-cvs_set,.g-cvs_set ul{width: 100%; height: 100%;}
+.g-cvs_set ul{display: none;}
+.g-cvs_set ul.active{display: block;}
+.g-cvs_set li{position: absolute;left: 0; top: 0; padding: 5px; left: 100px; top: 200px; cursor: move; }
 .cvs-item-box{position: absolute;}
 .g-pointctrl{display: none; position: absolute; left: 0; top: 0; width: 100%; height: 100%;}
+.g-cvs_set li.active .g-pointctrl{display: block;}
 .g-pointctrl span{position: absolute; width: 8px; height: 8px; background: #fff; border: 1px solid #3399ff;}
 .m-pointctrl{width: 100%; height: 100%; border: 1px solid #3399ff;}
 .m-pointctrl span:nth-child(1){left: -5px; top: -5px; cursor: nw-resize;}
