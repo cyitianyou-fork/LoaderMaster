@@ -25,7 +25,7 @@
 var cvsSet = (function() {
 	var set = new Array();
 	var cur = 0; //表示当前激活tab栏Li的索引值
-	var ccurLeft = 0; //表示位于最左边的那个tab栏的索引值
+	var curLeft = 0; //表示位于最左边的那个tab栏的索引值
 	function init() {
 		var newCvs = new Canvas($('#j-tabc li').eq(0), $('#j-cvs_set ul').eq(0));
 		set.push(newCvs);
@@ -62,7 +62,7 @@ var cvsSet = (function() {
 	}
 	//设置应画布tab栏宽度
 	function setTabWidth() {
-		var w = $('#j-tabc li').eq(0).outerWidth() * $('#j-tabc li').length;
+		var w = $('#j-tabc li').eq(0).outerWidth()* $('#j-tabc li').length;
 		$('#j-tabc').width(w);
 	}
 	//左右移动tab
@@ -82,7 +82,7 @@ var cvsSet = (function() {
 			if(curLeft > 0) {
 				curLeft--;
 				$('#j-tabc').animate({
-					'left': curLeft * cw
+					'left': -curLeft * cw
 				}, 300);
 			}
 		});
@@ -151,10 +151,11 @@ var cvsSet = (function() {
 			setTabWidth()
 			$('#j-tabc li').eq(cvsSet.cur).addClass('active');
 			$('#j-cvs_set ul').eq(cvsSet.cur).addClass('active');
-			if(cvsSet.curLeft > 0) {
-				cvsSet.curLeft--;
+			var cw = $('#j-tabc li').eq(0).outerWidth(); //每个tab栏Li的宽度
+			if(curLeft > 0) {
+				curLeft--;
 				$('#j-tabc').animate({
-					'left': -cvsSet.curLeft * cw
+					'left': -curLeft * cw
 				}, 300);
 			}
 			return false;
@@ -208,6 +209,7 @@ var cvsSet = (function() {
 		cur: cur,
 		init: init,
 		bind: bind,
+		setTabWidth: setTabWidth,
 		addProduct: addProduct
 	}
 })();
@@ -242,34 +244,30 @@ Product.prototype.getCenterPoint = function() {
 	//移动
 Product.prototype.drag = function() {
 		var _this = this;
-		var left = 0,
-			top = 0;
 		this.obj.on('mousedown', function(e) {
 			var angle = parseFloat(_this.obj.attr('data-angle')); //旋转角度
 			angle = angle ? angle : 0;
 			var startx = e.pageX; //起始点
 			var starty = e.pageY;
-			var x, y; //临时变量
+			var x = 0,
+				y = 0; //临时变量
 			$(document).on('mousemove.drag', function(e) {
-				x = e.pageX - startx + left;
-				y = e.pageY - starty + top;
+				x = e.pageX - startx;
+				y = e.pageY - starty;
 				_this.obj.css('transform', 'translate3d(' + x + 'px,' + y + 'px,0px) rotate(' + angle + 'deg)');
 			});
 			$(document).on('mouseup.drag', function(e) {
 				$(document).off('.drag');
-				x = e.pageX - startx;
-				y = e.pageY - starty;
 				//改变中心点的位置
 				_this.cx += x;
 				_this.cy += y;
-				x = e.pageX - startx + left;
-				y = e.pageY - starty + top;
-				left = x;
-				top = y;
-				//保存已经移动的x和y值
-				_this.obj.attr('data-left', left);
-				_this.obj.attr('data-top', top);
-				_this.obj.css('transform', 'translate3d(' + x + 'px,' + y + 'px,0px) rotate(' + angle + 'deg)');
+				_this.obj.css('transform', 'translate3d(' + 0 + 'px,' + 0 + 'px,0px) rotate(' + angle + 'deg)');
+				//在移动或者旋转中获取元素的位置都用.css()的方法，不用offset(),原因是不管是移动、旋转、或者放大缩小，offset()的值都在变化，只有通过.css()方法才能获取变化前的那个值
+				_this.obj.css({
+					left: parseFloat(_this.obj.css('left')) + x,
+					top: parseFloat(_this.obj.css('top')) + y
+				});
+
 			});
 			return false;
 		});
@@ -281,23 +279,20 @@ Product.prototype.rotate = function() {
 		this.obj.find('.m-rotatepoint span').on('mousedown', function(e) {
 			$('body').css('cursor', $(this).css('cursor'));
 			if(_this.obj.hasClass('active')) {
-				var left = parseFloat(_this.obj.attr('data-left'));
-				var top = parseFloat(_this.obj.attr('data-top'));
 				var disx, disy; //临时变量
 				$(document).on('mousemove.rotate', function(e) {
 					disx = e.pageX - _this.cx;
 					disy = e.pageY - _this.cy;
 					angle = 360 * Math.atan2(disy, disx) / (2 * Math.PI)
 					angle = angle < -90 ? (450 + angle) : angle + 90;
-					_this.obj.css('transform', 'translate3d(' + left + 'px,' + top + 'px,' + '0px) rotate(' + angle + 'deg)');
+					_this.obj.css('transform', 'rotate(' + angle + 'deg)');
 				});
 				$(document).on('mouseup.rotate', function(e) {
 					$(document).off('.rotate');
 					//保存已经旋转的角度值
 					_this.obj.attr('data-angle', angle);
-					_this.obj.css('transform', 'translate3d(' + left + 'px,' + top + 'px,' + '0px) rotate(' + angle + 'deg)');
+					_this.obj.css('transform', 'rotate(' + angle + 'deg)');
 					$('body').css('cursor', 'default');
-					console.log('ll='+_this.obj.offset().left)
 				});
 				return false;
 			}
@@ -307,53 +302,123 @@ Product.prototype.rotate = function() {
 Product.prototype.scale = function() {
 	var _this = this;
 	this.obj.find('.m-pointctrl span').on('mousedown', function(e) {
+		$('body').css('cursor', $(this).css('cursor'));
 		var index = $(this).index();
 		var startx = e.pageX;
 		var starty = e.pageY;
-		var disx = 0,
-			disy = 0,
-			dis=0;
+		var disw = 0,
+			dish = 0,
+			disl = 0,
+			dist = 0,
+			tmp = 0;
 		var base = {
 			width: _this.obj.width(),
 			height: _this.obj.height(),
-			x: _this.obj.offset().left,
-			y: _this.obj.offset().top
+			x: parseFloat(_this.obj.css('left')),
+			y: parseFloat(_this.obj.css('top'))
 		};
-		console.log('1.'+_this.obj.offset().top)
-		var left = parseFloat(_this.obj.attr('data-left'));
-		var top = parseFloat(_this.obj.attr('data-top'));
-		var angle = parseFloat(_this.obj.attr('data-angle')); //旋转角度
-			angle = angle ? angle : 0;
-			left+=_this.obj.width()*Math.
-		//console.log(base)
 		$(document).on('mousemove.scale', function(e) {
-			console.log('2.'+_this.obj.offset().top)
-			disx = e.pageX - startx;
-			disy = e.pageY - starty;
-			dis = Math.min(disx,disy);
-			if (base.width-dis<11) {
-				dis=base.width-11;
+			disw = e.pageX - startx;
+			dish = e.pageY - starty;
+			switch(index) {
+				case 0:
+					tmp = Math.min(disw, dish);
+					if(base.width - tmp < 11) {
+						tmp = base.width - 11;
+					}
+					if(base.height - tmp < 11) {
+						tmp = base.height - 11;
+					}
+					dist = disl = tmp;
+					disw = dish = -tmp;
+					break;
+				case 1:
+					tmp = dish;
+					if(base.height - tmp < 11) {
+						tmp = base.height - 11;
+					}
+					dish = -tmp;
+					disl = disw = 0;
+					dist = tmp;
+					break;
+				case 2:
+					tmp = disw;
+					if(base.width + tmp < 11) {
+						tmp = 11 - base.width;
+					}
+					if(base.height + tmp < 11) {
+						tmp = 11 - base.height;
+					}
+					dish = disw = tmp;
+					dist = -tmp;
+					disl = 0;
+					break;
+				case 3:
+					tmp = -disw;
+					if(base.width - tmp < 11) {
+						tmp = base.width - 11;
+					}
+					disw = -tmp;
+					dist = disl = dish = 0;
+					break;
+				case 4:
+					tmp = -Math.min(disw, dish);
+					if(base.width - tmp < 11) {
+						tmp = base.width - 11;
+					}
+					if(base.height - tmp < 11) {
+						tmp = base.height - 11;
+					}
+					dish = disw = -tmp;
+					dist = disl = 0;
+					break;
+				case 5:
+					tmp = -dish;
+					if(base.height - tmp < 11) {
+						tmp = base.height - 11;
+					}
+					dish = -tmp;
+					dist = disl = disw = 0;
+					break;
+				case 6:
+					tmp = disw;
+					if(base.width - tmp < 11) {
+						tmp = base.width - 11;
+					}
+					if(base.height - tmp < 11) {
+						tmp = base.height - 11;
+					}
+					dish = disw = -tmp;
+					disl = tmp;
+					dist = 0;
+					break;
+				case 7:
+					tmp = disw;
+					if(base.width - tmp < 11) {
+						tmp = base.width - 11;
+					}
+					disw = -tmp;
+					disl = tmp;
+					dist = dish = 0;
+					break;
+
 			}
-			if (base.height-dis<11) {
-				dis=base.height-11;
-			}
+
 			_this.obj.css({
-				width: base.width-dis,
-				height: base.height - dis,
-				left: base.x + dis-left,
-				top: base.y + dis-top,
+				width: base.width + disw,
+				height: base.height + dish,
+				left: base.x + disl,
+				top: base.y + dist,
 			});
-			console.log('dis='+(dis-top));
-			console.log('base='+base.y);
-			console.log('3.'+_this.obj.offset().top)
 			_this.obj.find('img').css({
-				width: base.width - dis,
-				height:base.height - dis
+				width: base.width + disw,
+				height: base.height + dish
 			});
 			_this.getCenterPoint();
 		});
 		$(document).on('mouseup.scale', function(e) {
 			$(document).off('.scale');
+			$('body').css('cursor', 'default');
 		});
 		return false;
 	});

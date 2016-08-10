@@ -151,7 +151,8 @@ $(function() {
 							'</li>');
 				$('#j-cvs_set').append(cvsItem);
 				$('#j-tabc').append(cvsTab);
-				
+				cvsSet.setTabWidth();
+				$('#j-page_right').trigger('click');
 				var newCvs=new Canvas(cvsTab,cvsItem);
 				
 				cvsSet.set.push(newCvs);
@@ -551,7 +552,7 @@ $(function() {
 	var libPop = (function() {
 		//初始化
 		function init() {
-			$('.pop').hide();
+			//$('.pop').hide();
 			//加载筛选条件一的数据
 			var cond1 = new DataLoader({
 				template: $('#t-cond1_cg'),
