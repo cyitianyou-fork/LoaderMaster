@@ -3,7 +3,6 @@ $(function() {
 	function init() {
 		win.init();
 		library.init();
-		cvsSet.init();
 		bind();
 	}
 	//所有dom元素绑定事件
@@ -14,8 +13,6 @@ $(function() {
 		library.bind();
 		cvsSet.bind();
 	}
-	
-	
 
 	//全局模块
 	var win = (function() {
@@ -136,31 +133,28 @@ $(function() {
 				}, 300);
 			});
 		}
-		
-		function newCvs(){
-			$(document).on('click','#j-new_cvs',function(){
-				var cvsItem=$('<ul>');
-				var cvsTab=$('<li class="active">'+
-								'<input type="text" value="空白页" readonly="readonly" />'+
-								'<div class="u-tabc_chbt">'+
-									'<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>'+
-									'<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>'+
-									'<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>'+
-									'<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>'+
-								'</div>'+
-							'</li>');
+
+		function newCvs() {
+			$(document).on('click', '#j-new_cvs', function() {
+				var cvsItem = $('<ul>');
+				var cvsTab = $('<li class="active">' +
+					'<input type="text" value="空白页" readonly="readonly" />' +
+					'<div class="u-tabc_chbt">' +
+					'<a href="javascript:" class="u-rename"><i class="icon icon-edit"></i></a>' +
+					'<a href="javascript:" class="u-prev"><i class="icon icon-prev"></i></a>' +
+					'<a href="javascript:" class="u-next"><i class="icon icon-next"></i></a>' +
+					'<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>' +
+					'</div>' +
+					'</li>');
 				$('#j-cvs_set').append(cvsItem);
 				$('#j-tabc').append(cvsTab);
 				cvsSet.setTabWidth();
 				$('#j-page_right').trigger('click');
-				var newCvs=new Canvas(cvsTab,cvsItem);
-				
-				cvsSet.set.push(newCvs);
-				cvsSet.cur=cvsSet.set.length-1;
 				$('#j-cvs_set ul').removeClass('active');
-				cvsSet.set[cvsSet.cur].cvs.addClass('active');
+				cvsItem.cvs.addClass('active');
 				$('#j-tabc li').removeClass('active');
-				cvsSet.set[cvsSet.cur].tab.addClass('active');
+				cvsTab.addClass('active');
+				cvsSet.cur = $('#j-tabc li').length - 1;
 			});
 		}
 
@@ -172,6 +166,10 @@ $(function() {
 	var tool = (function() {
 		function bind() {
 			showToolName();
+			deleteProc();
+			copyProc();
+			flipHorizontalProc();
+			flipVerticalProc();
 		}
 		//鼠标放在工具栏上显示工具的名称
 		function showToolName() {
@@ -184,6 +182,84 @@ $(function() {
 			});
 			$(document).on('mouseout', '#j-tools a', function(e) {
 				$.hideName();
+			});
+		}
+
+		//删除
+		function deleteProc() {
+			//通过工具栏删除
+			$(document).on('click', '#j-delete', function() {
+				$('#j-cvs_set li.active').remove();
+			});
+			//通过键盘delete删除
+			$(document).on('keydown', function(e) {
+				if(e.keyCode == 8) {
+					$('#j-cvs_set li.active').remove();
+				}
+			});
+		}
+		//复制
+		function copyProc() {
+			$(document).on('click', '#j-copy', function() {
+				$('#j-cvs_set li.active').each(function(i, ele) {
+					var copyObj=cvsSet.addProduct({
+						x: parseFloat($(ele).css('left')),
+						y: parseFloat($(ele).css('top')),
+						src: $(ele).find('img').attr('src'),
+						isNew: false
+					});
+					$(this).removeClass('active');
+					copyObj.obj.addClass('active');
+				});
+				return false;
+			});
+		}
+		//水平镜像
+		function flipHorizontalProc() {
+			$(document).on('click', '#j-flipHorizontal', function() {
+				$('#j-cvs_set li.active').each(function(i, ele) {
+					var angle = $(ele).attr('data-angle'); //旋转角度
+					if (angle) {
+						angle=JSON.parse(angle);
+						angle.x=angle.x?angle.x:0;
+						angle.y=angle.y?angle.y:0;
+						angle.z=angle.z?angle.z:0
+					}else{
+						angle={};
+						angle.x=0;
+						angle.y=0;
+						angle.z=0;
+					}
+					angle.y+=180;
+					$(ele).css('transform','rotateY('+angle.y+'deg) rotateX('+angle.x+'deg) rotateZ('+angle.z+'deg)');
+					angle=JSON.stringify(angle);
+					$(ele).attr('data-angle',angle);
+				});
+				return false;
+			});
+		}
+		//垂直
+		function flipVerticalProc() {
+			$(document).on('click', '#j-flipVertical', function() {
+				$('#j-cvs_set li.active').each(function(i, ele) {
+					var angle = $(ele).attr('data-angle'); //旋转角度
+					if (angle) {
+						angle=JSON.parse(angle);
+						angle.x=angle.x?angle.x:0;
+						angle.y=angle.y?angle.y:0;
+						angle.z=angle.z?angle.z:0
+					}else{
+						angle={};
+						angle.x=0;
+						angle.y=0;
+						angle.z=0;
+					}
+					angle.x+=180;
+					$(ele).css('transform','rotateZ('+angle.z+'deg) rotateX('+angle.x+'deg) rotateY('+angle.y+'deg)');
+					angle=JSON.stringify(angle);
+					$(ele).attr('data-angle',angle);
+				});
+				return false;
 			});
 		}
 		return {
@@ -532,7 +608,13 @@ $(function() {
 				var yoff = (e.pageY > $('#j-cvs_core').offset().top) && (e.pageY < $('body').height());
 				var xoff = (e.pageX > $('#j-tools').width()) && (e.pageX < $('body').width() - $('#j-library').width());
 				if(off && yoff && xoff) {
-					cvsSet.addProduct(e.pageX,e.pageY,src);
+					e.pageX, e.pageY, src
+					cvsSet.addProduct({
+						x: e.pageX,
+						y: e.pageY,
+						src: src,
+						isNew: true
+					});
 				}
 				$img.remove();
 				off = false;

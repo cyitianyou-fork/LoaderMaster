@@ -1,35 +1,73 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title></title>
-		<style type="text/css">
-			span{cursor: w-resize;}
-		</style>
-		<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript">
-			var defaults={
-				x:0,
-				y:0,
-				text:"name"
-			}
-			var options={
-				y:10,
-				text:"copy"
-			}
-			var rs=$.extend(true,{}, defaults, options);
-			console.log(rs)
-//			s.friends.push('333');
-//			console.log(s.friends.toString())
-//			console.log(p.friends.tost)curl -o- https://raw.githubusercontent.com/creationix/nvm/<v4.4.4>/install.sh | bash
-			var a=1;
-			var b=2;
-			var c=3;
-			var [a,b,]
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-  
+transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+		<title>无标题文档</title>
+		<script type="text/javascript" src="jquery-1.10.2.js"></script>
+		<script type="text/javascript">
+			var rem = new Array();
+
+			function shift_select() {
+				$(".box div").click(function(e) {
+					rem.push($(".box div").index($(this)))
+					if(e.shiftKey) {
+						var iMin = Math.min(rem[rem.length - 2], rem[rem.length - 1])
+						var iMax = Math.max(rem[rem.length - 2], rem[rem.length - 1])
+						for(i = iMin; i <= iMax; i++) {
+							$(".box div:eq(" + i + ") input[type=checkbox]").prop("checked", true);
+							//这边部分为逻辑代码，你可以根据需要来处理全中的div  
+							//$(".box div:eq("+i+")")这为选中的div  
+						}
+					} else {
+						$(this).toggleClass("selected");
+					}
+				});
+			}
+			$(function() {
+				shift_select();
+			});
+
+			//与程序无关，是禁止鼠标选中文字。点选的时候容易选中文字 太讨厌 。  
+			document.onselectstart = function(event) {
+				event = window.event || event;
+				event.returnValue = false;
+			}
 		</script>
+		<style type="text/css">
+			.selected {
+				background: tan;
+			}
+			
+			p {
+				cursor: pointer;
+				background: #f0f0f0
+			}
+		</style>
 	</head>
+
 	<body>
-		<span>ddd</span>
+		<div class="box">
+			<div><input type="checkbox" value="1" />hello1</div>
+			<div><input type="checkbox" value="1" />hello2</div>
+			<div><input type="checkbox" value="1" />hello3</div>
+			<div><input type="checkbox" value="1" />hello4</div>
+			<div><input type="checkbox" value="1" />hello5</div>
+			<div><input type="checkbox" value="1" />hello6</div>
+			<div><input type="checkbox" value="1" />hello7</div>
+			<div><input type="checkbox" value="1" />hello8</div>
+			<div><input type="checkbox" value="1" />hello9</div>
+			<div><input type="checkbox" value="1" />hello10</div>
+			<div><input type="checkbox" value="1" />hello11</div>
+			<div><input type="checkbox" value="1" />hello12</div>
+			<div><input type="checkbox" value="1" />hello13</div>
+			<div><input type="checkbox" value="1" />hello14</div>
+			<div><input type="checkbox" value="1" />hello15</div>
+			<div><input type="checkbox" value="1" />hello16</div>
+			<div><input type="checkbox" value="1" />hello17</div>
+			<div><input type="checkbox" value="1" />hello18</div>
+		</div>
 	</body>
+
 </html>

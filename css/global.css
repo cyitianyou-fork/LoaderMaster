@@ -315,7 +315,7 @@ html,body{height: 100%;}
 .pop-cond2{width: 404px; height: 528px;}
 .pop-cond2_inner{position: relative; width: 100%; padding-top: 27px;}
 .pop-cond2_inner .close{position: absolute; right: 5px; top: 6px;}
-.row{margin-bottom: 16px; overflow: hidden;}
+.row{margin-bottom: 16px; }
 .row .col{float: left;}
 .row .col-1{width: 56px; text-align: right; color: #ccc; font-size: 14px;}
 .row .col-2{color: #888;}
@@ -426,17 +426,18 @@ html,body{height: 100%;}
 .m-pointctrl span:nth-child(8){left: -5px; top: calc(50% - 5px); cursor: w-resize;}
 .m-rotatepoint{position: absolute; left: calc(50% - 1px); top: -40px; width: 0; height: 40px; margin: ; border: 1px solid #3399ff;}
 .m-rotatepoint span{position:absolute; left: -5px; top: -10px; background: #3399ff; cursor: url(../img/mouserotate.ico) 10 10,default;}
-.pop-save{}
+.pop-save{display: none;}
 .pop-save .pop-inner{width: 686px; height: 466px;}
 .pop-save dl{padding-left: 46px; padding-top: 53px; margin-bottom: 20px;}
 .pop-save dt{float: left; width: 400px; height: 286px; text-align: center; line-height: 286px; border: 1px solid #ccc;}
 .pop-save dt img{width: 80%; margin: 0 auto; vertical-align: middle;}
 .pop-save dd{width: 200px; float: left;}
-.pop-save .row{height: 26px; margin-bottom: 8px; overflow: auto;}
+.pop-save .row{height: 26px; margin-bottom: 8px;}
 .pop-save .col-1{color: #00b0d1; width: 70px; padding-right: 5px; text-align: right; line-height: 26px;}
 .pop-save .col-2{position: relative; width: 120px;}
 .pop-save .col-content{width: 110px; height: 24px; color: #000; line-height: 24px; padding-left: 8px; border: 1px solid #ccc;}
 .pop-save i{position: absolute; right: 5px;}
 .row-color span{display: inline-block; width: 78px; height: 14px; margin-top: 5px; background: red;}
-.pop-save .subcol{position: absolute; z-index: 10000000; left: 0; top: 28px; width: 158px; padding: 11px; border: 1px solid #ccc;}
+.pop-save .subcol{display: none; position: absolute; left: 0; top: 28px; width: 158px; padding: 11px; border: 1px solid #ccc; background: #fff;}
 .pop-save .subcol a{float: left; width: 50%; height: 22px; line-height: 22px;}
+.row-space .subcol{display: block;}

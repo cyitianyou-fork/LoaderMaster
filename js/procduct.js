@@ -23,13 +23,8 @@
 })(jQuery);
 
 var cvsSet = (function() {
-	var set = new Array();
 	var cur = 0; //表示当前激活tab栏Li的索引值
 	var curLeft = 0; //表示位于最左边的那个tab栏的索引值
-	function init() {
-		var newCvs = new Canvas($('#j-tabc li').eq(0), $('#j-cvs_set ul').eq(0));
-		set.push(newCvs);
-	}
 
 	function bind() {
 		moveCvsTab();
@@ -39,7 +34,6 @@ var cvsSet = (function() {
 		closeTool();
 		closeLib();
 		unselected();
-		selected();
 	}
 	//失去焦点时，控制点消失
 	function unselected() {
@@ -47,22 +41,9 @@ var cvsSet = (function() {
 			$('#j-cvs_set li').removeClass('active');
 		});
 	}
-	//点击，显示控制点
-	function selected() {
-		$(document).on('click', '#j-cvs_set li', function() {
-			$('#j-cvs_set li').removeClass('active');
-			$(this).addClass('active');
-			return false;
-		})
-		$(document).on('mousedown', '#j-cvs_set li', function() {
-			$('#j-cvs_set li').removeClass('active');
-			$(this).addClass('active');
-			return false;
-		})
-	}
 	//设置应画布tab栏宽度
 	function setTabWidth() {
-		var w = $('#j-tabc li').eq(0).outerWidth()* $('#j-tabc li').length;
+		var w = $('#j-tabc li').eq(0).outerWidth() * $('#j-tabc li').length;
 		$('#j-tabc').width(w);
 	}
 	//左右移动tab
@@ -174,7 +155,7 @@ var cvsSet = (function() {
 		});
 	}
 
-	function addProduct(x, y, src) {
+	function addProduct(info) {
 		var newLi = $('<li>' +
 			'<div class="g-pointctrl">' +
 			'<div class="m-rotatepoint">' +
@@ -191,62 +172,79 @@ var cvsSet = (function() {
 			'<span></span>' +
 			'</div>' +
 			'</div>' +
-			'<img src="' + src + '"/></li>');
+			'<img src="' + info.src + '"/></li>');
 		var newProc = new Product(newLi);
-		set[cvsSet.cur].queues.push(newProc);
-		set[cvsSet.cur].size++;
-		set[cvsSet.cur].cvs.append(newLi); //这里必须先添加到父级上，再设置left和top值，不然无法获取$dv的高宽
-		x = x - newLi.width() / 2;
-		y = y - newLi.height() / 2;
+		$('#j-cvs_set ul.active').append(newLi); //这里必须先添加到父级上，再设置left和top值，不然无法获取$dv的高宽
+		var x, y;
+		if(info.isNew) { //是复制创建节点还是新建创建节点
+			x = info.x - newLi.width() / 2;
+			y = info.y - newLi.height() / 2;
+		} else {
+			x = info.x + 15;
+			y = info.y + 15;
+		}
 		newLi.css({
 			left: x,
 			top: y
 		});
 		newProc.init(); //最后初始化
+		return newProc;
 	}
+	
 	return {
-		set: set,
 		cur: cur,
-		init: init,
 		bind: bind,
 		setTabWidth: setTabWidth,
 		addProduct: addProduct
 	}
 })();
 
-function Canvas(tab, cvs, type) {
-	this.tab = tab;
-	this.cvs = cvs;
-	this.queues = new Array();
-	this.size = 0;
-	this.type = type ? type : '';
-}
-
 function Product(obj) {
 	this.obj = obj;
-	//中心点
-	this.cx = 0;
-	this.cy = 0;
 }
 Product.prototype.init = function() {
-		//初始化中心点
-		this.getCenterPoint();
+	this.selected();
+	this.drag();
+	this.rotate();
+	this.scale();
+}
+Product.prototype.selected = function() {
+		var _this = this;
+		this.obj.on('click', function(e) {
+			if(!$(this).hasClass('active')) {
+				if(e.shiftKey) {
+					$(this).addClass('active');
+				} else {
+					$('#j-cvs_set li').removeClass('active');
+					$(this).addClass('active');
+				}
+			}
 
-		this.drag();
-		this.rotate();
-		this.scale();
-	}
-	//获取中心点的坐标值
-Product.prototype.getCenterPoint = function() {
-		this.cx = this.obj.offset().left + this.obj.width() / 2;
-		this.cy = this.obj.offset().top + this.obj.height() / 2;
+			return false;
+		});
 	}
 	//移动
 Product.prototype.drag = function() {
 		var _this = this;
 		this.obj.on('mousedown', function(e) {
-			var angle = parseFloat(_this.obj.attr('data-angle')); //旋转角度
-			angle = angle ? angle : 0;
+			var tmpAngle = [];
+			_this.selected();
+			$('#j-cvs_set li.active').each(function(i, ele) {
+				var angle = $(ele).attr('data-angle'); //旋转角度
+				if (angle) {
+					angle=JSON.parse(angle);
+					angle.x=angle.x?angle.x:0;
+					angle.y=angle.y?angle.y:0
+					angle.z=angle.z?angle.z:0
+				}else{
+					angle={};
+					angle.x=0;
+					angle.y=0;
+					angle.z=0;
+				}
+				tmpAngle.push(angle);
+				angle=null;
+			});
 			var startx = e.pageX; //起始点
 			var starty = e.pageY;
 			var x = 0,
@@ -254,20 +252,20 @@ Product.prototype.drag = function() {
 			$(document).on('mousemove.drag', function(e) {
 				x = e.pageX - startx;
 				y = e.pageY - starty;
-				_this.obj.css('transform', 'translate3d(' + x + 'px,' + y + 'px,0px) rotate(' + angle + 'deg)');
+				$('#j-cvs_set li.active').each(function(i, ele) {
+					$(ele).css('transform', 'translate3d(' + x + 'px,' + y + 'px,0px) rotateX('+tmpAngle[i].x+'deg) rotateY('+tmpAngle[i].y+'deg) rotateZ(' + tmpAngle[i].z + 'deg)');
+				});
 			});
 			$(document).on('mouseup.drag', function(e) {
 				$(document).off('.drag');
-				//改变中心点的位置
-				_this.cx += x;
-				_this.cy += y;
-				_this.obj.css('transform', 'translate3d(' + 0 + 'px,' + 0 + 'px,0px) rotate(' + angle + 'deg)');
-				//在移动或者旋转中获取元素的位置都用.css()的方法，不用offset(),原因是不管是移动、旋转、或者放大缩小，offset()的值都在变化，只有通过.css()方法才能获取变化前的那个值
-				_this.obj.css({
-					left: parseFloat(_this.obj.css('left')) + x,
-					top: parseFloat(_this.obj.css('top')) + y
+				$('#j-cvs_set li.active').each(function(i, ele) {
+					$(ele).css('transform', 'translate3d(0,0,0) rotateX('+tmpAngle[i].x+'deg) rotateY('+tmpAngle[i].y+'deg) rotateZ(' + tmpAngle[i].z + 'deg)');
+					//在移动或者旋转中获取元素的位置都用.css()的方法，不用offset(),原因是不管是移动、旋转、或者放大缩小，offset()的值都在变化，只有通过.css()方法才能获取变化前的那个值
+					$(ele).css({
+						left: parseFloat($(ele).css('left')) + x,
+						top: parseFloat($(ele).css('top')) + y
+					});
 				});
-
 			});
 			return false;
 		});
@@ -275,23 +273,41 @@ Product.prototype.drag = function() {
 	//旋转
 Product.prototype.rotate = function() {
 		var _this = this;
-		var angle = 0; //旋转角度
+		var angleZ = 0, //旋转角度
+			cx = 0,
+			cy = 0; //中心点
 		this.obj.find('.m-rotatepoint span').on('mousedown', function(e) {
 			$('body').css('cursor', $(this).css('cursor'));
 			if(_this.obj.hasClass('active')) {
+				cx = parseFloat(_this.obj.css('left')) + _this.obj.width() / 2;
+				cy = parseFloat(_this.obj.css('top')) + _this.obj.height() / 2;
+				var angle = _this.obj.attr('data-angle'); //旋转角度
+				if (angle) {
+					angle=JSON.parse(angle);
+					angle.x=angle.x?angle.x:0;
+					angle.y=angle.y?angle.y:0
+				}else{
+					angle={};
+					angle.x=0;
+					angle.y=0;
+					angle.z=0;
+				}
 				var disx, disy; //临时变量
 				$(document).on('mousemove.rotate', function(e) {
-					disx = e.pageX - _this.cx;
-					disy = e.pageY - _this.cy;
-					angle = 360 * Math.atan2(disy, disx) / (2 * Math.PI)
-					angle = angle < -90 ? (450 + angle) : angle + 90;
-					_this.obj.css('transform', 'rotate(' + angle + 'deg)');
+					disx = e.pageX - cx;
+					disy = e.pageY - cy;
+					angleZ = 360 * Math.atan2(disy, disx) / (2 * Math.PI)
+					angleZ = angleZ < -90 ? (450 + angleZ) : angleZ + 90;
+					angleZ=angle.x%360==0?angleZ:angleZ-180;  //存在一个bug,只要垂直翻转是奇数次，z轴就会多转180度，原因至今还没弄清楚
+					_this.obj.css('transform', 'rotateZ('+angleZ+'deg) rotateY('+angle.y+'deg) rotateX(' + angle.x + 'deg)');
 				});
 				$(document).on('mouseup.rotate', function(e) {
 					$(document).off('.rotate');
 					//保存已经旋转的角度值
+					angle.z=angleZ;
+					angle=JSON.stringify(angle)
 					_this.obj.attr('data-angle', angle);
-					_this.obj.css('transform', 'rotate(' + angle + 'deg)');
+					_this.obj.css('transform', 'rotateZ('+angleZ+'deg) rotateY('+angle.y+'deg) rotateX(' + angle.x + 'deg)');
 					$('body').css('cursor', 'default');
 				});
 				return false;
@@ -301,7 +317,10 @@ Product.prototype.rotate = function() {
 	//放大和缩小
 Product.prototype.scale = function() {
 	var _this = this;
+	var bases = [];
+	var tmp = 0;
 	this.obj.find('.m-pointctrl span').on('mousedown', function(e) {
+		bases.length = 0;
 		$('body').css('cursor', $(this).css('cursor'));
 		var index = $(this).index();
 		var startx = e.pageX;
@@ -309,117 +328,107 @@ Product.prototype.scale = function() {
 		var disw = 0,
 			dish = 0,
 			disl = 0,
-			dist = 0,
-			tmp = 0;
-		var base = {
-			width: _this.obj.width(),
-			height: _this.obj.height(),
-			x: parseFloat(_this.obj.css('left')),
-			y: parseFloat(_this.obj.css('top'))
-		};
+			dist = 0;
+		$('#j-cvs_set li.active').each(function(i, ele) {
+			var base = {
+				width: $(ele).width(),
+				height: $(ele).height(),
+				x: parseFloat($(ele).css('left')),
+				y: parseFloat($(ele).css('top'))
+			};
+			bases.push(base);
+		});
 		$(document).on('mousemove.scale', function(e) {
 			disw = e.pageX - startx;
 			dish = e.pageY - starty;
 			switch(index) {
 				case 0:
-					tmp = Math.min(disw, dish);
-					if(base.width - tmp < 11) {
-						tmp = base.width - 11;
-					}
-					if(base.height - tmp < 11) {
-						tmp = base.height - 11;
-					}
+					tmp = dish;
+					scopeLimit();
 					dist = disl = tmp;
 					disw = dish = -tmp;
 					break;
 				case 1:
 					tmp = dish;
-					if(base.height - tmp < 11) {
-						tmp = base.height - 11;
-					}
+					scopeLimit();
 					dish = -tmp;
 					disl = disw = 0;
 					dist = tmp;
 					break;
 				case 2:
-					tmp = disw;
-					if(base.width + tmp < 11) {
-						tmp = 11 - base.width;
-					}
-					if(base.height + tmp < 11) {
-						tmp = 11 - base.height;
-					}
-					dish = disw = tmp;
-					dist = -tmp;
+					tmp = dish;
+					scopeLimit();
+					dish = disw = -tmp;
+					dist = tmp;
 					disl = 0;
 					break;
 				case 3:
 					tmp = -disw;
-					if(base.width - tmp < 11) {
-						tmp = base.width - 11;
-					}
+					scopeLimit();
 					disw = -tmp;
 					dist = disl = dish = 0;
 					break;
 				case 4:
-					tmp = -Math.min(disw, dish);
-					if(base.width - tmp < 11) {
-						tmp = base.width - 11;
-					}
-					if(base.height - tmp < 11) {
-						tmp = base.height - 11;
-					}
+					tmp = -dish;
+					scopeLimit();
 					dish = disw = -tmp;
 					dist = disl = 0;
 					break;
 				case 5:
 					tmp = -dish;
-					if(base.height - tmp < 11) {
-						tmp = base.height - 11;
-					}
+					scopeLimit();
 					dish = -tmp;
 					dist = disl = disw = 0;
 					break;
 				case 6:
-					tmp = disw;
-					if(base.width - tmp < 11) {
-						tmp = base.width - 11;
-					}
-					if(base.height - tmp < 11) {
-						tmp = base.height - 11;
-					}
+					tmp = -dish;
+					scopeLimit();
 					dish = disw = -tmp;
 					disl = tmp;
 					dist = 0;
 					break;
 				case 7:
 					tmp = disw;
-					if(base.width - tmp < 11) {
-						tmp = base.width - 11;
-					}
+					scopeLimit();
 					disw = -tmp;
 					disl = tmp;
 					dist = dish = 0;
 					break;
 
 			}
+			$('#j-cvs_set li.active').each(function(i, ele) {
+				$(ele).css({
+					width: bases[i].width + disw,
+					height: bases[i].height + dish,
+					left: bases[i].x + disl,
+					top: bases[i].y + dist,
+				});
+				$(ele).find('img').css({
+					width: bases[i].width + disw,
+					height: bases[i].height + dish
+				});
+			});
 
-			_this.obj.css({
-				width: base.width + disw,
-				height: base.height + dish,
-				left: base.x + disl,
-				top: base.y + dist,
-			});
-			_this.obj.find('img').css({
-				width: base.width + disw,
-				height: base.height + dish
-			});
-			_this.getCenterPoint();
 		});
 		$(document).on('mouseup.scale', function(e) {
 			$(document).off('.scale');
+			//			$('#j-cvs_set li.active').each(function(i,ele){
+			//				
+			//			});
+			//			_this.getCenterPoint();
 			$('body').css('cursor', 'default');
 		});
 		return false;
 	});
+
+	function scopeLimit() {
+		for(var i = 0; i < bases.length; i++) {
+			if(bases[i].width - tmp < 11) {
+				tmp = bases[i].width - 11;
+			}
+			if(bases[i].height - tmp < 11) {
+				tmp = bases[i].height - 11;
+			}
+		}
+	}
 }
