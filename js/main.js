@@ -168,8 +168,14 @@ $(function() {
 			showToolName();
 			deleteProc();
 			copyProc();
+			beGroup();
 			flipHorizontalProc();
 			flipVerticalProc();
+			layerForward();
+			layerTop();
+			layerBackward();
+			layerBottom();
+			toggleLock();
 		}
 		//鼠标放在工具栏上显示工具的名称
 		function showToolName() {
@@ -202,14 +208,18 @@ $(function() {
 		function copyProc() {
 			$(document).on('click', '#j-copy', function() {
 				$('#j-cvs_set li.active').each(function(i, ele) {
-					var copyObj=cvsSet.addProduct({
-						x: parseFloat($(ele).css('left')),
-						y: parseFloat($(ele).css('top')),
-						src: $(ele).find('img').attr('src'),
-						isNew: false
-					});
-					$(this).removeClass('active');
-					copyObj.obj.addClass('active');
+					var $copy = $(ele).clone();
+					$copy.css({
+						left: parseFloat($(ele).css('left')) + 10,
+						top: parseFloat($(ele).css('top')) + 10
+					})
+
+					$(ele).removeClass('active');
+					$copy.removeClass('lock');
+					$copy.addClass('active');
+					$('#j-cvs_set ul.active').append($copy);
+					var newProc=new Product($copy);
+					newProc.init();
 				});
 				return false;
 			});
@@ -217,23 +227,21 @@ $(function() {
 		//水平镜像
 		function flipHorizontalProc() {
 			$(document).on('click', '#j-flipHorizontal', function() {
-				$('#j-cvs_set li.active').each(function(i, ele) {
+				$('#j-cvs_set li.active img').each(function(i, ele) {
 					var angle = $(ele).attr('data-angle'); //旋转角度
-					if (angle) {
-						angle=JSON.parse(angle);
-						angle.x=angle.x?angle.x:0;
-						angle.y=angle.y?angle.y:0;
-						angle.z=angle.z?angle.z:0
-					}else{
-						angle={};
-						angle.x=0;
-						angle.y=0;
-						angle.z=0;
+					if(angle) {
+						angle = JSON.parse(angle);
+						angle.x = angle.x ? angle.x : 0;
+						angle.y = angle.y ? angle.y : 0;
+					} else {
+						angle = {};
+						angle.x = 0;
+						angle.y = 0;
 					}
-					angle.y+=180;
-					$(ele).css('transform','rotateY('+angle.y+'deg) rotateX('+angle.x+'deg) rotateZ('+angle.z+'deg)');
-					angle=JSON.stringify(angle);
-					$(ele).attr('data-angle',angle);
+					angle.y += 180;
+					$(ele).css('transform', 'rotateY(' + angle.y + 'deg) rotateX(' + angle.x + 'deg)');
+					angle = JSON.stringify(angle);
+					$(ele).attr('data-angle', angle);
 				});
 				return false;
 			});
@@ -241,27 +249,270 @@ $(function() {
 		//垂直
 		function flipVerticalProc() {
 			$(document).on('click', '#j-flipVertical', function() {
-				$('#j-cvs_set li.active').each(function(i, ele) {
+				$('#j-cvs_set li.active img').each(function(i, ele) {
 					var angle = $(ele).attr('data-angle'); //旋转角度
-					if (angle) {
-						angle=JSON.parse(angle);
-						angle.x=angle.x?angle.x:0;
-						angle.y=angle.y?angle.y:0;
-						angle.z=angle.z?angle.z:0
-					}else{
-						angle={};
-						angle.x=0;
-						angle.y=0;
-						angle.z=0;
+					if(angle) {
+						angle = JSON.parse(angle);
+						angle.x = angle.x ? angle.x : 0;
+						angle.y = angle.y ? angle.y : 0;
+					} else {
+						angle = {};
+						angle.x = 0;
+						angle.y = 0;
 					}
-					angle.x+=180;
-					$(ele).css('transform','rotateZ('+angle.z+'deg) rotateX('+angle.x+'deg) rotateY('+angle.y+'deg)');
-					angle=JSON.stringify(angle);
-					$(ele).attr('data-angle',angle);
+					angle.x += 180;
+					$(ele).css('transform', 'rotateX(' + angle.x + 'deg) rotateY(' + angle.y + 'deg)');
+					angle = JSON.stringify(angle);
+					$(ele).attr('data-angle', angle);
 				});
 				return false;
 			});
 		}
+
+		//成组
+		function beGroup() {
+			$(document).on('click', '#j-group', function() {
+				var $activeLi = $('#j-cvs_set li.active');
+				if($activeLi.length > 1) {
+					var $newLi = $('<li>' +
+						'<div class="g-pointctrl">' +
+						'<div class="m-rotatepoint">' +
+						'<span></span>' +
+						'</div>' +
+						'<div class="m-pointctrl">' +
+						'<span></span>' +
+						'<span></span>' +
+						'<span></span>' +
+						'<span></span>' +
+						'<span></span>' +
+						'<span></span>' +
+						'<span></span>' +
+						'<span></span>' +
+						'</div>' +
+						'</div>' +
+						'<ul></ul></li>');
+					var $first = $('#j-cvs_set li.active').eq(0);
+					var pos = getPointPos($first);
+					var left = pos.l,
+						top = pos.t,
+						right = pos.r,
+						bottom = pos.b;
+					$first.siblings('.active').each(function(i, ele) {
+						pos = getPointPos($(ele));
+						left = pos.l < left ? pos.l : left;
+						right = pos.r > right ? pos.r : right;
+						top = pos.t < top ? pos.t : top;
+						bottom = pos.b > bottom ? pos.b : bottom;
+					});
+					$newLi.css({
+						width: right - left,
+						height: bottom - top,
+						left: left,
+						top: top
+					});
+					var $ul = $newLi.find('ul');
+					$activeLi.each(function(i, ele) {
+						var $img = $(ele).find('img');
+						if($img.length > 1) {
+							var angle = parseFloat($(ele).attr('data-angle'));
+							angle = angle ? angle : 0;
+							$(ele).find('li').each(function(j, eleLi) {
+								var angleEle = parseFloat($(ele).attr('data-angle'));
+								angleEle = angleEle ? angleEle : 0;
+								angleEle += angle;
+								$(eleLi).css({
+									left: parseFloat($(eleLi).css('left')) + parseFloat($(ele).css('left')) - left,
+									top: parseFloat($(eleLi).css('top')) + parseFloat($(ele).css('top')) - top,
+									transform: 'rotateZ(' + angleEle + 'deg)'
+								});
+								$(eleLi).attr('data-angle', angleEle);
+								$ul.append($(eleLi));
+							});
+							$(ele).remove();
+						} else {
+							$(ele).css({
+								left: parseFloat($(ele).css('left')) - left,
+								top: parseFloat($(ele).css('top')) - top
+							});
+							$ul.append($(ele));
+						}
+
+					});
+					$activeLi.removeClass('active');
+					$activeLi.off();
+					$activeLi.find('.g-pointctrl').remove();
+					$newLi.addClass('active');
+					$('#j-cvs_set ul.active').append($newLi);
+					var newProc = new Product($newLi);
+					newProc.init();
+				}
+				return false;
+			});
+		}
+		//获取控制点的坐标
+		function getPointPos(obj) {
+			var point = obj.find('.m-pointctrl span').eq(0);
+			var pos = {
+				l: point.offset().left,
+				r: point.offset().left,
+				t: point.offset().top,
+				b: point.offset().top
+			};
+			point.siblings('span').each(function(i, ele) {
+				if($(ele).offset().left < pos.l) {
+					pos.l = $(ele).offset().left;
+				} else if($(ele).offset().left > pos.r) {
+					pos.r = $(ele).offset().left;
+				}
+				if($(ele).offset().top < pos.t) {
+					pos.t = $(ele).offset().top;
+				} else if($(ele).offset().top > pos.b) {
+					pos.b = $(ele).offset().top;
+				}
+			});
+			return pos;
+		}
+		//上移一层
+		function layerForward() {
+			$(document).on('click', '#j-layerforward', function() {
+				$('#j-cvs_set li.active').each(function(i, ele) {
+					var rs = upLayer($(ele));
+					if(rs.length > 0) {
+						var zIndex = parseInt(rs[0].css('zIndex'));
+						rs[0].css('zIndex', parseInt($(ele).css('zIndex')));
+						$(ele).css('zIndex', zIndex);
+					}
+				});
+				return false;
+			});
+		}
+		//移至顶层
+		function layerTop() {
+			$(document).on('click', '#j-layertop', function() {
+				$('#j-cvs_set li.active').each(function(i, ele) {
+					var rs = upLayer($(ele));
+					if(rs.length > 0) {
+						var zIndex = parseInt(rs[rs.length - 1].css('zIndex'));
+						for(var i = rs.length - 1; i > 0; i--) {
+							rs[i].css('zIndex', parseInt(rs[i - 1].css('zIndex')));
+						}
+						rs[0].css('zIndex', parseInt($(ele).css('zIndex')));
+						$(ele).css('zIndex', zIndex);
+					}
+				});
+				return false;
+			});
+		}
+		//下移一层
+		function layerBackward() {
+			$(document).on('click', '#j-layerbackward', function() {
+				$('#j-cvs_set li.active').each(function(i, ele) {
+					var rs = lowerLayer($(ele));
+					if(rs.length > 0) {
+						var zIndex = parseInt(rs[0].css('zIndex'));
+						rs[0].css('zIndex', parseInt($(ele).css('zIndex')));
+						$(ele).css('zIndex', zIndex);
+					}
+				});
+				return false;
+			});
+		}
+		//移至底层
+		function layerBottom() {
+			$(document).on('click', '#j-layerbottom', function() {
+				$('#j-cvs_set li.active').each(function(i, ele) {
+					var rs = lowerLayer($(ele));
+					if(rs.length > 0) {
+						var zIndex = parseInt(rs[rs.length - 1].css('zIndex'));
+						for(var i = rs.length - 1; i > 0; i--) {
+							rs[i].css('zIndex', parseInt(rs[i - 1].css('zIndex')));
+						}
+						rs[0].css('zIndex', parseInt($(ele).css('zIndex')));
+						$(ele).css('zIndex', zIndex);
+					}
+				});
+				return false;
+			});
+		}
+		//找到上层的Li
+		function upLayer(obj) {
+			var $activeLi = $('#j-cvs_set li');
+			var zIndex = parseInt(obj.css('zIndex'));
+			var rs = [];
+			var bl, br, bt, bb; //bool表示是否存在重叠的li
+			var curLi;
+			for(var i = 0; i < $activeLi.length; i++) {
+				curLi = $activeLi.eq(i);
+				if(i != obj.index()) {
+					bl = (parseInt(curLi.css('left')) + curLi.width()) < parseInt(obj.css('left'));
+					br = parseInt(curLi.css('left')) > (parseInt(obj.css('left')) + obj.width());
+					bt = (parseInt(curLi.css('top')) + curLi.height()) < parseInt(obj.css('top'));
+					bb = parseInt(curLi.css('top')) > (parseInt(obj.css('top')) + obj.height());
+					if(bl || br || bt || bb) {
+						continue;
+					} else {
+						if(parseInt(curLi.css('zIndex')) > zIndex) {
+							rs.push(curLi);
+						}
+					}
+				}
+			}
+			if(rs.length > 0) {
+				rs.sort(function(obj1, obj2) {
+					return parseInt(obj1.css('zIndex')) - parseInt(obj2.css('zIndex'));
+				});
+			}
+			return rs;
+		}
+		//找到下层的Li
+		function lowerLayer(obj) {
+			var $activeLi = $('#j-cvs_set li');
+			var zIndex = parseInt(obj.css('zIndex'));
+			var rs = [];
+			var bl, br, bt, bb; //bool表示是否存在重叠的li
+			var curLi;
+			for(var i = 0; i < $activeLi.length; i++) {
+				curLi = $activeLi.eq(i);
+				if(i != obj.index()) {
+					bl = (parseInt(curLi.css('left')) + curLi.width()) < parseInt(obj.css('left'));
+					br = parseInt(curLi.css('left')) > (parseInt(obj.css('left')) + obj.width());
+					bt = (parseInt(curLi.css('top')) + curLi.height()) < parseInt(obj.css('top'));
+					bb = parseInt(curLi.css('top')) > (parseInt(obj.css('top')) + obj.height());
+					if(bl || br || bt || bb) {
+						continue;
+					} else {
+						if(parseInt(curLi.css('zIndex')) < zIndex) {
+							rs.push(curLi);
+						}
+					}
+				}
+			}
+			if(rs.length > 0) {
+				rs.sort(function(obj1, obj2) {
+					return parseInt(obj2.css('zIndex')) - parseInt(obj1.css('zIndex'));
+				});
+			}
+			return rs;
+		}
+		
+		function toggleLock(){
+			$(document).on('click','#j-lock',function(){
+				var icon=$(this).find('.icon');
+				if (icon.hasClass('icon-lock')) {
+					icon.removeClass('icon-lock');
+					icon.addClass('icon-unlock');
+					$(this).attr('data-name','解锁');
+					$('#j-cvs_set li.active').addClass('lock');
+				}else{
+					icon.removeClass('icon-unlock');
+					icon.addClass('icon-lock');
+					$(this).attr('data-name','锁定');
+					$('#j-cvs_set li.active').removeClass('lock');
+				}
+				return false;
+			});
+		}
+
 		return {
 			bind: bind
 		}
@@ -612,8 +863,7 @@ $(function() {
 					cvsSet.addProduct({
 						x: e.pageX,
 						y: e.pageY,
-						src: src,
-						isNew: true
+						src: src
 					});
 				}
 				$img.remove();
