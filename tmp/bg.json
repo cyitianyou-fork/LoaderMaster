@@ -4,46 +4,25 @@
 	"list":
 	[
 		
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png",
-		"tmp/proc01.png"
-	
+		{
+			"id": "bg-1",
+			"url": "tmp/proc01.png"
+		},
+		{
+			"id": "bg-1",
+			"url": "tmp/proc01.png"
+		},
+		{
+			"id": "bg-1",
+			"url": "tmp/proc01.png"
+		},
+		{
+			"id": "bg-1",
+			"url": "tmp/proc01.png"
+		},
+		{
+			"id": "bg-1",
+			"url": "tmp/proc01.png"
+		}
 	]
 }

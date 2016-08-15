@@ -302,8 +302,10 @@ html,body{height: 100%;}
 .m-proc_word{float: left; margin-left: 8px; line-height: 17px; color: #666;}
 .m-proc_bill span{float: right; line-height: 66px; color: #666;}
 .m-lib_color{padding-left: 10px; padding-top: 10px;}
-.m-lib_color li{float:left; width: 68px; height: 68px; margin-right: 5px; margin-bottom: 5px; border-radius: 3px;}
+.m-lib_color li{float:left; width: 68px; height: 68px; margin-right: 5px; margin-bottom: 5px; border-radius: 3px; cursor: pointer;}
 .m-lib_color li:nth-child(5n){margin-right: 0;}
+.m-word{padding-top: 25px; margin-left: 20px;}
+.m-lib_word li{cursor: pointer; width: 68px; height: 68px; font-size: 22px;}
 .u-char{display: inline-block; margin-left: 20px; margin-top: 26px; color: #666; font-size: 16px;}
 .pop-cond {display: none; position: absolute; left: 0px; top: 40px; z-index: 1; border: 1px solid #00b0d0; border-radius: 3px; background: #fff; overflow-y: auto;}
 .pop-cond1{width: 268px; height: 398px;}
@@ -404,7 +406,7 @@ html,body{height: 100%;}
 .pop-bts a:last-child{background: #00b0d0;}
 
 /*拖动库面板的图片，新建一个img元素*/
-.dImg{position: absolute; z-index: 10005; opacity: .6;}
+.dobj{position: absolute; z-index: 10005; opacity: .6;}
 
 /*画布区*/
 .g-cvs_core,.g-cvs_set,.g-cvs_set ul{width: 100%; height: 100%;}
@@ -414,7 +416,7 @@ html,body{height: 100%;}
 .g-cvs_set li{position: absolute;left: 0; top: 0; padding: 5px; left: 100px; top: 200px; cursor: move; }
 .cvs-item-box{position: absolute;}
 .g-pointctrl{display: none; position: absolute; left: 0; top: 0; width: 100%; height: 100%;}
-.g-cvs_set li.active .g-pointctrl{display: block;}
+.g-cvs_set li.active >.g-pointctrl{display: block;}
 .g-cvs_set .img_box{position: absolute;}
 .g-pointctrl span{position: absolute; width: 8px; height: 8px; background: #fff; border: 1px solid #3399ff;}
 .m-pointctrl{width: 100%; height: 100%; border: 1px solid #3399ff;}

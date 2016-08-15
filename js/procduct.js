@@ -173,11 +173,36 @@ var cvsSet = (function() {
 			'<span></span>' +
 			'</div>' +
 			'</div>' +
-			'<img src="' + info.src + '"/></li>');
-		var newProc = new Product(newLi);
+			'</li>');
+		var w, h;
+		if(info.isColorBlock) {
+			var $dv = $('<div>');
+			$dv.css({
+				width: 68,
+				height: 68,
+				background: info.color,
+			});
+			w=68;
+			h=68;
+			newLi.append($dv);
+		} else if(info.isWordBlock) {
+			w=136;
+			h=68;
+			newLi.html('请输入文字');
+		} else {
+			var $img = $('<img  src="' + info.src + '" />');
+			$img.load(function(){
+				newLi.append($img);
+				w = $img.width();
+				h = $img.height()
+				console.log(w+','+h);
+				$img.attr('data-id', info.id);
+				//保存图片最原始的高度和宽度
+				$img.attr('data-initW', w);
+				$img.attr('data-initH', h);
+			});
+		}
 		$('#j-cvs_set ul.active').append(newLi); //这里必须先添加到父级上，再设置left和top值，不然无法获取$dv的高宽
-		var w = newLi.find('img').eq(0).width();
-		var h = newLi.find('img').eq(0).height();
 		var x = info.x - w / 2;
 		var y = info.y - h / 2;
 		newLi.css({
@@ -187,8 +212,10 @@ var cvsSet = (function() {
 			top: y,
 			zIndex: cvsSet.zIndex++
 		});
+		var newProc = new Product(newLi);
 		newProc.init(); //最后初始化
 
+		//初始化锁定按钮状态
 		$('#j-lock .icon').removeClass('icon-unlock');
 		$('#j-lock .icon').addClass('icon-lock');
 		$('#j-lock').attr('data-name', '锁定');
@@ -248,15 +275,17 @@ Product.prototype.selected = function() {
 Product.prototype.drag = function() {
 		var _this = this;
 		this.obj.on('mousedown', function(e) {
-			if($('#j-cvs_set li.active.lock').length > 0) {
-				return;
-			}
 			var tmpAngle = [];
+			//按下添加active
 			if(!$(this).hasClass('active')) {
 				if(!e.shiftKey) {
 					$('#j-cvs_set li').removeClass('active');
 				}
 				$(this).addClass('active');
+			}
+			//判断是否是也有lock
+			if($('#j-cvs_set li.active.lock').length > 0) {
+				return;
 			}
 			$('#j-cvs_set li.active').each(function(i, ele) {
 				var angle = $(ele).attr('data-angle'); //旋转角度
@@ -325,7 +354,6 @@ Product.prototype.rotate = function() {
 Product.prototype.scale = function() {
 	var _this = this;
 	var bases = [];
-	var tmp = 0;
 	this.obj.find('.m-pointctrl span').on('mousedown', function(e) {
 		if($('#j-cvs_set li.active.lock').length > 0) {
 			return;
@@ -338,7 +366,8 @@ Product.prototype.scale = function() {
 		var disw = 0,
 			dish = 0,
 			disl = 0,
-			dist = 0;
+			dist = 0
+		scale = 0;
 		$('#j-cvs_set li.active').each(function(i, ele) {
 			var base = {
 				width: $(ele).width(),
@@ -362,96 +391,119 @@ Product.prototype.scale = function() {
 			dish = e.pageY - starty;
 			switch(index) {
 				case 0:
-					tmp = dish;
-					scopeLimit(true, true);
-					dist = disl = tmp;
-					disw = dish = -tmp;
+					$('#j-cvs_set li.active').each(function(i, ele) {
+						scale = dish / bases[i].height;
+						scopeLimit(i);
+						eleScale({
+							ele: $(ele),
+							disw: -scale * bases[i].width,
+							dish: -scale * bases[i].height,
+							disl: scale * bases[i].width,
+							dist: scale * bases[i].height,
+							index: i
+						});
+					});
 					break;
 				case 1:
-					tmp = dish;
-					scopeLimit(false, true);
-					dish = -tmp;
-					disl = disw = 0;
-					dist = tmp;
+					$('#j-cvs_set li.active').each(function(i, ele) {
+						scale = dish / bases[i].height;
+						scopeLimit(i);
+						eleScale({
+							ele: $(ele),
+							disw: -scale * bases[i].width,
+							dish: -scale * bases[i].height,
+							disl: scale * bases[i].width / 2,
+							dist: scale * bases[i].height,
+							index: i
+						});
+					});
 					break;
 				case 2:
-					tmp = dish;
-					scopeLimit(true, true);
-					dish = disw = -tmp;
-					dist = tmp;
-					disl = 0;
+					$('#j-cvs_set li.active').each(function(i, ele) {
+						scale = dish / bases[i].height;
+						scopeLimit(i);
+						eleScale({
+							ele: $(ele),
+							disw: -scale * bases[i].width,
+							dish: -scale * bases[i].height,
+							disl: 0,
+							dist: scale * bases[i].height,
+							index: i
+						});
+					});
 					break;
 				case 3:
-					tmp = -disw;
-					scopeLimit(true, false);
-					disw = -tmp;
-					dist = disl = dish = 0;
+					$('#j-cvs_set li.active').each(function(i, ele) {
+						scale = -disw / bases[i].height;
+						scopeLimit(i);
+						eleScale({
+							ele: $(ele),
+							disw: -scale * bases[i].width,
+							dish: -scale * bases[i].height,
+							disl: 0,
+							dist: scale * bases[i].height / 2,
+							index: i
+						});
+					});
 					break;
 				case 4:
-					tmp = -dish;
-					scopeLimit(true, true);
-					dish = disw = -tmp;
-					dist = disl = 0;
+					$('#j-cvs_set li.active').each(function(i, ele) {
+						scale = -dish / bases[i].height;
+						scopeLimit(i);
+						eleScale({
+							ele: $(ele),
+							disw: -scale * bases[i].width,
+							dish: -scale * bases[i].height,
+							disl: 0,
+							dist: 0,
+							index: i
+						});
+					});
 					break;
 				case 5:
-					tmp = -dish;
-					scopeLimit(false, true);
-					dish = -tmp;
-					dist = disl = disw = 0;
+					$('#j-cvs_set li.active').each(function(i, ele) {
+						scale = -dish / bases[i].height;
+						scopeLimit(i);
+						eleScale({
+							ele: $(ele),
+							disw: -scale * bases[i].width,
+							dish: -scale * bases[i].height,
+							disl: scale * bases[i].width / 2,
+							dist: 0,
+							index: i
+						});
+					});
 					break;
 				case 6:
-					tmp = -dish;
-					scopeLimit(true, true);
-					dish = disw = -tmp;
-					disl = tmp;
-					dist = 0;
+					$('#j-cvs_set li.active').each(function(i, ele) {
+						scale = -dish / bases[i].height;
+						scopeLimit(i);
+						eleScale({
+							ele: $(ele),
+							disw: -scale * bases[i].width,
+							dish: -scale * bases[i].height,
+							disl: scale * bases[i].width,
+							dist: 0,
+							index: i
+						});
+					});
 					break;
 				case 7:
-					tmp = disw;
-					scopeLimit(true, false);
-					disw = -tmp;
-					disl = tmp;
-					dist = dish = 0;
+					$('#j-cvs_set li.active').each(function(i, ele) {
+						scale = disw / bases[i].height;
+						scopeLimit(i);
+						eleScale({
+							ele: $(ele),
+							disw: -scale * bases[i].width,
+							dish: -scale * bases[i].height,
+							disl: scale * bases[i].width,
+							dist: scale * bases[i].height / 2,
+							index: i
+						});
+					});
 					break;
 
 			}
-			$('#j-cvs_set li.active').each(function(i, ele) {
-				$(ele).css({
-					width: bases[i].width + disw,
-					height: bases[i].height + dish,
-					left: bases[i].left + disl,
-					top: bases[i].top + dist,
-				});
-				var $img = $(ele).find('img');
-				if($img.length > 1) {
-					$(ele).find('li').each(function(j, eleLi) {
-
-						var w = parseFloat($(eleLi).attr('data-width'));
-						var h = parseFloat($(eleLi).attr('data-height'));
-						var l = parseFloat($(eleLi).attr('data-left'));
-						var t = parseFloat($(eleLi).attr('data-top'));
-						w += disw / bases[i].width * w;
-						h += dish / bases[i].height * h
-						l += disw / bases[i].width * l;
-						t += dish / bases[i].height * t;
-						$(eleLi).css({
-							width: w,
-							height: h,
-							left: l,
-							top: t
-						})
-						$(eleLi).find('img').css({
-							width: w,
-							height: h
-						})
-					});
-				} else {
-					$img.css({
-						width: bases[i].width + disw,
-						height: bases[i].height + dish,
-					});
-				}
-			});
 		});
 		$(document).on('mouseup.scale', function(e) {
 			$(document).off('.scale');
@@ -459,16 +511,56 @@ Product.prototype.scale = function() {
 		});
 		return false;
 	});
-
 	//宽高缩小值都不能小于20
-	function scopeLimit(widthLimit, heightLimit) {
-		for(var i = 0; i < bases.length; i++) {
-			if(widthLimit && bases[i].width - tmp < 20) {
-				tmp = bases[i].width - 20;
-			}
-			if(heightLimit && bases[i].height - tmp < 20) {
-				tmp = bases[i].height - 20;
-			}
+	function scopeLimit(index) {
+		if((1 - scale) * bases[index].width < 20) {
+			scale = 1 - 20 / bases[index].width;
+		}
+		if((1 - scale) * bases[index].height < 20) {
+			scale = 1 - 20 / bases[index].height;
+		}
+	}
+
+	//单个元素缩放
+	function eleScale(tar) {
+		tar.ele.css({
+			width: bases[tar.index].width + tar.disw,
+			height: bases[tar.index].height + tar.dish,
+			left: bases[tar.index].left + tar.disl,
+			top: bases[tar.index].top + tar.dist,
+		});
+		var $img = tar.ele.find('img');
+		if($img.length > 1) {
+			tar.ele.find('li').each(function(j, eleLi) {
+
+				var w = parseFloat($(eleLi).attr('data-width'));
+				var h = parseFloat($(eleLi).attr('data-height'));
+				var l = parseFloat($(eleLi).attr('data-left'));
+				var t = parseFloat($(eleLi).attr('data-top'));
+				var angle = parseFloat($(eleLi).attr('data-angle'));
+				angle = angle ? angle : 0;
+				angle = angle * Math.PI / 180;
+
+				w += tar.disw / bases[tar.index].width * w;
+				h += tar.dish / bases[tar.index].height * h
+				l += tar.disw / bases[tar.index].width * l;
+				t += tar.dish / bases[tar.index].height * t;
+				$(eleLi).css({
+					width: w,
+					height: h,
+					left: l,
+					top: t
+				})
+				$(eleLi).find('img').css({
+					width: w,
+					height: h
+				})
+			});
+		} else {
+			$img.css({
+				width: bases[tar.index].width + tar.disw,
+				height: bases[tar.index].height + tar.dish,
+			});
 		}
 	}
 }
