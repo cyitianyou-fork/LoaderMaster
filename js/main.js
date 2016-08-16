@@ -85,6 +85,7 @@ $(function() {
 				init();
 				//库面板、工具栏、tab栏的高度跟着变化
 				$('#j-cvs_tab').css('top', $('#j-cvs_tab').offset().top + val);
+				$('#j-input_word').css('top', $('#j-input_word').offset().top + val);
 				$('#j-tools').css({
 					top: $('#j-tools').offset().top + val,
 					height: $('#j-tools').height() - val
@@ -314,7 +315,7 @@ $(function() {
 					});
 					var $ul = $newLi.find('ul');
 					$activeLi.each(function(i, ele) {
-						var $img = $(ele).find('img');
+						var $img = $(ele).find('.inner');
 						maxZIndex = parseInt($(ele).css('zIndex')) > maxZIndex ? parseInt($(ele).css('zIndex')) : maxZIndex;
 						if($img.length > 1) {
 							var angle = parseFloat($(ele).attr('data-angle'));
@@ -555,16 +556,11 @@ $(function() {
 				if($('#j-cvs_set li.active').length < 1) {
 					return;
 				}
-				var icon = $(this).find('.icon');
 				if($('#j-cvs_set li.active.lock').length < $('#j-cvs_set li.active').length) {
-					icon.removeClass('icon-lock');
-					icon.addClass('icon-unlock');
-					$(this).attr('data-name', '解锁');
+					cvsSet.setLockStatus(true);
 					$('#j-cvs_set li.active').addClass('lock');
 				} else {
-					icon.removeClass('icon-unlock');
-					icon.addClass('icon-lock');
-					$(this).attr('data-name', '锁定');
+					cvsSet.setLockStatus(true);
 					$('#j-cvs_set li.active').removeClass('lock');
 				}
 				return false;
@@ -894,6 +890,10 @@ $(function() {
 				} else if($ul.hasClass('m-lib_word')) {
 					dragObj = $('<div>');
 					dragObj.html('ABcd');
+					dragObj.css({
+						fontSize: '24px',
+						color: '#333'
+					})
 					isWordBlock = true;
 				} else {
 					dragObj = $('<img  src="" />');
@@ -902,8 +902,8 @@ $(function() {
 					id = id ? id : '';
 					dragObj.attr('src', src);
 				}
-				w = $(this).find('a').eq(0).width();
-				h = $(this).find('a').eq(0).width();
+				w = $(this).width();
+				h = $(this).height();
 				l = e.pageX - (w + 20);
 				t = e.pageY - (h + 20);;
 				dragObj.attr('class', 'dobj');
@@ -946,7 +946,7 @@ $(function() {
 						isWordBlock: isWordBlock
 					});
 				}
-				if (dragObj) {
+				if(dragObj) {
 					dragObj.remove();
 				}
 				//数据还原

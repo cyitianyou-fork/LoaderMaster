@@ -1,6 +1,7 @@
 (function($) {
 
 	$.extend({
+		//显示或隐藏工具栏的名字
 		nameEle: $('<span class="u-tool_name"></span>'),
 		showName: function(options) {
 			var defaults = {
@@ -18,6 +19,61 @@
 		},
 		hideName: function() {
 			$.nameEle.remove();
+		},
+		//文字输入框
+		inputBox: $('<div id="j-input_word" class="m-word_input">' +
+			'<input type="text" placeholder="请输入文字内容" />' +
+			'<span>确定</span>' +
+			'</div>'),
+		//输入框输入文字的绑定对象
+		inputTar: null,
+		//输入框在某个对象下输入的文字
+		text: '',
+		//初始化输入框
+		initInputBox: function() {
+			$('body').append($.inputBox);
+			$.inputBox.on('click', function(e) {
+				$.inputBox.show();
+				return false;
+			});
+			$.inputBox.find('span').eq(0).on('click', function() {
+				$.text += $.inputBox.find('input').eq(0).val();
+				$.inputTar.html($.text);
+			});
+			$.inputBox.find('input').eq(0).on('keydown', function(e) {
+				if(e.keyCode == 8) {
+					e.stopPropagation();
+				} else if(e.keyCode == 13) {
+					if($.text != '') {
+						$.text += $.inputBox.find('input').eq(0).val() + '<br>';
+					} else {
+						$.text = $.inputBox.find('input').eq(0).val() + '<br>';
+					}
+					$.inputTar.html($.text);
+					$.inputBox.find('input').eq(0).val('');
+				}
+			});
+			$.inputBox.hide();
+		},
+		//显示或隐藏输入框
+		showInput: function(tar) {
+			$.inputTar = tar;
+			$.text = tar.html();
+			if($.text != '请输入文字内容') {
+				var match = $.text.match(/<br>/i);
+				if(match) {
+					$.inputBox.find('input').eq(0).val($.text.substring(0, match.index));
+				} else {
+					$.inputBox.find('input').eq(0).val($.text);
+				}
+			} else {
+				$.text = '';
+			}
+			$.inputBox.show();
+		},
+		hideInput: function() {
+			$.inputBox.hide();
+			$.inputBox.find('input').eq(0).val('');
 		}
 	})
 })(jQuery);
@@ -35,11 +91,13 @@ var cvsSet = (function() {
 		closeTool();
 		closeLib();
 		unselected();
+		$.initInputBox();
 	}
 	//失去焦点时，控制点消失
 	function unselected() {
 		$(document).on('click', function() {
 			$('#j-cvs_set li').removeClass('active');
+			$.hideInput();
 		});
 	}
 	//设置应画布tab栏宽度
@@ -157,6 +215,7 @@ var cvsSet = (function() {
 	}
 
 	function addProduct(info) {
+		var w, h, x, y, $inner;
 		var newLi = $('<li>' +
 			'<div class="g-pointctrl">' +
 			'<div class="m-rotatepoint">' +
@@ -174,53 +233,66 @@ var cvsSet = (function() {
 			'</div>' +
 			'</div>' +
 			'</li>');
-		var w, h;
+		$('#j-cvs_set ul.active').append(newLi); //这里必须先添加到父级上，再设置left和top值，不然无法获获取高宽
+		var defer = $.Deferred(); //设置延迟函数，使得图片加载完，获取宽度，再设置样式
 		if(info.isColorBlock) {
-			var $dv = $('<div>');
-			$dv.css({
-				width: 68,
-				height: 68,
-				background: info.color,
-			});
-			w=68;
-			h=68;
-			newLi.append($dv);
+			$inner = $('<div class="u-color inner"></div>');
+			newLi.append($inner);
+			$inner.css('background', info.color);
+			w = 68;
+			h = 68;
+			defer.resolve();
 		} else if(info.isWordBlock) {
-			w=136;
-			h=68;
-			newLi.html('请输入文字');
+			var $inner = $('<div class="u-word inner">请输入文字内容</div>');
+			newLi.append($inner);
+			w = 136;
+			h = 68;
+			defer.resolve();
 		} else {
-			var $img = $('<img  src="' + info.src + '" />');
-			$img.load(function(){
-				newLi.append($img);
-				w = $img.width();
-				h = $img.height()
-				console.log(w+','+h);
-				$img.attr('data-id', info.id);
+			$inner = $('<img class="inner" src="' + info.src + '" />');
+			$inner.load(function() {
+				newLi.append($inner);
+				w = $inner.width();
+				h = $inner.height()
+				$inner.attr('data-id', info.id);
 				//保存图片最原始的高度和宽度
-				$img.attr('data-initW', w);
-				$img.attr('data-initH', h);
-			});
+				$inner.attr('data-initW', w);
+				$inner.attr('data-initH', h);
+				defer.resolve();
+			})
 		}
-		$('#j-cvs_set ul.active').append(newLi); //这里必须先添加到父级上，再设置left和top值，不然无法获取$dv的高宽
-		var x = info.x - w / 2;
-		var y = info.y - h / 2;
-		newLi.css({
-			width: w,
-			height: h,
-			left: x,
-			top: y,
-			zIndex: cvsSet.zIndex++
+		defer.done(function() {
+			x = info.x - w / 2;
+			y = info.y - h / 2;
+			newLi.css({
+				width: w,
+				height: h,
+				left: x,
+				top: y,
+				zIndex: cvsSet.zIndex++
+			});
 		});
 		var newProc = new Product(newLi);
 		newProc.init(); //最后初始化
 
 		//初始化锁定按钮状态
-		$('#j-lock .icon').removeClass('icon-unlock');
-		$('#j-lock .icon').addClass('icon-lock');
-		$('#j-lock').attr('data-name', '锁定');
+		cvsSet.setLockStatus(false);
 		$('#j-cvs_set li.active').removeClass('active');
 		return newProc;
+	}
+
+	function setLockStatus(flag) {
+		//flag表示是否处于锁定状态
+		var icon = $('#j-lock .icon');
+		if(flag) {
+			icon.removeClass('icon-lock');
+			icon.addClass('icon-unlock');
+			$('#j-lock').attr('data-name', '解锁');
+		} else {
+			icon.removeClass('icon-unlock');
+			icon.addClass('icon-lock');
+			$('#j-lock').attr('data-name', '锁定');
+		}
 	}
 
 	return {
@@ -228,7 +300,8 @@ var cvsSet = (function() {
 		zIndex: zIndex,
 		bind: bind,
 		setTabWidth: setTabWidth,
-		addProduct: addProduct
+		addProduct: addProduct,
+		setLockStatus: setLockStatus
 	}
 })();
 
@@ -236,38 +309,45 @@ function Product(obj) {
 	this.obj = obj;
 }
 Product.prototype.init = function() {
-	this.selected();
-	this.drag();
-	this.rotate();
-	this.scale();
+		this.selected();
+		this.drag();
+		this.rotate();
+		this.scale();
+	}
+	//是否显示输入框
+Product.prototype.isShowInputBox = function() {
+		$.hideInput();
+		//文本输入框是否显示
+		var $input = this.obj.find('.u-word');
+		var $ul = this.obj.find('ul');
+		if($('#j-cvs_set li.active').length == 1 && $input.length > 0 && $ul.length < 1) {
+			$.showInput($input);
+		}
+	}
+	//点击或按下时添加被选中项目
+Product.prototype.addSelectItem = function(e) {
+	if(!this.obj.hasClass('active')) {
+		if(!e.shiftKey) {
+			$('#j-cvs_set li').removeClass('active');
+		}
+		this.obj.addClass('active');
+	}
 }
 Product.prototype.selected = function() {
 		var _this = this;
 		this.obj.on('click', function(e) {
-			if(!$(this).hasClass('active')) {
-				if(!e.shiftKey) {
-					$('#j-cvs_set li').removeClass('active');
-				}
-				$(this).addClass('active');
-			}
+			_this.addSelectItem(e);
+			//锁定按钮状态
 			if($('#j-cvs_set li.active').length > 0) {
-				var icon = $('#j-lock .icon');
 				var off = true;
 				$('#j-cvs_set li.active').each(function(i, ele) {
 					if(!$(ele).hasClass('lock')) {
 						off = false;
 					}
 				});
-				if(off) {
-					icon.removeClass('icon-lock');
-					icon.addClass('icon-unlock');
-					$('#j-lock').attr('data-name', '解锁');
-				} else {
-					icon.removeClass('icon-unlock');
-					icon.addClass('icon-lock');
-					$('#j-lock').attr('data-name', '锁定');
-				}
+				cvsSet.setLockStatus(off);
 			}
+			_this.isShowInputBox();
 			return false;
 		});
 	}
@@ -276,13 +356,8 @@ Product.prototype.drag = function() {
 		var _this = this;
 		this.obj.on('mousedown', function(e) {
 			var tmpAngle = [];
-			//按下添加active
-			if(!$(this).hasClass('active')) {
-				if(!e.shiftKey) {
-					$('#j-cvs_set li').removeClass('active');
-				}
-				$(this).addClass('active');
-			}
+			_this.addSelectItem(e);
+			_this.isShowInputBox();
 			//判断是否是也有lock
 			if($('#j-cvs_set li.active.lock').length > 0) {
 				return;
@@ -529,7 +604,7 @@ Product.prototype.scale = function() {
 			left: bases[tar.index].left + tar.disl,
 			top: bases[tar.index].top + tar.dist,
 		});
-		var $img = tar.ele.find('img');
+		var $img = tar.ele.find('.inner');
 		if($img.length > 1) {
 			tar.ele.find('li').each(function(j, eleLi) {
 
