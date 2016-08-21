@@ -1,21 +1,62 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
 		<style type="text/css">
-			#p{position: absolute; padding: 5px; width: 96px; height: 96px; border: 1px solid #000;}
-			#c{position: absolute; left: 2px; top: 2px; width: 100px; height: 100px; background: red;}
+			#p {
+				position: absolute;
+				padding: 5px;
+				width: 96px;
+				height: 96px;
+				border: 1px solid #000;
+			}
+			
+			#c {
+				position: absolute;
+				left: 2px;
+				top: 2px;
+				width: 100px;
+				height: 100px;
+				background: red;
+			}
 		</style>
+		<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/template7.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(function(){
+				var data={
+					list: [
+						{"name":"fanfan","age":"23"},
+						{"name":"mm","age":"25"}
+					]
+				};
+				data={"name":"fanfan"}
+				var temp=$('#tt2').html();
+				var cc=Template7.compile(temp);
+				console.log(cc)
+				var html= cc(data);
+				$('#dv2').html(html);
+			})
+		</script>
 	</head>
+
 	<body>
-		<div id="p">
-			<div id="c" contenteditable="true">这是一段可编辑的段落。请试着编辑该文本。</div>
+		<ul id="dv">
+
+		</ul>
+		<script id="tt" type="text/template7">
+			{{#each list}}
+			<li>my name is {{name}},my age is <strong>{{age}}</strong></li>
+			{{/each}}
+		</script>
+		<div id="dv2">
+			
 		</div>
-		<div id="p" style="top: 200px;">
-			<div id="c" contenteditable="true">
-				hello
-			</div>
-		</div>
+		<script id="tt2" type="text/template7">
+			{{name}}
+		</script>
 	</body>
+
 </html>

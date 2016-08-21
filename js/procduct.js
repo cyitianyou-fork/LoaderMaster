@@ -1,87 +1,100 @@
-(function($) {
+//相关产品推荐
+var relProc = (function() {
+	function bind() {
+		toggleRelInfo();
+		toggleList();
+	}
 
-	$.extend({
-		//显示或隐藏工具栏的名字
-		nameEle: $('<span class="u-tool_name"></span>'),
-		showName: function(options) {
-			var defaults = {
-				x: 0,
-				y: 0,
-				text: "name"
-			}
-			var rs = $.extend(true, {}, defaults, options);
-			$.nameEle.html(rs.text);
-			$.nameEle.css({
-				left: rs.x,
-				top: rs.y
-			});
-			$('body').append($.nameEle);
-		},
-		hideName: function() {
-			$.nameEle.remove();
-		},
-		//文字输入框
-		inputBox: $('<div id="j-input_word" class="m-word_input">' +
-			'<input type="text" placeholder="请输入文字内容" />' +
-			'<span>确定</span>' +
-			'</div>'),
-		//输入框输入文字的绑定对象
-		inputTar: null,
-		//输入框在某个对象下输入的文字
-		text: '',
-		//初始化输入框
-		initInputBox: function() {
-			$('body').append($.inputBox);
-			$.inputBox.on('click', function(e) {
-				$.inputBox.show();
-				return false;
-			});
-			$.inputBox.find('span').eq(0).on('click', function() {
-				$.text += $.inputBox.find('input').eq(0).val();
-				$.inputTar.html($.text);
-			});
-			$.inputBox.find('input').eq(0).on('keydown', function(e) {
-				if(e.keyCode == 8) {
-					e.stopPropagation();
-				} else if(e.keyCode == 13) {
-					if($.text != '') {
-						$.text += $.inputBox.find('input').eq(0).val() + '<br>';
-					} else {
-						$.text = $.inputBox.find('input').eq(0).val() + '<br>';
-					}
-					$.inputTar.html($.text);
-					$.inputBox.find('input').eq(0).val('');
+	function toggleRelInfo() {
+		$(document).on('click', '#j-rel_list li', function() {
+			showRelInfo($(this).index());
+		});
+	}
+
+	function toggleList() {
+		$(document).on('click', '#j-rel_bt', function() {
+			$('.m-rel_list').toggle();
+		});
+	}
+	//加载数据
+	function load(url) {
+		var data = new DataLoader({
+			template: $('#t-rel_list'),
+			container: $('#j-rel_list'),
+			url: url,
+			fn: function() {
+				if($('#j-rel_list li').length > 0) {
+					$('.g-relative_proc').show();
+					$('#j-rel_list').width($('#j-rel_list li').eq(0).outerWidth(true) * $('#j-rel_list li').length);
+					showRelInfo(0);
+
 				}
-			});
-			$.inputBox.hide();
-		},
-		//显示或隐藏输入框
-		showInput: function(tar) {
-			$.inputTar = tar;
-			$.text = tar.html();
-			if($.text != '请输入文字内容') {
-				var match = $.text.match(/<br>/i);
-				if(match) {
-					$.inputBox.find('input').eq(0).val($.text.substring(0, match.index));
-				} else {
-					$.inputBox.find('input').eq(0).val($.text);
-				}
-			} else {
-				$.text = '';
 			}
-			$.inputBox.show();
-		},
-		hideInput: function() {
-			$.inputBox.hide();
-			$.inputBox.find('input').eq(0).val('');
-		}
-	})
-})(jQuery);
+		});
+		data.getData();
+	}
+	//显示相关产品的详情信息
+	function showRelInfo(index) {
+		var tar = $('#j-rel_list li').eq(index);
+		$('#j-rel_show img').attr('src', tar.find('img').attr('src'));
+		$('#j-rel_show h4').html(tar.attr('data-name'));
+		$('#j-rel_show strong').html(tar.attr('data-price'));
+		$('#j-rel_show span').eq(0).html('规格：' + tar.attr('data-spec'));
+		$('#j-rel_show span').eq(1).html('材质：' + tar.attr('data-material'));
+		$('#j-rel_show a').attr('href', tar.attr('data-url'));
+	}
+	return {
+		bind: bind,
+		load: load
+	}
+})();
+
+var relImg = (function() {
+	function bind() {
+		toggleImg();
+	}
+
+	function load(url) {
+		var data = new DataLoader({
+			template: $('#t-rel_img'),
+			container: $('#j-rel_img'),
+			url: url,
+			fn: function() {
+				if($('#j-rel_img li').length > 0) {
+					$('.g-relative_img').show();
+					$('#j-rel_img li').eq(0).addClass('active');
+				}
+			}
+		});
+		data.getData();
+	}
+
+	function toggleImg() {
+		$(document).on('click', '#j-rel_img li', function() {
+			$(this).addClass('active').siblings().removeClass('active');
+			$('#j-cvs_set li.active').find('img').attr('src', $(this).find('img').attr('src'));
+			$('#j-cvs_set li.active').css({
+				width: $('#j-cvs_set li.active').find('img').width(),
+				height: $('#j-cvs_set li.active').find('img').height()
+			});
+			return false;
+		});
+	}
+	return {
+		load: load,
+		bind: bind
+	}
+})();
 
 var cvsSet = (function() {
 	var cur = 0; //表示当前激活tab栏Li的索引值
 	var curLeft = 0; //表示位于最左边的那个tab栏的索引值
 	var zIndex = 0;
+	var scale = 1; //画布缩放倍数 .5-2
+	var trpos = {
+		x: 0,
+		y: 0
+	};
 
 	function bind() {
 		moveCvsTab();
@@ -98,6 +111,7 @@ var cvsSet = (function() {
 		$(document).on('click', function() {
 			$('#j-cvs_set li').removeClass('active');
 			$.hideInput();
+			$('.g-relative_img').hide();
 		});
 	}
 	//设置应画布tab栏宽度
@@ -181,7 +195,6 @@ var cvsSet = (function() {
 			if($('#j-tabc li').length < 2) {
 				return;
 			}
-			set.splice(cvsSet.cur, 1);
 			$(this).parents('li').remove();
 			$('#j-cvs_set ul').eq(cvsSet.cur).remove();
 			if(cvsSet.cur == $('#j-tabc li').length) {
@@ -233,6 +246,9 @@ var cvsSet = (function() {
 			'</div>' +
 			'</div>' +
 			'</li>');
+		if(info.isProc) {
+			newLi.attr('data-cg', info.isProc);
+		}
 		$('#j-cvs_set ul.active').append(newLi); //这里必须先添加到父级上，再设置left和top值，不然无法获获取高宽
 		var defer = $.Deferred(); //设置延迟函数，使得图片加载完，获取宽度，再设置样式
 		if(info.isColorBlock) {
@@ -262,7 +278,7 @@ var cvsSet = (function() {
 			})
 		}
 		defer.done(function() {
-			x = info.x - w / 2;
+			x = info.x - w / 2 ;
 			y = info.y - h / 2;
 			newLi.css({
 				width: w,
@@ -270,7 +286,10 @@ var cvsSet = (function() {
 				left: x,
 				top: y,
 				zIndex: cvsSet.zIndex++
+					//transform: 'scale(' + cvsSet.scale + ')'
 			});
+			//控制点不缩放
+			//newLi.find('.g-pointctrl span').css('transform', 'scale(' + 1 / cvsSet.scale + ')');
 		});
 		var newProc = new Product(newLi);
 		newProc.init(); //最后初始化
@@ -298,6 +317,8 @@ var cvsSet = (function() {
 	return {
 		cur: cur,
 		zIndex: zIndex,
+		scale: scale,
+		trpos: trpos,
 		bind: bind,
 		setTabWidth: setTabWidth,
 		addProduct: addProduct,
@@ -331,6 +352,19 @@ Product.prototype.addSelectItem = function(e) {
 			$('#j-cvs_set li').removeClass('active');
 		}
 		this.obj.addClass('active');
+	}
+	//显示相关推荐
+	var $img = $('#j-cvs_set li.active').eq(0).find('img');
+	if($('#j-cvs_set li.active').length == 1 && $img.length == 1) {
+		relImg.load('tmp/relImg.json');
+		if(this.obj.attr('data-cg') == 'proc') {
+			relProc.load('tmp/relProc.json');
+		} else {
+			$('.g-relative_proc').hide();
+		}
+	} else {
+		$('.g-relative_proc').hide();
+		$('.g-relative_img').hide();
 	}
 }
 Product.prototype.selected = function() {
@@ -370,18 +404,40 @@ Product.prototype.drag = function() {
 			var startx = e.pageX; //起始点
 			var starty = e.pageY;
 			var x = 0,
-				y = 0; //临时变量
+				y = 0,
+				$ul,
+				angleLi; //临时变量
 			$(document).on('mousemove.drag', function(e) {
 				x = e.pageX - startx;
 				y = e.pageY - starty;
 				$('#j-cvs_set li.active').each(function(i, ele) {
-					$(ele).css('transform', 'translate3d(' + x + 'px,' + y + 'px,0px) rotateZ(' + tmpAngle[i] + 'deg)');
+					$ul = $(ele).find('ul');
+					if($ul.length > 0) {
+						$(ele).css('transform', 'translate3d(' + x + 'px,' + y + 'px,0px) rotateZ(' + tmpAngle[i] + 'deg)');
+						$ul.find('li').each(function(i, eleLi) {
+							angleLi = parseFloat($(eleLi).attr('data-angle'));
+							angleLi = angleLi ? angleLi : 0;
+							$(eleLi).css('transform', 'rotateZ(' + angleLi + 'deg)');
+						});
+					} else {
+						$(ele).css('transform', 'translate3d(' + x + 'px,' + y + 'px,0px) rotateZ(' + tmpAngle[i] + 'deg)');
+					}
 				});
 			});
 			$(document).on('mouseup.drag', function(e) {
 				$(document).off('.drag');
 				$('#j-cvs_set li.active').each(function(i, ele) {
-					$(ele).css('transform', 'translate3d(0,0,0) rotateZ(' + tmpAngle[i] + 'deg)');
+					$ul = $(ele).find('ul');
+					if($ul.length > 0) {
+						$(ele).css('transform', 'translate3d(0px,0px,0px) rotateZ(' + tmpAngle[i] + 'deg)');
+						$ul.find('li').each(function(i, eleLi) {
+							angleLi = parseFloat($(eleLi).attr('data-angle'));
+							angleLi = angleLi ? angleLi : 0;
+							$(eleLi).css('transform', 'rotateZ(' + angleLi + 'deg)');
+						});
+					} else {
+						$(ele).css('transform', 'translate3d(0px,0px,0px) rotateZ(' + tmpAngle[i] + 'deg)');
+					}
 					//在移动或者旋转中获取元素的位置都用.css()的方法，不用offset(),原因是不管是移动、旋转、或者放大缩小，offset()的值都在变化，只有通过.css()方法才能获取变化前的那个值
 					$(ele).css({
 						left: parseFloat($(ele).css('left')) + x,
@@ -395,7 +451,8 @@ Product.prototype.drag = function() {
 	//旋转
 Product.prototype.rotate = function() {
 		var _this = this;
-		var angleZ = 0, //旋转角度
+		var $ul,
+			angleZ = 0, //旋转角度
 			cx = 0,
 			cy = 0; //中心点
 		this.obj.find('.m-rotatepoint span').on('mousedown', function(e) {
@@ -410,15 +467,25 @@ Product.prototype.rotate = function() {
 				$(document).on('mousemove.rotate', function(e) {
 					disx = e.pageX - cx;
 					disy = e.pageY - cy;
+					console.log(cx + ',' + cy);
 					angle = 360 * Math.atan2(disy, disx) / (2 * Math.PI)
 					angle = angle < -90 ? (450 + angle) : angle + 90;
-					_this.obj.css('transform', 'rotateZ(' + angle + 'deg)');
+					$ul = _this.obj.find('ul');
+					if($ul.length > 0) {
+						_this.obj.css('transform', 'rotateZ(' + angle + 'deg)');
+						$ul.find('li').each(function(i, eleLi) {
+							angleLi = parseFloat($(eleLi).attr('data-angle'));
+							angleLi = angleLi ? angleLi : 0;
+							$(eleLi).css('transform', 'rotateZ(' + angleLi + 'deg)');
+						});
+					} else {
+						_this.obj.css('transform', 'rotateZ(' + angle + 'deg)');
+					}
 				});
 				$(document).on('mouseup.rotate', function(e) {
 					$(document).off('.rotate');
 					//保存已经旋转的角度值
 					_this.obj.attr('data-angle', angle);
-					_this.obj.css('transform', 'rotateZ(' + angle + 'deg)');
 					$('body').css('cursor', 'default');
 				});
 				return false;
@@ -429,6 +496,7 @@ Product.prototype.rotate = function() {
 Product.prototype.scale = function() {
 	var _this = this;
 	var bases = [];
+	var scale = 0;
 	this.obj.find('.m-pointctrl span').on('mousedown', function(e) {
 		if($('#j-cvs_set li.active.lock').length > 0) {
 			return;
@@ -441,8 +509,7 @@ Product.prototype.scale = function() {
 		var disw = 0,
 			dish = 0,
 			disl = 0,
-			dist = 0
-		scale = 0;
+			dist = 0;
 		$('#j-cvs_set li.active').each(function(i, ele) {
 			var base = {
 				width: $(ele).width(),
@@ -451,8 +518,8 @@ Product.prototype.scale = function() {
 				top: parseFloat($(ele).css('top'))
 			};
 			bases.push(base);
-			var $img = $(ele).find('img');
-			if($img.length > 1) {
+			var $ul = $(ele).find('ul');
+			if($ul.length > 0) {
 				$(ele).find('li').each(function(j, eleLi) {
 					$(eleLi).attr('data-width', $(eleLi).width());
 					$(eleLi).attr('data-height', $(eleLi).height());
@@ -626,7 +693,7 @@ Product.prototype.scale = function() {
 					left: l,
 					top: t
 				})
-				$(eleLi).find('img').css({
+				$(eleLi).find('.inner').css({
 					width: w,
 					height: h
 				})

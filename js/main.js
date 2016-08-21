@@ -3,15 +3,19 @@ $(function() {
 	function init() {
 		win.init();
 		library.init();
+		popMenu.init();
 		bind();
 	}
 	//所有dom元素绑定事件
 	function bind() {
 		win.bind();
 		menu.bind();
+		popMenu.bind();
 		tool.bind();
 		library.bind();
 		cvsSet.bind();
+		relProc.bind();
+		relImg.bind();
 	}
 
 	//全局模块
@@ -116,6 +120,8 @@ $(function() {
 		function bind() {
 			showSubMenu();
 			newCvs();
+			savePop();
+			openPop();
 		}
 		//菜单栏,鼠标置上显示二级菜单，移开隐藏二级菜单
 		function showSubMenu() {
@@ -158,8 +164,82 @@ $(function() {
 				cvsSet.cur = $('#j-tabc li').length - 1;
 			});
 		}
+		//保存、发布弹出框
+		function savePop() {
+			$(document).on('click', '.u-pairs', function() {
+				$('#j-save_pairs').fadeIn();
+			});
+			$(document).on('click', '.u-plan', function() {
+				$('#j-save_plan').fadeIn();
+			});
+		}
+		//打开
+		function openPop() {
+			$(document).on('click', '#j-open', function() {
+				$('#j-open_pop').fadeIn();
+			});
+		}
 
 		return {
+			bind: bind
+		}
+	})();
+
+	popMenu = (function() {
+		function init() {
+			$('.pop').hide();
+			//			$('#j-save_pairs').hide();
+			//			$('#j-save_plan').hide();
+			getOpenData('tmp/pop-list.json');
+		}
+
+		function bind() {
+			popSave();
+			popOpen();
+		}
+
+		//保存弹出框事件
+		function popSave() {
+			$(document).on('click', '.pop-save .col-content .icon-traigledown', function() {
+				$(this).parents('.col-2').find('.subcol-2').toggle();
+			});
+			$(document).on('click', '.pop-save .subcol-2 a', function() {
+				var par = $(this).parents('.subcol-2');
+				var con = par.siblings('.col-content').find('span');
+				par.hide();
+				if(par.hasClass('subcol-color')) {
+					var bg = $(this).find('i').eq(0).css('background');
+					con.css('background', bg);
+				} else {
+					var val = $(this).html();
+					con.html(val);
+				}
+			});
+		}
+
+		//获取打开弹出框的数据
+		function getOpenData(url) {
+			var data = new DataLoader({
+				template: $('#t-pop_list'),
+				container: $('#j-pop_list'),
+				url: url
+			});
+			data.getData();
+		}
+		//打开弹出框事件
+		function popOpen() {
+			$(document).on('click', '.pop-tab span', function() {
+				$(this).addClass('active').siblings().removeClass('active');
+				getOpenData('tmp/pop-list.json');
+			});
+			$(document).on('click', '.cho_cond span', function() {
+				$(this).addClass('active').siblings().removeClass('active');
+				getOpenData('tmp/pop-list.json');
+			});
+		}
+
+		return {
+			init: init,
 			bind: bind
 		}
 	})();
@@ -178,6 +258,7 @@ $(function() {
 			layerBackward();
 			layerBottom();
 			toggleLock();
+			zoomInAndOut();
 		}
 		//鼠标放在工具栏上显示工具的名称
 		function showToolName() {
@@ -198,11 +279,15 @@ $(function() {
 			//通过工具栏删除
 			$(document).on('click', '#j-delete', function() {
 				$('#j-cvs_set li.active').remove();
+				$('.g-relative_proc').hide();
+				$('.g-relative_img').hide();
 			});
 			//通过键盘delete删除
 			$(document).on('keydown', function(e) {
 				if(e.keyCode == 8) {
 					$('#j-cvs_set li.active').remove();
+					$('.g-relative_proc').hide();
+					$('.g-relative_img').hide();
 				}
 			});
 		}
@@ -317,9 +402,9 @@ $(function() {
 					$activeLi.each(function(i, ele) {
 						var $img = $(ele).find('.inner');
 						maxZIndex = parseInt($(ele).css('zIndex')) > maxZIndex ? parseInt($(ele).css('zIndex')) : maxZIndex;
+						var angle = parseFloat($(ele).attr('data-angle'));
+						angle = angle ? angle : 0;
 						if($img.length > 1) {
-							var angle = parseFloat($(ele).attr('data-angle'));
-							angle = angle ? angle : 0;
 							$(ele).find('li').each(function(j, eleLi) {
 								var ABx = parseFloat($(eleLi).css('left')) + $(eleLi).width() / 2 - $(ele).width() / 2;
 								var ABy = parseFloat($(eleLi).css('top')) + $(eleLi).height() / 2 - $(ele).height() / 2;
@@ -346,7 +431,7 @@ $(function() {
 						} else {
 							$(ele).css({
 								left: parseFloat($(ele).css('left')) - left,
-								top: parseFloat($(ele).css('top')) - top
+								top: parseFloat($(ele).css('top')) - top,
 							});
 							$ul.append($(ele));
 						}
@@ -567,6 +652,78 @@ $(function() {
 			});
 		}
 
+		//放大和缩小
+		function zoomInAndOut() {
+			var point = $('#j-zoom .u-dian').eq(0);
+			//总长度的一半
+			var ttL = Math.floor(($('#j-zoom').height() - point.height()) / 2);
+			//初始化中心点
+			var certer = parseFloat(point.css('top'));
+			//当前长度
+			var curL = 0;
+			$(document).on('click', '#j-zoom .u-jia', function() {
+				if(curL < ttL) {
+					curL++;
+					point.css('transform', 'translate3d(0,' + curL + 'px,0)');
+					toZoom(curL);
+				}
+			});
+			$(document).on('click', '#j-zoom .u-jian', function() {
+				if(curL > -ttL) {
+					curL--;
+					point.css('transform', 'translate3d(0,' + curL + 'px,0)');
+					toZoom(curL);
+				}
+			});
+			point.on('mousedown', function(e) {
+				$('body').css('cursor', 'pointer');
+				var start = e.pageY;
+				var top = 0;
+				$(document).on('mousemove.zoom', function(e) {
+					top = e.pageY - start;
+					top += curL;
+					if(top < -ttL) {
+						top = -ttL;
+					} else if(top > ttL) {
+						top = ttL;
+					}
+					point.css('transform', 'translate3d(0,' + top + 'px,0)');
+					toZoom(top);
+				});
+				$(document).on('mouseup.zoom', function() {
+					$(document).off('.zoom');
+					curL = top;
+					$('body').css('cursor', 'default');
+				});
+			});
+
+			function toZoom(curL) {
+				//放大倍数范伟：.5-2
+				cvsSet.scale = curL > 0 ? (1 + curL / ttL) : (1 + curL / (2 * ttL));
+				$('#j-cvs_set >ul >li').each(function(i, ele) {
+					var angle = parseFloat($(ele).attr('data-angle'));
+					angle = angle ? angle : 0;
+					$(ele).css('transform', 'rotateZ(' + angle + 'deg) scale(' + cvsSet.scale + ')');
+					$(ele).find('.g-pointctrl span').css('transform', 'scale(' + 1 / cvsSet.scale + ')');
+				});
+			}
+		}
+
+		//			function toZoom(curL) {
+		//				//放大倍数范伟：.5-2
+		//				cvsSet.scale = curL > 0 ? (1 + curL / ttL) : (1 + curL / (2 * ttL));
+		//				var w = $('#j-cvs_core').width();
+		//				var h = $('#j-cvs_core').height();
+		//				var nowW = w / cvsSet.scale;
+		//				var nowH = h / cvsSet.scale;
+		//				cvsSet.trpos.x = (w - nowW) / 2;
+		//				cvsSet.trpos.y = (h - nowH) / 2;
+		//				$('#j-cvs_set').css({
+		//					transform: 'scale(' + cvsSet.scale + ') '
+		//				});
+		//			}
+		//		}
+
 		return {
 			bind: bind
 		}
@@ -610,7 +767,6 @@ $(function() {
 		}
 
 		function bind() {
-
 			//地区选择，当省份变化时，加载市的数据
 			$(document).on('change', '#j-province', function() {
 				province = $(this).val();
@@ -875,10 +1031,14 @@ $(function() {
 			var w, h, l, t, $ul, color, src, id,
 				off = false, //off设置为false,只有当lib-drag li点击后才设置为true,防止其它元素点击通过冒泡触发document的mouseup事件
 				isColorBlock = false, //是否是颜色块
-				isWordBlock = false; //是否是文字块
+				isWordBlock = false, //是否是文字块
+				isProc = ''; //是否是产品类，只有产品类才加载相关推荐
 			$(document).on('mousedown', '.lib-drag li', function(e) {
 				off = true;
 				$ul = $(this).parent('ul');
+				if($ul.hasClass('proc')) {
+					isProc = 'proc';
+				}
 				if($ul.hasClass('m-lib_color')) {
 					dragObj = $('<div>');
 					color = $(this).css('background');
@@ -943,8 +1103,15 @@ $(function() {
 						id: id,
 						color: color,
 						isColorBlock: isColorBlock,
-						isWordBlock: isWordBlock
+						isWordBlock: isWordBlock,
+						isProc: isProc
 					});
+					//加载产品推荐
+					if(isProc == 'proc') {
+						relProc.load('tmp/relProc.json');
+					} else {
+						$('.g-relative_proc').hide();
+					}
 				}
 				if(dragObj) {
 					dragObj.remove();
@@ -953,6 +1120,7 @@ $(function() {
 				off = false;
 				isColorBlock = false;
 				isWordBlock = false;
+				isProc = '';
 			});
 
 		}

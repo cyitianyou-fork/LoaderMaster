@@ -1,3 +1,84 @@
+//插件
+(function($) {
+
+	$.extend({
+		//显示或隐藏工具栏的名字
+		nameEle: $('<span class="u-tool_name"></span>'),
+		showName: function(options) {
+			var defaults = {
+				x: 0,
+				y: 0,
+				text: "name"
+			}
+			var rs = $.extend(true, {}, defaults, options);
+			$.nameEle.html(rs.text);
+			$.nameEle.css({
+				left: rs.x,
+				top: rs.y
+			});
+			$('body').append($.nameEle);
+		},
+		hideName: function() {
+			$.nameEle.remove();
+		},
+		//文字输入框
+		inputBox: $('<div id="j-input_word" class="m-word_input">' +
+			'<input type="text" placeholder="请输入文字内容" />' +
+			'<span>确定</span>' +
+			'</div>'),
+		//输入框输入文字的绑定对象
+		inputTar: null,
+		//输入框在某个对象下输入的文字
+		text: '',
+		//初始化输入框
+		initInputBox: function() {
+			$('body').append($.inputBox);
+			$.inputBox.on('click', function(e) {
+				$.inputBox.show();
+				return false;
+			});
+			$.inputBox.find('span').eq(0).on('click', function() {
+				$.text += $.inputBox.find('input').eq(0).val();
+				$.inputTar.html($.text);
+			});
+			$.inputBox.find('input').eq(0).on('keydown', function(e) {
+				if(e.keyCode == 8) {
+					e.stopPropagation();
+				} else if(e.keyCode == 13) {
+					if($.text != '') {
+						$.text += $.inputBox.find('input').eq(0).val() + '<br>';
+					} else {
+						$.text = $.inputBox.find('input').eq(0).val() + '<br>';
+					}
+					$.inputTar.html($.text);
+					$.inputBox.find('input').eq(0).val('');
+				}
+			});
+			$.inputBox.hide();
+		},
+		//显示或隐藏输入框
+		showInput: function(tar) {
+			$.inputTar = tar;
+			$.text = tar.html();
+			if($.text != '请输入文字内容') {
+				var match = $.text.match(/<br>/i);
+				if(match) {
+					$.inputBox.find('input').eq(0).val($.text.substring(0, match.index));
+				} else {
+					$.inputBox.find('input').eq(0).val($.text);
+				}
+			} else {
+				$.text = '';
+			}
+			$.inputBox.show();
+		},
+		hideInput: function() {
+			$.inputBox.hide();
+			$.inputBox.find('input').eq(0).val('');
+		}
+	})
+})(jQuery);
+
 //库面板数据加载类
 function DataLoader(obj) {
 	this.obj = obj;
@@ -20,11 +101,11 @@ DataLoader.prototype.getData = function() {
 					
 					_this.toList();
 				} else {
-					_this.obj.container.html('<h2 style="margin:30px; color:#000">' + data.msg + '</h2>');
+					_this.obj.container.html('<h3 style="color:#000">' + data.msg + '</h3>');
 				}
 			},
 			error: function() {
-				_this.obj.container.html('<h2 style="margin:30px; color:#000">404! 网络出错了...</h2>');
+				_this.obj.container.html('<h3 style="color:#000">网络异常</h3>');
 			}
 		});
 	}
@@ -35,6 +116,9 @@ DataLoader.prototype.toList = function() {
 		var compiledTemplate = Template7.compile(template);
 		var html = compiledTemplate(this.context);
 		this.obj.container.html(html);
+		if (this.obj.fn) {
+			this.obj.fn();
+		}
 	}
 	//实现继承的方法
 function myextend(sub, sup) {
