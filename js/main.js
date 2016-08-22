@@ -5,6 +5,8 @@ $(function() {
 		library.init();
 		popMenu.init();
 		bind();
+		//清空所有的本地数据
+		sessionStorage.clear()
 	}
 	//所有dom元素绑定事件
 	function bind() {
@@ -24,6 +26,9 @@ $(function() {
 		function init() {
 			initCvsHeight();
 			initLibHeight();
+			//初始化画布的中心点
+			cvsSet.trpos.x = ($('#j-cvs_set').width() - $('#j-tools').width() - $('#j-library').width()) / 2;
+			cvsSet.trpos.y = $('#j-cvs_set').height() / 2 + $('#j-cvs_set').offset().top;
 		}
 
 		function bind() {
@@ -122,6 +127,8 @@ $(function() {
 			newCvs();
 			savePop();
 			openPop();
+			cancelCvs();
+			clearCvs();
 		}
 		//菜单栏,鼠标置上显示二级菜单，移开隐藏二级菜单
 		function showSubMenu() {
@@ -143,7 +150,7 @@ $(function() {
 
 		function newCvs() {
 			$(document).on('click', '#j-new_cvs', function() {
-				var cvsItem = $('<ul>');
+				var cvsItem = $('<ul data-version="0">');
 				var cvsTab = $('<li class="active">' +
 					'<input type="text" value="空白页" readonly="readonly" />' +
 					'<div class="u-tabc_chbt">' +
@@ -153,6 +160,8 @@ $(function() {
 					'<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>' +
 					'</div>' +
 					'</li>');
+				cvsItem.attr('id', 'cvs' + $('#j-cvs_set >ul').length);
+				//cvsItem.data('version','assda1');
 				$('#j-cvs_set').append(cvsItem);
 				$('#j-tabc').append(cvsTab);
 				cvsSet.setTabWidth();
@@ -177,6 +186,29 @@ $(function() {
 		function openPop() {
 			$(document).on('click', '#j-open', function() {
 				$('#j-open_pop').fadeIn();
+			});
+		}
+
+		//撤销
+		function cancelCvs() {
+			$(document).on('click', '#j-cancel', function() {
+				var key = $('#j-cvs_set >ul.active').attr('id');
+				var handle = window.sessionStorage.getItem(key);
+				if (handle) {
+					handle=handle.split('@');
+					console.log('l2='+handle.length)
+					handle.pop();
+					console.log('ll='+handle.length)
+					$('#j-cvs_set >ul.active').html(handle[handle.length-1]);
+					window.sessionStorage.setItem(key, handle.join(';'));
+				}
+			});
+		}
+
+		//清空
+		function clearCvs() {
+			$(document).on('click', '#j-reset', function() {
+				$('#j-cvs_set >ul.active').html('');
 			});
 		}
 
@@ -281,6 +313,7 @@ $(function() {
 				$('#j-cvs_set li.active').remove();
 				$('.g-relative_proc').hide();
 				$('.g-relative_img').hide();
+				cvsSet.localSave();
 			});
 			//通过键盘delete删除
 			$(document).on('keydown', function(e) {
@@ -288,6 +321,7 @@ $(function() {
 					$('#j-cvs_set li.active').remove();
 					$('.g-relative_proc').hide();
 					$('.g-relative_img').hide();
+					cvsSet.localSave();
 				}
 			});
 		}
@@ -308,13 +342,16 @@ $(function() {
 					var newProc = new Product($copy);
 					newProc.init();
 				});
+				cvsSet.localSave();
 				return false;
 			});
 		}
 		//水平镜像
 		function flipHorizontalProc() {
-			$(document).on('click', '#j-flipHorizontal', function() {
-				$('#j-cvs_set li.active img').each(function(i, ele) {
+			$(document).on('click', '#j-fliphorizontal', function() {
+				console.log('99')
+				$('#j-cvs_set li.active .img').each(function(i, ele) {
+					console.log(0)
 					var angle = $(ele).attr('data-angle'); //旋转角度
 					if(angle) {
 						angle = JSON.parse(angle);
@@ -330,13 +367,14 @@ $(function() {
 					angle = JSON.stringify(angle);
 					$(ele).attr('data-angle', angle);
 				});
+				cvsSet.localSave();
 				return false;
 			});
 		}
 		//垂直
 		function flipVerticalProc() {
-			$(document).on('click', '#j-flipVertical', function() {
-				$('#j-cvs_set li.active img').each(function(i, ele) {
+			$(document).on('click', '#j-flipvertical', function() {
+				$('#j-cvs_set li.active .img').each(function(i, ele) {
 					var angle = $(ele).attr('data-angle'); //旋转角度
 					if(angle) {
 						angle = JSON.parse(angle);
@@ -352,6 +390,7 @@ $(function() {
 					angle = JSON.stringify(angle);
 					$(ele).attr('data-angle', angle);
 				});
+				cvsSet.localSave();
 				return false;
 			});
 		}
@@ -445,6 +484,7 @@ $(function() {
 					var newProc = new Product($newLi);
 					newProc.init();
 				}
+				cvsSet.localSave();
 				return false;
 			});
 		}
@@ -452,7 +492,7 @@ $(function() {
 		function toPart() {
 			$(document).on('click', '#j-part', function() {
 				$('#j-cvs_set li.active').each(function(i, ele) {
-					var $img = $(ele).find('img');
+					var $img = $(ele).find('.img');
 					if($img.length > 1) {
 						var angle = parseFloat($(ele).attr('data-angle'));
 						angle = angle ? angle : 0;
@@ -487,6 +527,7 @@ $(function() {
 						$(ele).remove();
 					}
 				});
+				cvsSet.localSave();
 				return false;
 			});
 		}
@@ -524,6 +565,7 @@ $(function() {
 						$(ele).css('zIndex', zIndex);
 					}
 				});
+				cvsSet.localSave();
 				return false;
 			});
 		}
@@ -541,6 +583,7 @@ $(function() {
 						$(ele).css('zIndex', zIndex);
 					}
 				});
+				cvsSet.localSave();
 				return false;
 			});
 		}
@@ -555,6 +598,7 @@ $(function() {
 						$(ele).css('zIndex', zIndex);
 					}
 				});
+				cvsSet.localSave();
 				return false;
 			});
 		}
@@ -572,6 +616,7 @@ $(function() {
 						$(ele).css('zIndex', zIndex);
 					}
 				});
+				cvsSet.localSave();
 				return false;
 			});
 		}
@@ -645,9 +690,10 @@ $(function() {
 					cvsSet.setLockStatus(true);
 					$('#j-cvs_set li.active').addClass('lock');
 				} else {
-					cvsSet.setLockStatus(true);
+					cvsSet.setLockStatus(false);
 					$('#j-cvs_set li.active').removeClass('lock');
 				}
+				cvsSet.localSave();
 				return false;
 			});
 		}
@@ -665,7 +711,9 @@ $(function() {
 				if(curL < ttL) {
 					curL++;
 					point.css('transform', 'translate3d(0,' + curL + 'px,0)');
+					console.log()
 					toZoom(curL);
+					console.log($('#j-cvs_set .inner').eq(0).offset().left + $('#j-cvs_set .inner').eq(0).width() / 2)
 				}
 			});
 			$(document).on('click', '#j-zoom .u-jian', function() {
@@ -700,29 +748,12 @@ $(function() {
 			function toZoom(curL) {
 				//放大倍数范伟：.5-2
 				cvsSet.scale = curL > 0 ? (1 + curL / ttL) : (1 + curL / (2 * ttL));
-				$('#j-cvs_set >ul >li').each(function(i, ele) {
-					var angle = parseFloat($(ele).attr('data-angle'));
-					angle = angle ? angle : 0;
-					$(ele).css('transform', 'rotateZ(' + angle + 'deg) scale(' + cvsSet.scale + ')');
-					$(ele).find('.g-pointctrl span').css('transform', 'scale(' + 1 / cvsSet.scale + ')');
+				var tmpx, tmpy;
+				$('#j-cvs_set .inner').each(function(i, ele) {
+					cvsSet.setZoom($(ele), true);
 				});
 			}
 		}
-
-		//			function toZoom(curL) {
-		//				//放大倍数范伟：.5-2
-		//				cvsSet.scale = curL > 0 ? (1 + curL / ttL) : (1 + curL / (2 * ttL));
-		//				var w = $('#j-cvs_core').width();
-		//				var h = $('#j-cvs_core').height();
-		//				var nowW = w / cvsSet.scale;
-		//				var nowH = h / cvsSet.scale;
-		//				cvsSet.trpos.x = (w - nowW) / 2;
-		//				cvsSet.trpos.y = (h - nowH) / 2;
-		//				$('#j-cvs_set').css({
-		//					transform: 'scale(' + cvsSet.scale + ') '
-		//				});
-		//			}
-		//		}
 
 		return {
 			bind: bind

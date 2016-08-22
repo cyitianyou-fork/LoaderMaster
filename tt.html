@@ -5,58 +5,33 @@
 		<meta charset="UTF-8">
 		<title></title>
 		<style type="text/css">
-			#p {
-				position: absolute;
-				padding: 5px;
-				width: 96px;
-				height: 96px;
-				border: 1px solid #000;
-			}
-			
-			#c {
-				position: absolute;
-				left: 2px;
-				top: 2px;
-				width: 100px;
-				height: 100px;
-				background: red;
-			}
+			#wrap{position: absolute; left: 50px; bottom: 50px; width: 300px; height: 300px; background: yellow;}
+			#box{width: 200px; height: 200px; background: red;}
 		</style>
 		<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/template7.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			$(function(){
-				var data={
-					list: [
-						{"name":"fanfan","age":"23"},
-						{"name":"mm","age":"25"}
-					]
-				};
-				data={"name":"fanfan"}
-				var temp=$('#tt2').html();
-				var cc=Template7.compile(temp);
-				console.log(cc)
-				var html= cc(data);
-				$('#dv2').html(html);
+				var cx=$(window).width()/2;
+				var cy=$(window).height()/2;
+				$('#box').css('transformOrigin',cx+'px '+cy+'px');
+				var s=1;
+				$('#bt').on('click',function(){
+					s-=0.1;
+					$('#box').css('transform','scale('+s+')');
+				})
 			})
 		</script>
 	</head>
 
 	<body>
-		<ul id="dv">
-
-		</ul>
-		<script id="tt" type="text/template7">
-			{{#each list}}
-			<li>my name is {{name}},my age is <strong>{{age}}</strong></li>
-			{{/each}}
-		</script>
-		<div id="dv2">
+		<div id="wrap">
+			<div id="box">
+				
+			</div>
 			
 		</div>
-		<script id="tt2" type="text/template7">
-			{{name}}
-		</script>
+		<button id="bt">click</button>
 	</body>
 
 </html>

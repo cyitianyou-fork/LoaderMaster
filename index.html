@@ -9,8 +9,6 @@
 		<script type="text/javascript" src="js/jquery.js"></script>
 		<script src="js/template7.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/dataloader.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/procduct.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 
 	<body scroll="no">
@@ -127,10 +125,10 @@
 						</div>
 					</li>
 					<li>
-						<a href="javascript:"><i class="icon icon-undo"></i>撤销</a>
+						<a id="j-cancel" href="javascript:"><i class="icon icon-undo"></i>撤销</a>
 					</li>
 					<li>
-						<a href="javascript:"><i class="icon icon-reset"></i>重做</a>
+						<a id="j-reset" href="javascript:"><i class="icon icon-reset"></i>重置</a>
 					</li>
 				</ul>
 				<ul class="fr">
@@ -814,7 +812,7 @@
 					<!--画布集-->
 					<div id="j-cvs_set" class="g-cvs_set">
 						<!--画布-->
-						<ul class="active">
+						<ul id="cvs0" data-version="0" class="active">
 							<!--单个元素-->
 							<!--<li>
 								<div class="g-pointctrl">
@@ -1196,6 +1194,8 @@
 				</div>
 			</div>
 		</div>
+		<script src="js/procduct.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
 	</body>
 
 </html>

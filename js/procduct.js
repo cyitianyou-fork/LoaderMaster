@@ -91,6 +91,7 @@ var cvsSet = (function() {
 	var curLeft = 0; //表示位于最左边的那个tab栏的索引值
 	var zIndex = 0;
 	var scale = 1; //画布缩放倍数 .5-2
+	//声明画布中心点
 	var trpos = {
 		x: 0,
 		y: 0
@@ -252,33 +253,34 @@ var cvsSet = (function() {
 		$('#j-cvs_set ul.active').append(newLi); //这里必须先添加到父级上，再设置left和top值，不然无法获获取高宽
 		var defer = $.Deferred(); //设置延迟函数，使得图片加载完，获取宽度，再设置样式
 		if(info.isColorBlock) {
-			$inner = $('<div class="u-color inner"></div>');
+			$inner = $('<div class=="inner"><div class="u-color img"></div></div>');
 			newLi.append($inner);
 			$inner.css('background', info.color);
 			w = 68;
 			h = 68;
 			defer.resolve();
 		} else if(info.isWordBlock) {
-			var $inner = $('<div class="u-word inner">请输入文字内容</div>');
+			var $inner = $('<div class="inner"><div class="u-word img">请输入文字内容</div></div>');
 			newLi.append($inner);
 			w = 136;
 			h = 68;
 			defer.resolve();
 		} else {
-			$inner = $('<img class="inner" src="' + info.src + '" />');
-			$inner.load(function() {
+			$inner = $('<div class="inner" ><img class="img" src="' + info.src + '" /></div>');
+			var $img = $inner.find('img');
+			$img.load(function() {
 				newLi.append($inner);
-				w = $inner.width();
-				h = $inner.height()
-				$inner.attr('data-id', info.id);
+				w = $img.width();
+				h = $img.height()
+				$img.attr('data-id', info.id);
 				//保存图片最原始的高度和宽度
-				$inner.attr('data-initW', w);
-				$inner.attr('data-initH', h);
+				$img.attr('data-initW', w);
+				$img.attr('data-initH', h);
 				defer.resolve();
 			})
 		}
 		defer.done(function() {
-			x = info.x - w / 2 ;
+			x = info.x - w / 2;
 			y = info.y - h / 2;
 			newLi.css({
 				width: w,
@@ -288,8 +290,14 @@ var cvsSet = (function() {
 				zIndex: cvsSet.zIndex++
 					//transform: 'scale(' + cvsSet.scale + ')'
 			});
-			//控制点不缩放
-			//newLi.find('.g-pointctrl span').css('transform', 'scale(' + 1 / cvsSet.scale + ')');
+			newLi.attr('data-initW', w);
+			newLi.attr('data-initH', h);
+			newLi.attr('data-initL', x);
+			newLi.attr('data-initT', y);
+			$inner.attr('data-cx', $inner.offset().left + $inner.width() / 2)
+			$inner.attr('data-cy', $inner.offset().top + $inner.height() / 2)
+				//初始化放大缩小
+			setZoom($inner, false)
 		});
 		var newProc = new Product(newLi);
 		newProc.init(); //最后初始化
@@ -297,7 +305,25 @@ var cvsSet = (function() {
 		//初始化锁定按钮状态
 		cvsSet.setLockStatus(false);
 		$('#j-cvs_set li.active').removeClass('active');
+		cvsSet.localSave();
 		return newProc;
+	}
+
+	function setZoom(ele, bool) {
+		ele.css({
+			transform: 'scale(' + cvsSet.scale + ')'
+		});
+		var $pointctrl = ele.parents('ul').siblings('.g-pointctrl');
+		var num = 1;
+		if($pointctrl.length > 0) {
+			var num = ele.closest('ul').find('li').length;
+		} else {
+			$pointctrl = ele.siblings('.g-pointctrl');
+		}
+		$pointctrl.css({
+			transform: 'scale(' + num * cvsSet.scale + ')'
+		});
+		$pointctrl.find('span').css('transform', 'scale(' + 1 / cvsSet.scale + ')');
 	}
 
 	function setLockStatus(flag) {
@@ -314,6 +340,25 @@ var cvsSet = (function() {
 		}
 	}
 
+	function localSave() {
+		//本地数据存储 用于存储当前画布的 的所有html节点数据  用于返回和提交后台数据
+		// key值为 当前画布id加版本号 ： id +","+version;
+		// velue为 画布所有的html节点；
+		
+		//本地存储
+		var _id = $('#j-cvs_set >ul.active').attr('id');
+		var version =parseInt( $('#j-cvs_set >ul.active').data('version'));
+		version++;
+		var html=$('#j-cvs_set >ul.active').html()
+		var key=_id+","+version;
+		window.sessionStorage.setItem(key,html);	
+		$('#j-cvs_set >ul.active').data('version',version)
+		var max_ver=10;
+		//最大存max步，如果超出，则销毁前面的
+		sessionStorage.removeItem(_id+","+(version-10))
+		
+	}
+
 	return {
 		cur: cur,
 		zIndex: zIndex,
@@ -322,7 +367,9 @@ var cvsSet = (function() {
 		bind: bind,
 		setTabWidth: setTabWidth,
 		addProduct: addProduct,
-		setLockStatus: setLockStatus
+		setLockStatus: setLockStatus,
+		setZoom: setZoom,
+		localSave: localSave
 	}
 })();
 
@@ -444,6 +491,10 @@ Product.prototype.drag = function() {
 						top: parseFloat($(ele).css('top')) + y
 					});
 				});
+				if (x!=0||y!=0) {
+					//本地存储
+					cvsSet.localSave();
+				}
 			});
 			return false;
 		});
@@ -487,6 +538,7 @@ Product.prototype.rotate = function() {
 					//保存已经旋转的角度值
 					_this.obj.attr('data-angle', angle);
 					$('body').css('cursor', 'default');
+					cvsSet.localSave();
 				});
 				return false;
 			}
@@ -650,6 +702,7 @@ Product.prototype.scale = function() {
 		$(document).on('mouseup.scale', function(e) {
 			$(document).off('.scale');
 			$('body').css('cursor', 'default');
+			cvsSet.localSave();
 		});
 		return false;
 	});
@@ -671,8 +724,9 @@ Product.prototype.scale = function() {
 			left: bases[tar.index].left + tar.disl,
 			top: bases[tar.index].top + tar.dist,
 		});
-		var $img = tar.ele.find('.inner');
-		if($img.length > 1) {
+		var $inner = tar.ele.find('.inner');
+		var $img = $inner.find('.img');
+		if($inner.length > 1) {
 			tar.ele.find('li').each(function(j, eleLi) {
 
 				var w = parseFloat($(eleLi).attr('data-width'));
@@ -693,7 +747,7 @@ Product.prototype.scale = function() {
 					left: l,
 					top: t
 				})
-				$(eleLi).find('.inner').css({
+				$(eleLi).find('.img').css({
 					width: w,
 					height: h
 				})
