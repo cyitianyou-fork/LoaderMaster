@@ -3,7 +3,6 @@ $(function() {
 	function init() {
 		win.init();
 		library.init();
-		popMenu.init();
 		bind();
 		//清空所有的本地数据
 		sessionStorage.clear()
@@ -12,7 +11,6 @@ $(function() {
 	function bind() {
 		win.bind();
 		menu.bind();
-		popMenu.bind();
 		tool.bind();
 		library.bind();
 		cvsSet.bind();
@@ -175,49 +173,350 @@ $(function() {
 		//保存、发布弹出框
 		function savePop() {
 			$(document).on('click', '.u-pairs', function() {
-				$('#j-save_pairs').fadeIn();
+				$.pop({
+					title: '保存搭配',
+					content: '<dl class="clearfix">' +
+						'<dt><img src="tmp/proc01.png"/></dt>' +
+						'<dd>' +
+						'<div class="row">' +
+						'<div class="col col-1">名称:</div>' +
+						'<div class="col col-2"><input class="col-content" type="text" value="空白页" /></div>' +
+						'</div>' +
+						'<div class="row row-color">' +
+						'<div class="col col-1">色系:</div>' +
+						'<div class="col col-2">' +
+						'<div class="col-content">' +
+						'<span></span>' +
+						'<i class="icon icon-traigledown"></i>' +
+						'</div>' +
+						'<div class="subcol-color subcol-2">' +
+						'<a href="javascript:"><i></i></a>' +
+						'<a href="javascript:"><i></i></a>' +
+						'<a href="javascript:"><i></i></a>' +
+						'<a href="javascript:"><i></i></a>' +
+						'<a href="javascript:"><i></i></a>' +
+						'<a href="javascript:"><i></i></a>' +
+						'<a href="javascript:"><i></i></a>' +
+						'<a href="javascript:"><i></i></a>' +
+						'<a href="javascript:"><i></i></a>' +
+						'<a href="javascript:"><i></i></a>' +
+						'<a href="javascript:"><i></i></a>' +
+						'<a href="javascript:"><i></i></a>' +
+						'</div>' +
+						'</div>' +
+						'</div>' +
+						'<div class="row">' +
+						'<div class="col col-1">风格:</div>' +
+						'<div class="col col-2"><input class="col-content" type="text" value="田园简欧" /></div>' +
+						'</div>' +
+						'<div class="row">' +
+						'<div class="col col-1">空间:</div>' +
+						'<div class="col col-2">' +
+						'<div class="col-content">' +
+						'<span>其它</span>' +
+						'<i class="icon icon-traigledown"></i>' +
+						'</div>' +
+						'<div class="subcol subcol-2">' +
+						'<a href="javascript:">其它</a>' +
+						'<a href="javascript:">雪茄房</a>' +
+						'<a href="javascript:">前台</a>' +
+						'<a href="javascript:">大堂</a>' +
+						'<a href="javascript:">主卧</a>' +
+						'<a href="javascript:">入户花园</a>' +
+						'<a href="javascript:">会客区</a>' +
+						'<a href="javascript:">宴会厅</a>' +
+						'<a href="javascript:">红酒房</a>' +
+						'<a href="javascript:">书房</a>' +
+						'<a href="javascript:">客厅</a>' +
+						'<a href="javascript:">储藏室</a>' +
+						'<a href="javascript:">阳台</a>' +
+						'<a href="javascript:">庭院</a>' +
+						'<a href="javascript:">娱乐室</a>' +
+						'<a href="javascript:">棋牌室</a>' +
+						'<a href="javascript:">走廊</a>' +
+						'<a href="javascript:">工作室</a>' +
+						'<a href="javascript:">卫生间</a>' +
+						'<a href="javascript:">厨房</a>' +
+						'<a href="javascript:">茶室</a>' +
+						'<a href="javascript:">老人房</a>' +
+						'<a href="javascript:">婴儿房</a>' +
+						'<a href="javascript:">儿童房</a>' +
+						'<a href="javascript:">衣帽间</a>' +
+						'<a href="javascript:">卧室</a>' +
+						'<a href="javascript:">餐厅</a>' +
+						'<a href="javascript:">玄关</a>' +
+						'</div>' +
+						'</div>' +
+						'</div>' +
+						'<div class="row">' +
+						'<div class="col col-1">户型:</div>' +
+						'<div class="col col-2">' +
+						'<div class="col-content">' +
+						'<span>两室一厅</span>' +
+						'<i class="icon icon-traigledown"></i>' +
+						'</div>' +
+						'<div class="subcol subcol-2">' +
+						'<a href="javascript:">两室一厅</a>' +
+						'<a href="javascript:">三室一厅</a>' +
+						'</div>' +
+						'</div>' +
+						'</div>' +
+						'<div class="row">' +
+						'<div class="col col-1">面积:</div>' +
+						'<div class="col col-2">' +
+						'<div class="col-content">' +
+						'<span>90-180</span>' +
+						'<i class="icon icon-traigledown"></i>' +
+						'</div>' +
+						'<div class="subcol subcol-2">' +
+						'<a href="javascript:">90-180</a>' +
+						'<a href="javascript:">90</a>' +
+						'</div>' +
+						'</div>' +
+						'</div>' +
+						'<div class="row">' +
+						'<div class="col col-1">商业空间:</div>' +
+						'<div class="col col-2">' +
+						'<div class="col-content">' +
+						'<span>其它</span>' +
+						'<i class="icon icon-traigledown"></i>' +
+						'</div>' +
+						'<div class="subcol subcol-2">' +
+						'<a href="javascript:">其它</a>' +
+						'<a href="javascript:">居家</a>' +
+						'<a href="javascript:">ktv</a>' +
+						'<a href="javascript:">影院</a>' +
+						'<a href="javascript:">酒吧</a>' +
+						'<a href="javascript:">健身房</a>' +
+						'<a href="javascript:">公寓</a>' +
+						'<a href="javascript:">办公室</a>' +
+						'<a href="javascript:">售楼处</a>' +
+						'<a href="javascript:">橱窗</a>' +
+						'<a href="javascript:">专卖店</a>' +
+						'<a href="javascript:">展示厅</a>' +
+						'<a href="javascript:">样板房</a>' +
+						'<a href="javascript:">会所</a>' +
+						'<a href="javascript:">别墅</a>' +
+						'<a href="javascript:">酒店</a>' +
+						'</div>' +
+						'</div>' +
+						'</div>' +
+						'</dd>' +
+						'</dl>',
+					className: 'pop-save',
+					id: 'j-save_pairs',
+					callback: function() {
+						$('#j-save_pairs .icon-traigledown').on('click', function() {
+							$(this).parents('.col-2').find('.subcol-2').toggle();
+						});
+						$('#j-save_pairs .subcol-2 a').on('click', function() {
+							var par = $(this).parents('.subcol-2');
+							var con = par.siblings('.col-content').find('span');
+							par.hide();
+							if(par.hasClass('subcol-color')) {
+								var bg = $(this).find('i').eq(0).css('background');
+								con.css('background', bg);
+							} else {
+								var val = $(this).html();
+								con.html(val);
+							}
+						});
+					}
+				});
 			});
 			$(document).on('click', '.u-plan', function() {
-				$('#j-save_plan').fadeIn();
+				$.pop({
+					title: '保存方案',
+					content: '<dl class="clearfix">' +
+						'<dt><img src="tmp/proc01.png"/></dt>' +
+						'<dd>' +
+						'<div class="row">' +
+						'<div class="col col-1">名称:</div>' +
+						'<div class="col col-2"><input class="col-content" type="text" value="方案名称" /></div>' +
+						'</div>' +
+						'<div class="row">' +
+						'<div class="col col-1">类别:</div>' +
+						'<div class="col col-2">' +
+						'<div class="col-content">' +
+						'<span>健身房</span>' +
+						'<i class="icon icon-traigledown"></i>' +
+						'</div>' +
+						'<div class="subcol subcol-2">' +
+						'<a href="javascript:">健身房</a>' +
+						'<a href="javascript:">公寓</a>' +
+						'<a href="javascript:">专卖店</a>' +
+						'<a href="javascript:">俱乐部</a>' +
+						'<a href="javascript:">橱窗</a>' +
+						'<a href="javascript:">展示厅</a>' +
+						'<a href="javascript:">会所</a>' +
+						'<a href="javascript:">别墅</a>' +
+						'<a href="javascript:">酒店</a>' +
+						'<a href="javascript:">办公室</a>' +
+						'</div>' +
+						'</div>' +
+						'</div>' +
+						'<div class="row">' +
+						'<div class="col col-1">风格:</div>' +
+						'<div class="col col-2">' +
+						'<div class="col-content">' +
+						'<span>其它</span>' +
+						'<i class="icon icon-traigledown"></i>' +
+						'</div>' +
+						'<div class="subcol subcol-2">' +
+						'<a href="javascript:">田园简欧</a>' +
+						'<a href="javascript:">田园</a>' +
+						'<a href="javascript:">简欧</a>' +
+						'<a href="javascript:">简美</a>' +
+						'<a href="javascript:">北欧</a>' +
+						'<a href="javascript:">其他混塔</a>' +
+						'<a href="javascript:">伊斯兰</a>' +
+						'<a href="javascript:">地中海</a>' +
+						'<a href="javascript:">日式</a>' +
+						'<a href="javascript:">现代</a>' +
+						'<a href="javascript:">浅色现代</a>' +
+						'<a href="javascript:">现代中式</a>' +
+						'<a href="javascript:">现代波普</a>' +
+						'<a href="javascript:">现代北欧</a>' +
+						'<a href="javascript:">现代奢华</a>' +
+						'<a href="javascript:">现代极简</a>' +
+						'<a href="javascript:">新中式</a>' +
+						'<a href="javascript:">新中式</a>' +
+						'<a href="javascript:">中式传统</a>' +
+						'<a href="javascript:">美式</a>' +
+						'</div>' +
+						'</div>' +
+						'</div>' +
+						'<div class="row">' +
+						'<div class="col col-1">面积:</div>' +
+						'<div class="col col-2">' +
+						'<div class="col-content">' +
+						'<span>90-180</span>' +
+						'<i class="icon icon-traigledown"></i>' +
+						'</div>' +
+						'<div class="subcol subcol-2">' +
+						'<a href="javascript:">90-180</a>' +
+						'<a href="javascript:">90</a>' +
+						'</div>' +
+						'</div>' +
+						'</div>' +
+						'<div class="row">' +
+						'<div class="col col-1">户型:</div>' +
+						'<div class="col col-2">' +
+						'<div class="col-content">' +
+						'<span>两室一厅</span>' +
+						'<i class="icon icon-traigledown"></i>' +
+						'</div>' +
+						'<div class="subcol subcol-2">' +
+						'<a href="javascript:">两室一厅</a>' +
+						'<a href="javascript:">三室一厅</a>' +
+						'</div>' +
+						'</div>' +
+						'</div>' +
+						'</dd>' +
+						'</dl>',
+					id: 'j-save_plan',
+					className: 'pop-save',
+					callback: function() {
+						$('#j-save_plan .icon-traigledown').on('click', function() {
+							$(this).parents('.col-2').find('.subcol-2').toggle();
+						});
+						$('#j-save_plan .subcol-2 a').on('click', function() {
+							var par = $(this).parents('.subcol-2');
+							var con = par.siblings('.col-content').find('span');
+							par.hide();
+							if(par.hasClass('subcol-color')) {
+								var bg = $(this).find('i').eq(0).css('background');
+								con.css('background', bg);
+							} else {
+								var val = $(this).html();
+								con.html(val);
+							}
+						});
+					}
+				});
 			});
 		}
 		//打开
 		function openPop() {
 			$(document).on('click', '#j-open', function() {
-				$('#j-open_pop').fadeIn();
+				$.pop({
+					title: '打开',
+					content: '<div class="pop-tab">' +
+						'<span class="active">搭配</span>' +
+						'<span>方案</span>' +
+						'</div>' +
+						'<div class="clearfix">' +
+						'<div class="cho_cond">' +
+						'<span class="active">全部搭配</span>' +
+						'<span>未公开搭配</span>' +
+						'<span>公开搭配</span>' +
+						'</div>' +
+						'<div class="pop-search">' +
+						'<i class="icon icon-search"></i>' +
+						'<input type="text" placeholder="搜索" />' +
+						'</div>' +
+						'</div>' +
+						'<div class="pop-con_wrap">' +
+						'<ul id="j-pop_list" class="clearfix">' +
+
+						'</ul>' +
+						'<script id="t-pop_list" type="text/template7">' +
+						'{{#each list}}' +
+						'<li>' +
+						'<a href="javascript:"><img src="{{url}}"/></a>' +
+						'<p>{{name}}</p>' +
+						'</li>' +
+						'{{/each}}' +
+						'</script>' +
+						'</div>',
+					id: 'j-open_pop',
+					className: 'pop-open',
+					callback: function() {
+						//获取打开弹出框的数据
+						function getOpenData(url) {
+							var data = new DataLoader({
+								template: $('#t-pop_list'),
+								container: $('#j-pop_list'),
+								url: url
+							});
+							data.getData();
+						}
+
+						getOpenData('tmp/pop-list.json');
+
+						$('#j-open_pop .pop-tab span').on('click', function() {
+							$(this).addClass('active').siblings().removeClass('active');
+							getOpenData('tmp/pop-list.json');
+						});
+						$('#j-open_pop .cho_cond span').on('click', function() {
+							$(this).addClass('active').siblings().removeClass('active');
+							getOpenData('tmp/pop-list.json');
+						});
+					}
+				});
 			});
 		}
 
 		//撤销
 		function cancelCvs() {
 			$(document).on('click', '#j-cancel', function() {
-				//				var key = $('#j-cvs_set >ul.active').attr('id');
-				//				var handle = window.sessionStorage.getItem(key);
-				//				if (handle) {
-				//					handle=handle.split('@');
-				//					console.log('l2='+handle.length)
-				//					handle.pop();
-				//					console.log('ll='+handle.length)
-				//					$('#j-cvs_set >ul.active').html(handle[handle.length-1]);
-				//					window.sessionStorage.setItem(key, handle.join(';'));
-				//				}
+				$('.g-relative_proc').hide();
+				$('.g-relative_img').hide();
 				var _id = $('#j-cvs_set >ul.active').attr('id');
 				var version = parseInt($('#j-cvs_set >ul.active').data('version'));
 				version--;
 				var key = _id + "," + version;
 				var html = sessionStorage.getItem(key);
 				$('#j-cvs_set >ul.active').html(html);
-				$('#j-cvs_set >ul.active').data('version',version)
-				//回退后即从本地存储中删除
-				sessionStorage.removeItem(_id+","+(version-10));
-				var $li=$('#j-cvs_set >ul.active').find('>li');
-				console.log($li.length)
+				$('#j-cvs_set >ul.active').data('version', version)
+					//回退后即从本地存储中删除
+				sessionStorage.removeItem(_id + "," + (version - 10));
+				var $li = $('#j-cvs_set >ul.active').find('>li');
 				var newProc;
-				for (var i=0;i<$li.length;i++) {
-					newProc=new Product($li.eq(i));
+				for(var i = 0; i < $li.length; i++) {
+					newProc = new Product($li.eq(i));
 					newProc.init();
 				}
-
 			});
 		}
 
@@ -233,64 +532,6 @@ $(function() {
 		}
 	})();
 
-	popMenu = (function() {
-		function init() {
-			$('.pop').hide();
-			//			$('#j-save_pairs').hide();
-			//			$('#j-save_plan').hide();
-			getOpenData('tmp/pop-list.json');
-		}
-
-		function bind() {
-			popSave();
-			popOpen();
-		}
-
-		//保存弹出框事件
-		function popSave() {
-			$(document).on('click', '.pop-save .col-content .icon-traigledown', function() {
-				$(this).parents('.col-2').find('.subcol-2').toggle();
-			});
-			$(document).on('click', '.pop-save .subcol-2 a', function() {
-				var par = $(this).parents('.subcol-2');
-				var con = par.siblings('.col-content').find('span');
-				par.hide();
-				if(par.hasClass('subcol-color')) {
-					var bg = $(this).find('i').eq(0).css('background');
-					con.css('background', bg);
-				} else {
-					var val = $(this).html();
-					con.html(val);
-				}
-			});
-		}
-
-		//获取打开弹出框的数据
-		function getOpenData(url) {
-			var data = new DataLoader({
-				template: $('#t-pop_list'),
-				container: $('#j-pop_list'),
-				url: url
-			});
-			data.getData();
-		}
-		//打开弹出框事件
-		function popOpen() {
-			$(document).on('click', '.pop-tab span', function() {
-				$(this).addClass('active').siblings().removeClass('active');
-				getOpenData('tmp/pop-list.json');
-			});
-			$(document).on('click', '.cho_cond span', function() {
-				$(this).addClass('active').siblings().removeClass('active');
-				getOpenData('tmp/pop-list.json');
-			});
-		}
-
-		return {
-			init: init,
-			bind: bind
-		}
-	})();
 
 	var tool = (function() {
 		function bind() {
@@ -365,10 +606,10 @@ $(function() {
 		//水平镜像
 		function flipHorizontalProc() {
 			$(document).on('click', '#j-fliphorizontal', function() {
-				console.log('99')
-				$('#j-cvs_set li.active .img').each(function(i, ele) {
-					console.log(0)
-					var angle = $(ele).attr('data-angle'); //旋转角度
+				$('#j-cvs_set li.active').each(function(i, ele) {
+					var $ul=$(ele).find('ul');
+					var $obj=$ul.length>0?$ul:$(ele).find('.img');
+					var angle = $obj.attr('data-angle'); //旋转角度
 					if(angle) {
 						angle = JSON.parse(angle);
 						angle.x = angle.x ? angle.x : 0;
@@ -379,9 +620,9 @@ $(function() {
 						angle.y = 0;
 					}
 					angle.y += 180;
-					$(ele).css('transform', 'rotateY(' + angle.y + 'deg) rotateX(' + angle.x + 'deg)');
+					$obj.css('transform', 'rotateY(' + angle.y + 'deg) rotateX(' + angle.x + 'deg)');
 					angle = JSON.stringify(angle);
-					$(ele).attr('data-angle', angle);
+					$obj.attr('data-angle', angle);
 				});
 				cvsSet.localSave();
 				return false;
@@ -390,8 +631,10 @@ $(function() {
 		//垂直
 		function flipVerticalProc() {
 			$(document).on('click', '#j-flipvertical', function() {
-				$('#j-cvs_set li.active .img').each(function(i, ele) {
-					var angle = $(ele).attr('data-angle'); //旋转角度
+				$('#j-cvs_set li.active').each(function(i, ele) {
+					var $ul=$(ele).find('ul');
+					var $obj=$ul.length>0?$ul:$(ele).find('.img');
+					var angle = $obj.attr('data-angle'); //旋转角度
 					if(angle) {
 						angle = JSON.parse(angle);
 						angle.x = angle.x ? angle.x : 0;
@@ -402,9 +645,9 @@ $(function() {
 						angle.y = 0;
 					}
 					angle.x += 180;
-					$(ele).css('transform', 'rotateX(' + angle.x + 'deg) rotateY(' + angle.y + 'deg)');
+					$obj.css('transform', 'rotateX(' + angle.x + 'deg) rotateY(' + angle.y + 'deg)');
 					angle = JSON.stringify(angle);
-					$(ele).attr('data-angle', angle);
+					$obj.attr('data-angle', angle);
 				});
 				cvsSet.localSave();
 				return false;
@@ -1252,18 +1495,35 @@ $(function() {
 		//个人素材，点击上传，显示弹出框
 		function fileUpload() {
 			$(document).on('click', '#j-upload', function() {
-				$('.pop').hide();
-				$('#j-pop_upload').fadeIn();
-				var data = new DataLoader({
-					template: $('#t-select_files'),
-					container: $('#j-select_files'),
-					url: "tmp/file.json"
+				$.pop({
+					title: '上传',
+					content: '<div class="pop-input">' +
+						'<input class="showfile" type="text" readonly="readonly" />' +
+						'<label for=""><input type="file" /><a href="javascript:">浏览</a></label>' +
+						'</div>' +
+						'<div class="pop-select">' +
+						'<select id="j-select_files">' +
+						'</select>' +
+						'<script id="t-select_files" type="text/template7">' +
+						'{{#each list}}' +
+						'<option value="">{{filename}}</option>' +
+						'{{/each}}' +
+						'</script>' +
+						'</div>',
+					className: 'pop-upload',
+					id: 'j-pop_upload',
+					callback: function() {
+						$('#j-pop_upload').fadeIn();
+						var data = new DataLoader({
+							template: $('#t-select_files'),
+							container: $('#j-select_files'),
+							url: "tmp/file.json"
+						});
+						data.getData();
+					}
 				});
-				data.getData();
 			});
-			$(document).on('click', '.pop-close', function() {
-				$('.pop').hide();
-			});
+
 		}
 
 		return {

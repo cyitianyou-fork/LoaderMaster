@@ -193,8 +193,22 @@ var cvsSet = (function() {
 	function closeTab() {
 		//点击close关闭当前tab栏中的li
 		$(document).on('click', '.u-tabc_chbt .u-close', function() {
-			if($('#j-tabc li').length < 2) {
-				return;
+
+			if ($('#j-cvs_set ul.active li').length>0) {
+				$.pop({
+					title: '提示',
+					content: '<div class="pop-text">'+
+								'您还未保存！'+						
+							'</div>',
+					className: 'pop-tip',
+					sure_text: '去保存',
+					callback: function(){
+						$('.pop-bts a').eq(1).on('click',function(){
+							$('.pop').remove();
+							$('.u-pairs').trigger('click');
+						});
+					}
+				});
 			}
 			$(this).parents('li').remove();
 			$('#j-cvs_set ul').eq(cvsSet.cur).remove();
@@ -211,6 +225,9 @@ var cvsSet = (function() {
 				$('#j-tabc').animate({
 					'left': -curLeft * cw
 				}, 300);
+			}
+			if ($('#j-cvs_set ul').length==0) {
+				$('#j-new_cvs').trigger('click');
 			}
 			return false;
 		});
@@ -253,7 +270,7 @@ var cvsSet = (function() {
 		$('#j-cvs_set ul.active').append(newLi); //这里必须先添加到父级上，再设置left和top值，不然无法获获取高宽
 		var defer = $.Deferred(); //设置延迟函数，使得图片加载完，获取宽度，再设置样式
 		if(info.isColorBlock) {
-			$inner = $('<div class=="inner"><div class="u-color img"></div></div>');
+			$inner = $('<div class="inner"><div class="u-color img"></div></div>');
 			newLi.append($inner);
 			$inner.css('background', info.color);
 			w = 68;
@@ -298,6 +315,7 @@ var cvsSet = (function() {
 			$inner.attr('data-cy', $inner.offset().top + $inner.height() / 2)
 				//初始化放大缩小
 			setZoom($inner, false)
+			cvsSet.localSave();
 		});
 		var newProc = new Product(newLi);
 		newProc.init(); //最后初始化
@@ -305,7 +323,6 @@ var cvsSet = (function() {
 		//初始化锁定按钮状态
 		cvsSet.setLockStatus(false);
 		$('#j-cvs_set li.active').removeClass('active');
-		cvsSet.localSave();
 		return newProc;
 	}
 
@@ -321,9 +338,9 @@ var cvsSet = (function() {
 			$pointctrl = ele.siblings('.g-pointctrl');
 		}
 		$pointctrl.css({
-			transform: 'scale(' + num * cvsSet.scale + ')'
+			transform: 'scale(' + 1* cvsSet.scale + ')'
 		});
-		$pointctrl.find('span').css('transform', 'scale(' + 1 / cvsSet.scale + ')');
+		//$pointctrl.find('span').css('transform', 'scale(' + 1 / cvsSet.scale + ')');
 	}
 
 	function setLockStatus(flag) {
@@ -518,7 +535,6 @@ Product.prototype.rotate = function() {
 				$(document).on('mousemove.rotate', function(e) {
 					disx = e.pageX - cx;
 					disy = e.pageY - cy;
-					console.log(cx + ',' + cy);
 					angle = 360 * Math.atan2(disy, disx) / (2 * Math.PI)
 					angle = angle < -90 ? (450 + angle) : angle + 90;
 					$ul = _this.obj.find('ul');
@@ -760,3 +776,4 @@ Product.prototype.scale = function() {
 		}
 	}
 }
+

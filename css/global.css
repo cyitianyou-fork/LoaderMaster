@@ -464,7 +464,7 @@ html,body{height: 100%;}
 .row-color .subcol-color{width: 158px; height: 78px;}
 .row-color .col-content i{display: inline-block;}
 /*打开弹出框*/
-.pop-open .pop-inner{width: 500px;}
+.pop-open .pop-inner{width: 510px;}
 .pop-open .pop-content{padding-bottom: 12px;}
 .pop-tab{display: flex; display: -webkit-flex; justify-content: space-between; height: 40px; background: #65707a;}
 .pop-tab span{width: 49.5%; line-height: 40px; text-align: center; font-size: 14px; border-radius: 4px 4px 0 0; background: #b2b8bd; cursor: pointer;}
@@ -472,15 +472,19 @@ html,body{height: 100%;}
 .cho_cond{ float: left; display: flex; display: -webkit-flex; justify-content: space-between; width: 220px; height: 30px; margin: 25px 0px 20px 15px ;}
 .cho_cond span{width: 70px; height: 28px; line-height: 28px; text-align: center; border-radius: 4px; border: 1px solid #000; cursor: pointer;}
 .cho_cond span.active{border-color: #04b1d1;}
-.pop-search{float: right; position: relative; width: 180px; height: 28px; margin: 25px 0px 20px 15px ; line-height: 28px; border-radius: 4px; border: 1px solid #e4e4e4;}
+.pop-search{float: right; position: relative; width: 180px; height: 28px; margin: 25px 15px 20px 0px ; line-height: 28px; border-radius: 4px; border: 1px solid #e4e4e4;}
 .pop-search i{position: absolute; left: 5px;}
 .pop-search input{width: 156px; margin-left: 24px;}
 .pop-con_wrap{padding: 0 10px; margin-bottom: 10px; height: 260px; overflow-y: auto;}
+.pop-con_wrap ul{width: 480px;}
 .pop-con_wrap li{float: left; width: 150px; height: 130px; margin: 0 5px;}
 .pop-con_wrap a{display: block; width: 148px; height: 98px; line-height: 98px; text-align: center; border: 1px solid #e4e4e4; border-radius: 5px;}
 .pop-con_wrap img{width: 80%; vertical-align: middle;}
 .pop-con_wrap a:hover{border-color: #04b1d1;}
 .pop-con_wrap p{text-align: center; height: 30px; line-height: 30px; color: #666;}
+/*关闭画布，弹出提示*/
+.pop-tip .pop-inner{width: 400px; height: 226px;}
+.pop-text{height: 130px; width: 100%; text-align: center; line-height: 130px; font-size: 18px;}
 
 /*相关推荐*/
 .g-relative_proc{display: none; position: absolute; left: 34px; bottom: 14px; z-index: 10000; max-width: calc(100% - 488px); height: 82px; background: #fff;}
