@@ -1,16 +1,15 @@
-<!DOCTYPE html>
+<!doctype html>
 <!-- saved from url=(0036)http://www.rzds.net/?c=flash&a=tools -->
 <html>
 
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
 		<title>软装大师</title>
 		<link href="css/global.css" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="js/jquery.js"></script>
+		<!--<script type="text/javascript" src="js/jquery.js"></script>-->
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 		<script src="js/template7.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/dataloader.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/procduct.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 
 	<body scroll="no">
@@ -32,7 +31,7 @@
 					},
 					function() {
 						$(".login-show").hide();
-						$(".login-name span").addClass("smjt1");
+						$(".login-name span").addclass("smjt1");
 					});
 
 			});
@@ -69,10 +68,10 @@
 				<div class="top-nav-nav2 fl">
 					<ul>
 						<li>
-							<a href="http://www.rzds.net/?c=flash&amp;a=tools" class="dp" target="_blank">2D搭配&nbsp;</a>
+							<a href="http://www.rzds.net/?c=flash&amp;a=tools" class="dp" target="_blank">2d搭配&nbsp;</a>
 						</li>
 						<li>
-							<a href="http://rzds.admin.3vjia.com/" class="sd" target="_blank">3D设计&nbsp;</a>
+							<a href="http://rzds.admin.3vjia.com/" class="sd" target="_blank">3d设计&nbsp;</a>
 						</li>
 						<li>
 							<a href="http://www.rzds.net/?c=video#a" class="help" target="_blank">帮助视频</a>
@@ -114,36 +113,23 @@
 				<ul class="fl">
 					<li class="u-menu_item">
 						<a id="j-new_cvs" href="javascript:"><i class="icon icon-new"></i>新建</a>
-						<div class="g-submenu">
-							<i class="icon icon-uptriangle"></i>
-							<a href="javascript:">搭配</a>
-							<a href="javascript:">方案</a>
-						</div>
 					</li>
 					<li>
-						<a href="javascript:"><i class="icon icon-open"></i>打开</a>
+						<a id="j-open" href="javascript:"><i class="icon icon-open"></i>打开</a>
 					</li>
 					<li class="u-menu_item">
 						<a href="javascript:"><i class="icon icon-save"></i>保存</a>
 						<div class="g-submenu">
 							<i class="icon icon-uptriangle"></i>
-							<a href="javascript:">搭配</a>
-							<a href="javascript:">方案</a>
-						</div>
-					</li>
-					<li class="u-menu_item">
-						<a href="javascript:"><i class="icon icon-saveas"></i>另存为</a>
-						<div class="g-submenu">
-							<i class="icon icon-uptriangle"></i>
-							<a href="javascript:">搭配</a>
-							<a href="javascript:">方案</a>
+							<a class="u-pairs" href="javascript:">搭配</a>
+							<a class="u-plan" href="javascript:">方案</a>
 						</div>
 					</li>
 					<li>
-						<a href="javascript:"><i class="icon icon-undo"></i>撤销</a>
+						<a id="j-cancel" href="javascript:"><i class="icon icon-undo"></i>撤销</a>
 					</li>
 					<li>
-						<a href="javascript:"><i class="icon icon-reset"></i>重做</a>
+						<a id="j-reset" href="javascript:"><i class="icon icon-reset"></i>重置</a>
 					</li>
 				</ul>
 				<ul class="fr">
@@ -154,16 +140,16 @@
 						<a href="javascript:"><i class="icon icon-release"></i>发布</a>
 						<div class="g-submenu">
 							<i class="icon icon-uptriangle"></i>
-							<a href="javascript:">搭配</a>
-							<a href="javascript:">方案</a>
+							<a class="u-pairs" href="javascript:">搭配</a>
+							<a class="u-plan" href="javascript:">方案</a>
 						</div>
 					</li>
 					<li>
 						<a id="j-full_screen" href="javascript:"><i class="icon icon-fullscreen"></i>全屏</a>
 					</li>
-					<li>
+					<!--<li>
 						<a href="javascript"><i class="icon icon-music"></i>音乐</a>
-					</li>
+					</li>-->
 				</ul>
 			</div>
 
@@ -171,15 +157,21 @@
 				<div class="g-tools" id="j-tools">
 					<a id="j-delete" href="javascript:" data-name="删除"><i class="icon icon-delete"></i></a>
 					<a id="j-copy" href="javascript:" data-name="复制"><i class="icon icon-copy"></i></a>
-					<a id="j-flipHorizontal" href="javascript:" data-name="水平镜像"><i class="icon icon-horizontal"></i></a>
-					<a id="j-flipVertical" href="javascript:" data-name="垂直镜像"><i class="icon icon-vertical"></i></a>
+					<a id="j-fliphorizontal" href="javascript:" data-name="水平镜像"><i class="icon icon-horizontal"></i></a>
+					<a id="j-flipvertical" href="javascript:" data-name="垂直镜像"><i class="icon icon-vertical"></i></a>
 					<a id="j-layertop" href="javascript:" data-name="顶层"><i class="icon icon-layertop"></i></a>
 					<a id="j-layerforward" href="javascript:" data-name="上移一层"><i class="icon icon-layerforward"></i></a>
 					<a id="j-layerbackward" href="javascript:" data-name="下移一层"><i class="icon icon-layerbackward"></i></a>
 					<a id="j-layerbottom" href="javascript:" data-name="底层"><i class="icon icon-layerbottom"></i></a>
-					<!--<a id="j-group" href="javascript:" data-name="成组"><i class="icon icon-group"></i></a>
-					<a id="j-part" href="javascript:" data-name="解组"><i class="icon icon-part"></i></a>-->
+					<a id="j-group" href="javascript:" data-name="成组"><i class="icon icon-group"></i></a>
+					<a id="j-part" href="javascript:" data-name="解组"><i class="icon icon-part"></i></a>
 					<a id="j-lock" href="javascript:" data-name="锁定"><i class="icon icon-lock"></i></a>
+					<!--放大和缩小按钮-->
+					<div id="j-zoom" class="g-zoom">
+						<span class="u-jia"><i class="icon icon-jian"></i></span>
+						<span class="u-jian"><i class="icon icon-jia"></i></span>
+						<span class="u-dian"><i class="icon icon-dian"></i></span>
+					</div>
 				</div>
 				<div id="j-library" class="g-library">
 					<!--库面板的tab栏-->
@@ -233,9 +225,9 @@
 									<ul>
 										{{#each sublist}}
 										<li>
-											<strong>{{subtitle}}</strong> {{#if allList}}
+											<strong>{{subtitle}}</strong> {{#if alllist}}
 											<ul>
-												{{#each allList}}
+												{{#each alllist}}
 												<li>{{this}}</li>
 												{{/each}}
 											</ul>
@@ -277,11 +269,11 @@
 						<div id="j-cond2" class="pop-cond2 pop-cond">
 							<div class="pop-cond2_inner">
 								<a class="close close-pop" href="javascript:"><i class="icon icon-close"></i></a>
-								<div class="row first-row">
+								<div class="row first-row clearfix">
 									<div class="col col-1">尺寸：</div>
 									<div class="col col-2"><input type="text" />cm-&nbsp;&nbsp;&nbsp;<input type="text" />cm</div>
 								</div>
-								<div class="row sec-row">
+								<div class="row sec-row clearfix">
 									<div class="col col-1">价格：</div>
 									<div class="col col-2">
 										<label><input type="radio" name="price" />不限</label><br />
@@ -290,7 +282,7 @@
 										<label><input type="radio" name="price" />10001-50000</label><br />
 									</div>
 								</div>
-								<div class="row thr-row">
+								<div class="row thr-row clearfix">
 									<div class="col col-1">风格：</div>
 									<div class="col col-2">
 										<label><input type="radio" name="style" />不限</label>
@@ -311,7 +303,7 @@
 										<label><input type="radio" name="style" />田园</label>
 									</div>
 								</div>
-								<div class="row four-row">
+								<div class="row row-color clearfix">
 									<div class="col col-1">颜色：</div>
 									<div class="col col-2">
 										<a href="javascript:"><i></i></a>
@@ -371,7 +363,7 @@
 						<div id="j-cond2_sl" class="pop-cond2 pop-cond pop-cond2_sl">
 							<div class="pop-cond2_inner">
 								<a class="close close-pop" href="javascript:"><i class="icon icon-close"></i></a>
-								<div class="row">
+								<div class="row clearfix">
 									<div class="col col-1">省：</div>
 									<div class="col col-2">
 										<select id="j-province" name="">
@@ -383,7 +375,7 @@
 										</script>
 									</div>
 								</div>
-								<div class="row">
+								<div class="row clearfix">
 									<div class="col col-1">市：</div>
 									<div class="col col-2">
 										<select id="j-city" name="">
@@ -396,7 +388,7 @@
 										</script>
 									</div>
 								</div>
-								<div class="row">
+								<div class="row clearfix">
 									<div class="col col-1">区：</div>
 									<div class="col col-2">
 										<select id="j-area" name="">
@@ -409,7 +401,7 @@
 										</script>
 									</div>
 								</div>
-								<div class="row">
+								<div class="row clearfix">
 									<div class="col col-1">楼盘：</div>
 									<div class="col col-2">
 										<select id="j-floor" name="">
@@ -464,7 +456,7 @@
 							</div>
 							<!-- 产品分类下的数据列表 -->
 							<div id="j-detail_wrap" class="g-procs_detail">
-								<ul id="j-procs_detail" class="m-lib_list m-procs_detail lib-drag">
+								<ul id="j-procs_detail" class="m-lib_list m-procs_detail lib-drag proc">
 									<!--<li>
 										<a href="javascript:">
 											<img src="tmp/proc01.png" />
@@ -474,16 +466,16 @@
 								</ul>
 								<script id="t-item1_detail" type="text/template7">
 									{{#each list}}
-									<li data-id="{{id}}" data-name="{{name}}" data-price="{{price}}" data-spec="{{spec}}" data-material="{{material}}" data-traigle="{{traigle}}">
+									<li data-name="{{name}}" data-price="{{price}}" data-spec="{{spec}}" data-material="{{material}}" data-traigle="{{traigle}}">
 										<a href="javascript:">
-											<img src="{{url}}" />
+											<img data-id="{{id}}" src="{{url}}" />
 											<span class="u-love {{islove}}"><i class="icon icon-love"></i></span>
 										</a>
 									</li>
 									{{/each}}
 								</script>
 								<div class="u-proc_info" id="j-proc_info">
-									<h4>RoNS-双人沙发</h4>
+									<h4>rons-双人沙发</h4>
 									<strong>￥32098.50</strong>
 									<p>
 										<span>规格：1880990122</span>
@@ -504,13 +496,13 @@
 									<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
 									<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
 									<input type="text" />
-									<a class="u-go" href="javascript:">GO</a>
+									<a class="u-go" href="javascript:">go</a>
 								</div>
 							</div>
 						</div>
 						<!-- 公共库  -->
 						<div class="hide content">
-							<ul id="j-comment" class="m-lib_list m-other_list lib-drag">
+							<ul id="j-comment" class="m-lib_list m-other_list lib-drag proc">
 								<!--<li>
 									<a href="javascript:">
 										<img src="tmp/proc01.png" />
@@ -521,9 +513,9 @@
 							</ul>
 							<script id="t-comment" type="text/template7">
 								{{#each list}}
-								<li data-id="{{id}}">
+								<li>
 									<a href="javascript:">
-										<img src="{{url}}" />
+										<img data-id="{{id}}" src="{{url}}" />
 										<span class="u-close"><i class="icon icon-close"></i></span>
 										<span class="u-down"><i class="icon icon-down"></i></span>
 									</a>
@@ -539,12 +531,12 @@
 								<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
 								<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
 								<input type="text" />
-								<a class="u-go" href="javascript:">GO</a>
+								<a class="u-go" href="javascript:">go</a>
 							</div>
 						</div>
 						<!-- 户型库 -->
 						<div class="hide content">
-							<ul id="j-user" class="m-lib_list m-other_list lib-drag">
+							<ul id="j-user" class="m-lib_list m-other_list lib-drag proc">
 								<!--<li>
 									<a href="javascript:">
 										<img src="tmp/proc01.png" />
@@ -554,9 +546,9 @@
 							</ul>
 							<script id="t-user" type="text/template7">
 								{{#each list}}
-								<li data-id="id">
+								<li>
 									<a href="javascript:">
-										<img src="{{url}}" />
+										<img data-id="{{id}}" src="{{url}}" />
 										<span class="u-close"><i class="icon icon-close"></i></span>
 									</a>
 								</li>
@@ -571,13 +563,13 @@
 								<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
 								<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
 								<input type="text" />
-								<a class="u-go" href="javascript:">GO</a>
+								<a class="u-go" href="javascript:">go</a>
 							</div>
 						</div>
 						<!-- 我的收藏 -->
 
 						<div class="hide content">
-							<ul id="j-collect" class="m-lib_list m-other_list lib-drag">
+							<ul id="j-collect" class="m-lib_list m-other_list lib-drag proc">
 								<!--<li>
 									<a href="javascript:">
 										<img src="tmp/proc01.png" />
@@ -587,9 +579,9 @@
 							</ul>
 							<script id="t-collect" type="text/template7">
 								{{#each list}}
-								<li data-id="{{id}}">
+								<li>
 									<a href="javascript:">
-										<img src="{{url}}" />
+										<img data-id="{{id}}" src="{{url}}" />
 										<span class="u-close"><i class="icon icon-close"></i></span>
 									</a>
 								</li>
@@ -604,7 +596,7 @@
 								<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
 								<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
 								<input type="text" />
-								<a class="u-go" href="javascript:">GO</a>
+								<a class="u-go" href="javascript:">go</a>
 							</div>
 						</div>
 						<!-- 个人素材 -->
@@ -632,7 +624,7 @@
 								<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
 								<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
 								<input type="text" />
-								<a class="u-go" href="javascript:">GO</a>
+								<a class="u-go" href="javascript:">go</a>
 							</div>
 						</div>
 						<!-- 产品清单 -->
@@ -641,7 +633,7 @@
 								<li>
 									<a href="javascript:"><img src="tmp/proc01.png" /></a>
 									<div class="m-proc_word">
-										RONS三人沙发<br /> 规格：980*2410*1200
+										rons三人沙发<br /> 规格：980*2410*1200
 										<br /> 材质：烨木
 										<br /> 周期：7-15天
 									</div>
@@ -662,7 +654,7 @@
 								{{#each list}}
 								<li>
 									<a href="javascript:">
-										<img src="{{this}}" />
+										<img data-id="{{id}}" src="{{url}}" />
 									</a>
 								</li>
 								{{/each}}
@@ -676,7 +668,7 @@
 								<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
 								<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
 								<input type="text" />
-								<a class="u-go" href="javascript:">GO</a>
+								<a class="u-go" href="javascript:">go</a>
 							</div>
 						</div>
 						<!-- 色卡  -->
@@ -698,14 +690,14 @@
 								<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
 								<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
 								<input type="text" />
-								<a class="u-go" href="javascript:">GO</a>
+								<a class="u-go" href="javascript:">go</a>
 							</div>
 						</div>
 						<!-- 文字  -->
 						<div class="hide content">
-							<ul class="lib-drag">
+							<ul class="lib-drag m-lib_word">
 								<li>
-									<a class="u-char" href="javascript:"><img src="img/ABcd.png" /></a>
+									abcd
 								</li>
 							</ul>
 						</div>
@@ -722,7 +714,7 @@
 								{{#each list}}
 								<li>
 									<a href="javascript:">
-										<img src="{{this}}" />
+										<img data-id={{id}} src="{{url}}" />
 									</a>
 								</li>
 								{{/each}}
@@ -736,7 +728,7 @@
 								<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
 								<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
 								<input type="text" />
-								<a class="u-go" href="javascript:">GO</a>
+								<a class="u-go" href="javascript:">go</a>
 							</div>
 						</div>
 						<!-- 灯光  -->
@@ -752,7 +744,7 @@
 								{{#each list}}
 								<li>
 									<a href="javascript:">
-										<img src="{{this}}" />
+										<img data-id={{id}} src="{{url}}" />
 									</a>
 								</li>
 								{{/each}}
@@ -766,7 +758,7 @@
 								<a class="next" href="javascript:"><i class="icon icon-traigleright"></i></a>
 								<a class="last" href="javascript:"><i class="icon icon-liboff"></i></a>
 								<input type="text" />
-								<a class="u-go" href="javascript:">GO</a>
+								<a class="u-go" href="javascript:">go</a>
 							</div>
 						</div>
 						<!--con end-->
@@ -783,11 +775,11 @@
 							<p>色卡</p>
 						</li>
 						<li href="8">
-							<a href="javascript:"><i class="icon icon-graph"></i></a>
+							<a href="javascript:"><i class="icon icon-word"></i></a>
 							<p>文字</p>
 						</li>
 						<li href="9">
-							<a href="javascript:"><i class="icon icon-word"></i></a>
+							<a href="javascript:"><i class="icon icon-graph"></i></a>
 							<p>图形</p>
 						</li>
 						<li href="10">
@@ -821,7 +813,7 @@
 					<!--画布集-->
 					<div id="j-cvs_set" class="g-cvs_set">
 						<!--画布-->
-						<ul class="active">
+						<ul id="cvs0" data-version="0" class="active">
 							<!--单个元素-->
 							<!--<li>
 								<div class="g-pointctrl">
@@ -843,6 +835,45 @@
 							</li>-->
 						</ul>
 					</div>
+				</div>
+				<!--相关图片-->
+				<div class="g-relative_img">
+					<ul id="j-rel_img">
+
+					</ul>
+					<script id="t-rel_img" type="text/template7">
+						{{#each list}}
+						<li><img src="{{url}}" /></li>
+						{{/each}}
+					</script>
+				</div>
+				<!--相关产品推荐-->
+				<div class="g-relative_proc">
+					<dl id="j-rel_show" class="m-rel_show">
+						<dt><img src="tmp/proc01.png"/></dt>
+						<dd>
+							<h4>rons-双人沙发</h4>
+							<strong>￥32098.50</strong>
+							<span>规格：1880990122</span>
+							<span>材质：叶木垭克力</span>
+							<a href="#">更多详情</a>
+						</dd>
+					</dl>
+					<div class="m-rel_list">
+						<ul id="j-rel_list">
+							<!--<li>
+								<a href="javascript:"><img src="tmp/proc01.png" /></a>
+							</li>-->
+						</ul>
+						<script id="t-rel_list" type="text/template7">
+							{{#each list}}
+							<li data-name="{{name}}" data-price="{{price}}" data-material="{{material}}" data-spec="{{spec}}" data-url="{{moreUrl}}">
+								<a href="javascript:"><img id="{{id}}" src="{{url}}" /></a>
+							</li>
+							{{/each}}
+						</script>
+					</div>
+					<span id="j-rel_bt" class="u-rel_bt">相关产品</span>
 				</div>
 			</div>
 		</div>
@@ -878,7 +909,7 @@
 		</div>
 
 		<!--保存搭配，弹出框-->
-		<div id="j-pop_upload" class="pop pop-save">
+		<div id="j-save_pairs" class="pop pop-save">
 			<div class="pop-inner">
 				<h3>保存搭配</h3>
 				<i class="icon icon-close pop-close"></i>
@@ -897,7 +928,7 @@
 										<span></span>
 										<i class="icon icon-traigledown"></i>
 									</div>
-									<div class="subcol">
+									<div class="subcol-color subcol-2">
 										<a href="javascript:"><i></i></a>
 										<a href="javascript:"><i></i></a>
 										<a href="javascript:"><i></i></a>
@@ -917,14 +948,14 @@
 								<div class="col col-1">风格:</div>
 								<div class="col col-2"><input class="col-content" type="text" value="田园简欧" /></div>
 							</div>
-							<div class="row row-space">
+							<div class="row">
 								<div class="col col-1">空间:</div>
 								<div class="col col-2">
 									<div class="col-content">
 										<span>其它</span>
 										<i class="icon icon-traigledown"></i>
 									</div>
-									<div class="subcol">
+									<div class="subcol subcol-2">
 										<a href="javascript:">其它</a>
 										<a href="javascript:">雪茄房</a>
 										<a href="javascript:">前台</a>
@@ -963,7 +994,7 @@
 										<span>两室一厅</span>
 										<i class="icon icon-traigledown"></i>
 									</div>
-									<div class="subcol">
+									<div class="subcol subcol-2">
 										<a href="javascript:">两室一厅</a>
 										<a href="javascript:">三室一厅</a>
 									</div>
@@ -976,7 +1007,7 @@
 										<span>90-180</span>
 										<i class="icon icon-traigledown"></i>
 									</div>
-									<div class="subcol">
+									<div class="subcol subcol-2">
 										<a href="javascript:">90-180</a>
 										<a href="javascript:">90</a>
 									</div>
@@ -989,10 +1020,10 @@
 										<span>其它</span>
 										<i class="icon icon-traigledown"></i>
 									</div>
-									<div class="subcol">
+									<div class="subcol subcol-2">
 										<a href="javascript:">其它</a>
 										<a href="javascript:">居家</a>
-										<a href="javascript:">KTV</a>
+										<a href="javascript:">ktv</a>
 										<a href="javascript:">影院</a>
 										<a href="javascript:">酒吧</a>
 										<a href="javascript:">健身房</a>
@@ -1018,6 +1049,154 @@
 				</div>
 			</div>
 		</div>
+
+		<!--保存方案，弹出框-->
+		<div id="j-save_plan" class="pop pop-save">
+			<div class="pop-inner">
+				<h3>保存方案</h3>
+				<i class="icon icon-close pop-close"></i>
+				<div class="pop-content">
+					<dl class="clearfix">
+						<dt><img src="tmp/proc01.png"/></dt>
+						<dd>
+							<div class="row">
+								<div class="col col-1">名称:</div>
+								<div class="col col-2"><input class="col-content" type="text" value="方案名称" /></div>
+							</div>
+							<div class="row">
+								<div class="col col-1">类别:</div>
+								<div class="col col-2">
+									<div class="col-content">
+										<span>健身房</span>
+										<i class="icon icon-traigledown"></i>
+									</div>
+									<div class="subcol subcol-2">
+										<a href="javascript:">健身房</a>
+										<a href="javascript:">公寓</a>
+										<a href="javascript:">专卖店</a>
+										<a href="javascript:">俱乐部</a>
+										<a href="javascript:">橱窗</a>
+										<a href="javascript:">展示厅</a>
+										<a href="javascript:">会所</a>
+										<a href="javascript:">别墅</a>
+										<a href="javascript:">酒店</a>
+										<a href="javascript:">办公室</a>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col col-1">风格:</div>
+								<div class="col col-2">
+									<div class="col-content">
+										<span>其它</span>
+										<i class="icon icon-traigledown"></i>
+									</div>
+									<div class="subcol subcol-2">
+										<a href="javascript:">田园简欧</a>
+										<a href="javascript:">田园</a>
+										<a href="javascript:">简欧</a>
+										<a href="javascript:">简美</a>
+										<a href="javascript:">北欧</a>
+										<a href="javascript:">其他混塔</a>
+										<a href="javascript:">伊斯兰</a>
+										<a href="javascript:">地中海</a>
+										<a href="javascript:">日式</a>
+										<a href="javascript:">现代</a>
+										<a href="javascript:">浅色现代</a>
+										<a href="javascript:">现代中式</a>
+										<a href="javascript:">现代波普</a>
+										<a href="javascript:">现代北欧</a>
+										<a href="javascript:">现代奢华</a>
+										<a href="javascript:">现代极简</a>
+										<a href="javascript:">新中式</a>
+										<a href="javascript:">新中式</a>
+										<a href="javascript:">中式传统</a>
+										<a href="javascript:">美式</a>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col col-1">面积:</div>
+								<div class="col col-2">
+									<div class="col-content">
+										<span>90-180</span>
+										<i class="icon icon-traigledown"></i>
+									</div>
+									<div class="subcol subcol-2">
+										<a href="javascript:">90-180</a>
+										<a href="javascript:">90</a>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col col-1">户型:</div>
+								<div class="col col-2">
+									<div class="col-content">
+										<span>两室一厅</span>
+										<i class="icon icon-traigledown"></i>
+									</div>
+									<div class="subcol subcol-2">
+										<a href="javascript:">两室一厅</a>
+										<a href="javascript:">三室一厅</a>
+									</div>
+								</div>
+							</div>
+						</dd>
+					</dl>
+					<div class="pop-bts">
+						<a class="pop-close" href="javascript:">取消</a>
+						<a href="javascript:">确定</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--打开-->
+		<div id="j-open_pop" class="pop pop-open">
+			<div class="pop-inner">
+				<h3>打开</h3>
+				<i class="icon icon-close pop-close"></i>
+				<div class="pop-content">
+					<div class="pop-tab">
+						<span class="active">搭配</span>
+						<span>方案</span>
+					</div>
+					<div class="clearfix">
+						<div class="cho_cond">
+							<span class="active">全部搭配</span>
+							<span>未公开搭配</span>
+							<span>公开搭配</span>
+						</div>
+						<div class="pop-search">
+							<i class="icon icon-search"></i>
+							<input type="text" placeholder="搜索" />
+						</div>
+					</div>
+					<div class="pop-con_wrap">
+						<ul id="j-pop_list" class="clearfix">
+							<!--<li>
+								<a href="javascript:"><img src="tmp/proc01.png"/></a>
+								<p>效果图</p>
+							</li>-->
+						</ul>
+						<script id="t-pop_list" type="text/template7">
+							{{#each list}}
+								<li>
+									<a href="javascript:"><img src="{{url}}"/></a>
+									<p>{{name}}</p>
+								</li>
+							{{/each}}
+						</script>
+					</div>
+					<div class="pop-bts">
+						<a class="pop-close" href="javascript:">取消</a>
+						<a href="javascript:">确定</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="js/procduct.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
 	</body>
 
 </html>

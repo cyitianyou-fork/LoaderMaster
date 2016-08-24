@@ -10,19 +10,11 @@
 		},
 		{
 			"id": "bg-1",
-			"url": "tmp/proc01.png"
+			"url": "tmp/proc02.png"
 		},
 		{
 			"id": "bg-1",
-			"url": "tmp/proc01.png"
-		},
-		{
-			"id": "bg-1",
-			"url": "tmp/proc01.png"
-		},
-		{
-			"id": "bg-1",
-			"url": "tmp/proc01.png"
+			"url": "tmp/file.png"
 		}
 	]
 }

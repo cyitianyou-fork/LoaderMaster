@@ -3,15 +3,21 @@ $(function() {
 	function init() {
 		win.init();
 		library.init();
+		popMenu.init();
 		bind();
+		//清空所有的本地数据
+		sessionStorage.clear()
 	}
 	//所有dom元素绑定事件
 	function bind() {
 		win.bind();
 		menu.bind();
+		popMenu.bind();
 		tool.bind();
 		library.bind();
 		cvsSet.bind();
+		relProc.bind();
+		relImg.bind();
 	}
 
 	//全局模块
@@ -20,6 +26,9 @@ $(function() {
 		function init() {
 			initCvsHeight();
 			initLibHeight();
+			//初始化画布的中心点
+			cvsSet.trpos.x = ($('#j-cvs_set').width() - $('#j-tools').width() - $('#j-library').width()) / 2;
+			cvsSet.trpos.y = $('#j-cvs_set').height() / 2 + $('#j-cvs_set').offset().top;
 		}
 
 		function bind() {
@@ -85,6 +94,7 @@ $(function() {
 				init();
 				//库面板、工具栏、tab栏的高度跟着变化
 				$('#j-cvs_tab').css('top', $('#j-cvs_tab').offset().top + val);
+				$('#j-input_word').css('top', $('#j-input_word').offset().top + val);
 				$('#j-tools').css({
 					top: $('#j-tools').offset().top + val,
 					height: $('#j-tools').height() - val
@@ -115,6 +125,10 @@ $(function() {
 		function bind() {
 			showSubMenu();
 			newCvs();
+			savePop();
+			openPop();
+			cancelCvs();
+			clearCvs();
 		}
 		//菜单栏,鼠标置上显示二级菜单，移开隐藏二级菜单
 		function showSubMenu() {
@@ -136,7 +150,7 @@ $(function() {
 
 		function newCvs() {
 			$(document).on('click', '#j-new_cvs', function() {
-				var cvsItem = $('<ul>');
+				var cvsItem = $('<ul data-version="0">');
 				var cvsTab = $('<li class="active">' +
 					'<input type="text" value="空白页" readonly="readonly" />' +
 					'<div class="u-tabc_chbt">' +
@@ -146,19 +160,134 @@ $(function() {
 					'<a href="javascript:" class="u-close"><i class="icon icon-close"></i></a>' +
 					'</div>' +
 					'</li>');
+				cvsItem.attr('id', 'cvs' + $('#j-cvs_set >ul').length);
 				$('#j-cvs_set').append(cvsItem);
 				$('#j-tabc').append(cvsTab);
 				cvsSet.setTabWidth();
 				$('#j-page_right').trigger('click');
 				$('#j-cvs_set ul').removeClass('active');
-				cvsItem.cvs.addClass('active');
+				cvsItem.addClass('active');
 				$('#j-tabc li').removeClass('active');
 				cvsTab.addClass('active');
 				cvsSet.cur = $('#j-tabc li').length - 1;
 			});
 		}
+		//保存、发布弹出框
+		function savePop() {
+			$(document).on('click', '.u-pairs', function() {
+				$('#j-save_pairs').fadeIn();
+			});
+			$(document).on('click', '.u-plan', function() {
+				$('#j-save_plan').fadeIn();
+			});
+		}
+		//打开
+		function openPop() {
+			$(document).on('click', '#j-open', function() {
+				$('#j-open_pop').fadeIn();
+			});
+		}
+
+		//撤销
+		function cancelCvs() {
+			$(document).on('click', '#j-cancel', function() {
+				//				var key = $('#j-cvs_set >ul.active').attr('id');
+				//				var handle = window.sessionStorage.getItem(key);
+				//				if (handle) {
+				//					handle=handle.split('@');
+				//					console.log('l2='+handle.length)
+				//					handle.pop();
+				//					console.log('ll='+handle.length)
+				//					$('#j-cvs_set >ul.active').html(handle[handle.length-1]);
+				//					window.sessionStorage.setItem(key, handle.join(';'));
+				//				}
+				var _id = $('#j-cvs_set >ul.active').attr('id');
+				var version = parseInt($('#j-cvs_set >ul.active').data('version'));
+				version--;
+				var key = _id + "," + version;
+				var html = sessionStorage.getItem(key);
+				$('#j-cvs_set >ul.active').html(html);
+				$('#j-cvs_set >ul.active').data('version',version)
+				//回退后即从本地存储中删除
+				sessionStorage.removeItem(_id+","+(version-10));
+				var $li=$('#j-cvs_set >ul.active').find('>li');
+				console.log($li.length)
+				var newProc;
+				for (var i=0;i<$li.length;i++) {
+					newProc=new Product($li.eq(i));
+					newProc.init();
+				}
+
+			});
+		}
+
+		//清空
+		function clearCvs() {
+			$(document).on('click', '#j-reset', function() {
+				$('#j-cvs_set >ul.active').html('');
+			});
+		}
 
 		return {
+			bind: bind
+		}
+	})();
+
+	popMenu = (function() {
+		function init() {
+			$('.pop').hide();
+			//			$('#j-save_pairs').hide();
+			//			$('#j-save_plan').hide();
+			getOpenData('tmp/pop-list.json');
+		}
+
+		function bind() {
+			popSave();
+			popOpen();
+		}
+
+		//保存弹出框事件
+		function popSave() {
+			$(document).on('click', '.pop-save .col-content .icon-traigledown', function() {
+				$(this).parents('.col-2').find('.subcol-2').toggle();
+			});
+			$(document).on('click', '.pop-save .subcol-2 a', function() {
+				var par = $(this).parents('.subcol-2');
+				var con = par.siblings('.col-content').find('span');
+				par.hide();
+				if(par.hasClass('subcol-color')) {
+					var bg = $(this).find('i').eq(0).css('background');
+					con.css('background', bg);
+				} else {
+					var val = $(this).html();
+					con.html(val);
+				}
+			});
+		}
+
+		//获取打开弹出框的数据
+		function getOpenData(url) {
+			var data = new DataLoader({
+				template: $('#t-pop_list'),
+				container: $('#j-pop_list'),
+				url: url
+			});
+			data.getData();
+		}
+		//打开弹出框事件
+		function popOpen() {
+			$(document).on('click', '.pop-tab span', function() {
+				$(this).addClass('active').siblings().removeClass('active');
+				getOpenData('tmp/pop-list.json');
+			});
+			$(document).on('click', '.cho_cond span', function() {
+				$(this).addClass('active').siblings().removeClass('active');
+				getOpenData('tmp/pop-list.json');
+			});
+		}
+
+		return {
+			init: init,
 			bind: bind
 		}
 	})();
@@ -169,6 +298,7 @@ $(function() {
 			deleteProc();
 			copyProc();
 			beGroup();
+			toPart();
 			flipHorizontalProc();
 			flipVerticalProc();
 			layerForward();
@@ -176,6 +306,7 @@ $(function() {
 			layerBackward();
 			layerBottom();
 			toggleLock();
+			zoomInAndOut();
 		}
 		//鼠标放在工具栏上显示工具的名称
 		function showToolName() {
@@ -196,11 +327,17 @@ $(function() {
 			//通过工具栏删除
 			$(document).on('click', '#j-delete', function() {
 				$('#j-cvs_set li.active').remove();
+				$('.g-relative_proc').hide();
+				$('.g-relative_img').hide();
+				cvsSet.localSave();
 			});
 			//通过键盘delete删除
 			$(document).on('keydown', function(e) {
 				if(e.keyCode == 8) {
 					$('#j-cvs_set li.active').remove();
+					$('.g-relative_proc').hide();
+					$('.g-relative_img').hide();
+					cvsSet.localSave();
 				}
 			});
 		}
@@ -218,16 +355,19 @@ $(function() {
 					$copy.removeClass('lock');
 					$copy.addClass('active');
 					$('#j-cvs_set ul.active').append($copy);
-					var newProc=new Product($copy);
+					var newProc = new Product($copy);
 					newProc.init();
 				});
+				cvsSet.localSave();
 				return false;
 			});
 		}
 		//水平镜像
 		function flipHorizontalProc() {
-			$(document).on('click', '#j-flipHorizontal', function() {
-				$('#j-cvs_set li.active img').each(function(i, ele) {
+			$(document).on('click', '#j-fliphorizontal', function() {
+				console.log('99')
+				$('#j-cvs_set li.active .img').each(function(i, ele) {
+					console.log(0)
 					var angle = $(ele).attr('data-angle'); //旋转角度
 					if(angle) {
 						angle = JSON.parse(angle);
@@ -243,13 +383,14 @@ $(function() {
 					angle = JSON.stringify(angle);
 					$(ele).attr('data-angle', angle);
 				});
+				cvsSet.localSave();
 				return false;
 			});
 		}
 		//垂直
 		function flipVerticalProc() {
-			$(document).on('click', '#j-flipVertical', function() {
-				$('#j-cvs_set li.active img').each(function(i, ele) {
+			$(document).on('click', '#j-flipvertical', function() {
+				$('#j-cvs_set li.active .img').each(function(i, ele) {
 					var angle = $(ele).attr('data-angle'); //旋转角度
 					if(angle) {
 						angle = JSON.parse(angle);
@@ -265,6 +406,7 @@ $(function() {
 					angle = JSON.stringify(angle);
 					$(ele).attr('data-angle', angle);
 				});
+				cvsSet.localSave();
 				return false;
 			});
 		}
@@ -272,6 +414,7 @@ $(function() {
 		//成组
 		function beGroup() {
 			$(document).on('click', '#j-group', function() {
+				var maxZIndex = 0 //找到子级中zIndex最大值的那个值赋给父级的zIndex
 				var $activeLi = $('#j-cvs_set li.active');
 				if($activeLi.length > 1) {
 					var $newLi = $('<li>' +
@@ -312,27 +455,38 @@ $(function() {
 					});
 					var $ul = $newLi.find('ul');
 					$activeLi.each(function(i, ele) {
-						var $img = $(ele).find('img');
+						var $img = $(ele).find('.inner');
+						maxZIndex = parseInt($(ele).css('zIndex')) > maxZIndex ? parseInt($(ele).css('zIndex')) : maxZIndex;
+						var angle = parseFloat($(ele).attr('data-angle'));
+						angle = angle ? angle : 0;
 						if($img.length > 1) {
-							var angle = parseFloat($(ele).attr('data-angle'));
-							angle = angle ? angle : 0;
 							$(ele).find('li').each(function(j, eleLi) {
-								var angleEle = parseFloat($(ele).attr('data-angle'));
+								var ABx = parseFloat($(eleLi).css('left')) + $(eleLi).width() / 2 - $(ele).width() / 2;
+								var ABy = parseFloat($(eleLi).css('top')) + $(eleLi).height() / 2 - $(ele).height() / 2;
+								var triangle = Math.atan2(ABy, ABx) * 360 / (2 * Math.PI);
+								triangle += angle;
+								var AB = Math.sqrt(Math.pow(ABx, 2) + Math.pow(ABy, 2));
+								var ACx = AB * Math.cos(triangle / 180 * Math.PI);
+								var ACy = AB * Math.sin(triangle / 180 * Math.PI);
+								var disx = ACx - ABx;
+								var disy = ACy - ABy;
+								var angleEle = parseFloat($(eleLi).attr('data-angle'));
 								angleEle = angleEle ? angleEle : 0;
 								angleEle += angle;
 								$(eleLi).css({
-									left: parseFloat($(eleLi).css('left')) + parseFloat($(ele).css('left')) - left,
-									top: parseFloat($(eleLi).css('top')) + parseFloat($(ele).css('top')) - top,
+									left: parseFloat($(eleLi).css('left')) + parseFloat($(ele).css('left')) - left + disx,
+									top: parseFloat($(eleLi).css('top')) + parseFloat($(ele).css('top')) - top + disy,
 									transform: 'rotateZ(' + angleEle + 'deg)'
 								});
 								$(eleLi).attr('data-angle', angleEle);
 								$ul.append($(eleLi));
 							});
 							$(ele).remove();
+
 						} else {
 							$(ele).css({
 								left: parseFloat($(ele).css('left')) - left,
-								top: parseFloat($(ele).css('top')) - top
+								top: parseFloat($(ele).css('top')) - top,
 							});
 							$ul.append($(ele));
 						}
@@ -340,12 +494,56 @@ $(function() {
 					});
 					$activeLi.removeClass('active');
 					$activeLi.off();
-					$activeLi.find('.g-pointctrl').remove();
+					$newLi.css('zIndex', maxZIndex);
 					$newLi.addClass('active');
 					$('#j-cvs_set ul.active').append($newLi);
 					var newProc = new Product($newLi);
 					newProc.init();
 				}
+				cvsSet.localSave();
+				return false;
+			});
+		}
+		//分解
+		function toPart() {
+			$(document).on('click', '#j-part', function() {
+				$('#j-cvs_set li.active').each(function(i, ele) {
+					var $img = $(ele).find('.img');
+					if($img.length > 1) {
+						var angle = parseFloat($(ele).attr('data-angle'));
+						angle = angle ? angle : 0;
+						$(ele).find('li').each(function(j, eleLi) {
+							//初始时，父级的中心点到子级Li中心点的向量AB
+							var ABx = parseFloat($(eleLi).css('left')) + $(eleLi).width() / 2 - $(ele).width() / 2;
+							var ABy = parseFloat($(eleLi).css('top')) + $(eleLi).height() / 2 - $(ele).height() / 2;
+							//AB向量与X轴的夹角，注意坐标轴是向左向下为正值
+							var triangle = Math.atan2(ABy, ABx) * 360 / (2 * Math.PI);
+							//加上旋转后的角度
+							triangle += angle;
+							var AB = Math.sqrt(Math.pow(ABx, 2) + Math.pow(ABy, 2));
+							//旋转后子级中心点到父级的中心点向量AC
+							var ACx = AB * Math.cos(triangle / 180 * Math.PI);
+							var ACy = AB * Math.sin(triangle / 180 * Math.PI);
+							//disx,disy表示旋转后子级Li中心点移动的距离
+							var disx = ACx - ABx;
+							var disy = ACy - ABy;
+							var angleEle = parseFloat($(eleLi).attr('data-angle'));
+							angleEle = angleEle ? angleEle : 0;
+							angleEle += angle;
+							$(eleLi).css({
+								left: parseFloat($(eleLi).css('left')) + parseFloat($(ele).css('left')) + disx,
+								top: parseFloat($(eleLi).css('top')) + parseFloat($(ele).css('top')) + disy,
+								transform: 'rotateZ(' + angleEle + 'deg)'
+							});
+							$(eleLi).attr('data-angle', angleEle);
+							var newProc = new Product($(eleLi));
+							newProc.init();
+							$('#j-cvs_set ul.active').append($(eleLi));
+						});
+						$(ele).remove();
+					}
+				});
+				cvsSet.localSave();
 				return false;
 			});
 		}
@@ -383,6 +581,7 @@ $(function() {
 						$(ele).css('zIndex', zIndex);
 					}
 				});
+				cvsSet.localSave();
 				return false;
 			});
 		}
@@ -400,6 +599,7 @@ $(function() {
 						$(ele).css('zIndex', zIndex);
 					}
 				});
+				cvsSet.localSave();
 				return false;
 			});
 		}
@@ -414,6 +614,7 @@ $(function() {
 						$(ele).css('zIndex', zIndex);
 					}
 				});
+				cvsSet.localSave();
 				return false;
 			});
 		}
@@ -431,6 +632,7 @@ $(function() {
 						$(ele).css('zIndex', zIndex);
 					}
 				});
+				cvsSet.localSave();
 				return false;
 			});
 		}
@@ -494,23 +696,79 @@ $(function() {
 			}
 			return rs;
 		}
-		
-		function toggleLock(){
-			$(document).on('click','#j-lock',function(){
-				var icon=$(this).find('.icon');
-				if (icon.hasClass('icon-lock')) {
-					icon.removeClass('icon-lock');
-					icon.addClass('icon-unlock');
-					$(this).attr('data-name','解锁');
+
+		function toggleLock() {
+			$(document).on('click', '#j-lock', function() {
+				if($('#j-cvs_set li.active').length < 1) {
+					return;
+				}
+				if($('#j-cvs_set li.active.lock').length < $('#j-cvs_set li.active').length) {
+					cvsSet.setLockStatus(true);
 					$('#j-cvs_set li.active').addClass('lock');
-				}else{
-					icon.removeClass('icon-unlock');
-					icon.addClass('icon-lock');
-					$(this).attr('data-name','锁定');
+				} else {
+					cvsSet.setLockStatus(false);
 					$('#j-cvs_set li.active').removeClass('lock');
 				}
+				cvsSet.localSave();
 				return false;
 			});
+		}
+
+		//放大和缩小
+		function zoomInAndOut() {
+			var point = $('#j-zoom .u-dian').eq(0);
+			//总长度的一半
+			var ttL = Math.floor(($('#j-zoom').height() - point.height()) / 2);
+			//初始化中心点
+			var certer = parseFloat(point.css('top'));
+			//当前长度
+			var curL = 0;
+			$(document).on('click', '#j-zoom .u-jia', function() {
+				if(curL < ttL) {
+					curL++;
+					point.css('transform', 'translate3d(0,' + curL + 'px,0)');
+					console.log()
+					toZoom(curL);
+					console.log($('#j-cvs_set .inner').eq(0).offset().left + $('#j-cvs_set .inner').eq(0).width() / 2)
+				}
+			});
+			$(document).on('click', '#j-zoom .u-jian', function() {
+				if(curL > -ttL) {
+					curL--;
+					point.css('transform', 'translate3d(0,' + curL + 'px,0)');
+					toZoom(curL);
+				}
+			});
+			point.on('mousedown', function(e) {
+				$('body').css('cursor', 'pointer');
+				var start = e.pageY;
+				var top = 0;
+				$(document).on('mousemove.zoom', function(e) {
+					top = e.pageY - start;
+					top += curL;
+					if(top < -ttL) {
+						top = -ttL;
+					} else if(top > ttL) {
+						top = ttL;
+					}
+					point.css('transform', 'translate3d(0,' + top + 'px,0)');
+					toZoom(top);
+				});
+				$(document).on('mouseup.zoom', function() {
+					$(document).off('.zoom');
+					curL = top;
+					$('body').css('cursor', 'default');
+				});
+			});
+
+			function toZoom(curL) {
+				//放大倍数范伟：.5-2
+				cvsSet.scale = curL > 0 ? (1 + curL / ttL) : (1 + curL / (2 * ttL));
+				var tmpx, tmpy;
+				$('#j-cvs_set .inner').each(function(i, ele) {
+					cvsSet.setZoom($(ele), true);
+				});
+			}
 		}
 
 		return {
@@ -556,7 +814,6 @@ $(function() {
 		}
 
 		function bind() {
-
 			//地区选择，当省份变化时，加载市的数据
 			$(document).on('change', '#j-province', function() {
 				province = $(this).val();
@@ -817,40 +1074,67 @@ $(function() {
 
 		//库面板列表下的单元可拖动，松开后再画布区生产一个cvs-item元素
 		function drag() {
-			var $img = $('<img  src="" />');
-			var w, h, l, t, src, off = false; //off设置为false,只有当lib-drag li点击后才设置为true,防止其它元素点击通过冒泡触发document的mouseup事件
+			var dragObj = null;
+			var w, h, l, t, $ul, color, src, id,
+				off = false, //off设置为false,只有当lib-drag li点击后才设置为true,防止其它元素点击通过冒泡触发document的mouseup事件
+				isColorBlock = false, //是否是颜色块
+				isWordBlock = false, //是否是文字块
+				isProc = ''; //是否是产品类，只有产品类才加载相关推荐
 			$(document).on('mousedown', '.lib-drag li', function(e) {
 				off = true;
-				src = $(this).find('img').eq(0).attr('src')
-				w = $(this).find('a').eq(0).width();
-				h = $(this).find('a').eq(0).width();
+				$ul = $(this).parent('ul');
+				if($ul.hasClass('proc')) {
+					isProc = 'proc';
+				}
+				if($ul.hasClass('m-lib_color')) {
+					dragObj = $('<div>');
+					color = $(this).css('background');
+					dragObj.css({
+						background: color,
+						borderRadius: 3
+					});
+					isColorBlock = true;
+				} else if($ul.hasClass('m-lib_word')) {
+					dragObj = $('<div>');
+					dragObj.html('ABcd');
+					dragObj.css({
+						fontSize: '24px',
+						color: '#333'
+					})
+					isWordBlock = true;
+				} else {
+					dragObj = $('<img  src="" />');
+					src = $(this).find('img').eq(0).attr('src');
+					id = $(this).find('img').eq(0).attr('data-id');
+					id = id ? id : '';
+					dragObj.attr('src', src);
+				}
+				w = $(this).width();
+				h = $(this).height();
 				l = e.pageX - (w + 20);
 				t = e.pageY - (h + 20);;
-				$img.attr({
-					'src': src,
-					class: 'dImg'
-				});
-				$img.css({
+				dragObj.attr('class', 'dobj');
+				dragObj.css({
 					left: l,
 					top: t,
 					width: w * .8,
 					height: h * .8
 				});
 				if(win.flag) {
-					$img.css('zIndex', '10010');
+					dragObj.css('zIndex', '10010');
 				} else {
-					$img.css('zIndex', '10005');
+					dragObj.css('zIndex', '10005');
 				}
 			});
 			$(document).on('mousemove.lib', function(e) {
 				if(off) {
 					l = e.pageX - (w + 20);
 					t = e.pageY - (h + 20);
-					$img.css({
+					dragObj.css({
 						left: l,
 						top: t
 					});
-					$('body').append($img);
+					$('body').append(dragObj);
 					return false;
 				}
 
@@ -859,15 +1143,31 @@ $(function() {
 				var yoff = (e.pageY > $('#j-cvs_core').offset().top) && (e.pageY < $('body').height());
 				var xoff = (e.pageX > $('#j-tools').width()) && (e.pageX < $('body').width() - $('#j-library').width());
 				if(off && yoff && xoff) {
-					e.pageX, e.pageY, src
 					cvsSet.addProduct({
 						x: e.pageX,
 						y: e.pageY,
-						src: src
+						src: src,
+						id: id,
+						color: color,
+						isColorBlock: isColorBlock,
+						isWordBlock: isWordBlock,
+						isProc: isProc
 					});
+					//加载产品推荐
+					if(isProc == 'proc') {
+						relProc.load('tmp/relProc.json');
+					} else {
+						$('.g-relative_proc').hide();
+					}
 				}
-				$img.remove();
+				if(dragObj) {
+					dragObj.remove();
+				}
+				//数据还原
 				off = false;
+				isColorBlock = false;
+				isWordBlock = false;
+				isProc = '';
 			});
 
 		}
