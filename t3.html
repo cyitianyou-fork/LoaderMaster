@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			*{margin: 0; padding: 0;}
+			div {
+				position: absolute;
+				right: 0;
+				top: 0;
+				margin: 0;
+				padding: 0;
+				width: 200px;
+				height: 200px;
+			}
+			
+			#box1 {
+				
+				background: red;
+			}
+			
+			#box2 {
+				top: 0px;
+				background: green;
+			}
+		</style>
+		<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<div id="box1">
+
+		</div>
+		<div id="box2">
+
+		</div>
+		<script type="text/javascript">
+			$(function() {
+				var cx=$(window).width() / 2-parseFloat($('#box1').css('left'));
+				var cy=$(window).height() / 2-parseFloat($('#box1').css('top'));
+				$('#box1').css('transformOrigin', cx + 'px ' + cy+'px');
+				$('#box2').css('transformOrigin', 'center center');
+				$('div').css('transform', 'scale(.7)');
+				$('#box2').css({
+					left: parseFloat($('#box2').css('left'))-162
+				})
+			});
+		</script>
+	</body>
+
+</html>
