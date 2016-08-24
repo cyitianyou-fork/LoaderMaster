@@ -75,6 +75,42 @@
 		hideInput: function() {
 			$.inputBox.hide();
 			$.inputBox.find('input').eq(0).val('');
+		},
+		//弹出框
+		pop: function(options) {
+			var defaults = {
+				title: '弹出框',
+				content: '我是弹出框',
+				className: '',
+				id: '',
+				callback: null,
+				sure_text: '确定',
+				cancel_text: '取消'
+			}
+			var rs = $.extend(true, {}, defaults, options);
+			
+			var $pop = $('<div id="' + rs.id + '" class="pop ' + rs.className + '">' +
+				'<div class="pop-inner">' +
+				'<h3>' + rs.title + '</h3>' +
+				'<i class="icon icon-close pop-close"></i>' +
+				'<div class="pop-content">' + rs.content +
+				'<div class="pop-bts">' +
+				'<a class="pop-close" href="javascript:">'+rs.cancel_text+'</a>' +
+				'<a href="javascript:">'+rs.sure_text+'</a>' +
+				'</div>' +
+				'</div>' +
+				'</div>' +
+				'</div>');
+			$('body').append($pop);
+			$pop.css('display','none');
+			$pop.fadeIn();
+			$('.pop-close').on('click', function() {
+				$('.pop').remove();
+				$('.pop-close').off();
+			});
+			if(rs.callback) {
+				rs.callback();
+			}
 		}
 	})
 })(jQuery);
@@ -94,11 +130,12 @@ DataLoader.prototype.getData = function() {
 			type: "get",
 			url: _this.obj.url,
 			async: true,
+			dataType: "json",
 			success: function(data) {
 				//console.log(data)
 				if(data.status == 200) {
 					_this.context = data;
-					
+
 					_this.toList();
 				} else {
 					_this.obj.container.html('<h3 style="color:#000">' + data.msg + '</h3>');
@@ -111,12 +148,12 @@ DataLoader.prototype.getData = function() {
 	}
 	//编译模板，显示数据
 DataLoader.prototype.toList = function() {
-	
+
 		var template = this.obj.template.html();
 		var compiledTemplate = Template7.compile(template);
 		var html = compiledTemplate(this.context);
 		this.obj.container.html(html);
-		if (this.obj.fn) {
+		if(this.obj.fn) {
 			this.obj.fn();
 		}
 	}
@@ -147,6 +184,7 @@ SubDataLoader.prototype.getData = function() {
 			type: "get",
 			url: _this.obj.url,
 			async: true,
+			dataType: "json",
 			success: function(data) {
 				if(data.status == 200) {
 					//根据库面列表的高度决定一页显示多少行数据，32是底部页码的高度，74为每个数据集li的高度

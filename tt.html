@@ -25,13 +25,333 @@
 	</head>
 
 	<body>
-		<div id="wrap">
-			<div id="box">
-				
+		<!--个人素材，点击上传，弹出框-->
+		<!--<div id="j-pop_upload" class="pop pop-upload">
+			<div class="pop-inner">
+				<h3>上传</h3>
+				<i class="icon icon-close pop-close"></i>
+				<div class="pop-content">
+					<div class="pop-input">
+						<input class="showfile" type="text" readonly="readonly" />
+						<label for=""><input type="file" /><a href="javascript:">浏览</a></label>
+					</div>
+					<div class="pop-select">
+						<select id="j-select_files" name="">
+							
+						</select>
+						<script id="t-select_files" type="text/template7">
+							{{#each list}}
+							<option value="">{{filename}}</option>
+							{{/each}}
+						</script>
+					</div>
+					<div class="pop-bts">
+						<a class="pop-close" href="javascript:">取消</a>
+						<a href="javascript:">确定</a>
+					</div>
+				</div>
 			</div>
-			
-		</div>
-		<button id="bt">click</button>
+		</div>-->
+
+		<!--保存搭配，弹出框-->
+		<!--<div id="j-save_pairs" class="pop pop-save">
+			<div class="pop-inner">
+				<h3>保存搭配</h3>
+				<i class="icon icon-close pop-close"></i>
+				<div class="pop-content">
+					<dl class="clearfix">
+						<dt><img src="tmp/proc01.png"/></dt>
+						<dd>
+							<div class="row">
+								<div class="col col-1">名称:</div>
+								<div class="col col-2"><input class="col-content" type="text" value="空白页" /></div>
+							</div>
+							<div class="row row-color">
+								<div class="col col-1">色系:</div>
+								<div class="col col-2">
+									<div class="col-content">
+										<span></span>
+										<i class="icon icon-traigledown"></i>
+									</div>
+									<div class="subcol-color subcol-2">
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+										<a href="javascript:"><i></i></a>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col col-1">风格:</div>
+								<div class="col col-2"><input class="col-content" type="text" value="田园简欧" /></div>
+							</div>
+							<div class="row">
+								<div class="col col-1">空间:</div>
+								<div class="col col-2">
+									<div class="col-content">
+										<span>其它</span>
+										<i class="icon icon-traigledown"></i>
+									</div>
+									<div class="subcol subcol-2">
+										<a href="javascript:">其它</a>
+										<a href="javascript:">雪茄房</a>
+										<a href="javascript:">前台</a>
+										<a href="javascript:">大堂</a>
+										<a href="javascript:">主卧</a>
+										<a href="javascript:">入户花园</a>
+										<a href="javascript:">会客区</a>
+										<a href="javascript:">宴会厅</a>
+										<a href="javascript:">红酒房</a>
+										<a href="javascript:">书房</a>
+										<a href="javascript:">客厅</a>
+										<a href="javascript:">储藏室</a>
+										<a href="javascript:">阳台</a>
+										<a href="javascript:">庭院</a>
+										<a href="javascript:">娱乐室</a>
+										<a href="javascript:">棋牌室</a>
+										<a href="javascript:">走廊</a>
+										<a href="javascript:">工作室</a>
+										<a href="javascript:">卫生间</a>
+										<a href="javascript:">厨房</a>
+										<a href="javascript:">茶室</a>
+										<a href="javascript:">老人房</a>
+										<a href="javascript:">婴儿房</a>
+										<a href="javascript:">儿童房</a>
+										<a href="javascript:">衣帽间</a>
+										<a href="javascript:">卧室</a>
+										<a href="javascript:">餐厅</a>
+										<a href="javascript:">玄关</a>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col col-1">户型:</div>
+								<div class="col col-2">
+									<div class="col-content">
+										<span>两室一厅</span>
+										<i class="icon icon-traigledown"></i>
+									</div>
+									<div class="subcol subcol-2">
+										<a href="javascript:">两室一厅</a>
+										<a href="javascript:">三室一厅</a>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col col-1">面积:</div>
+								<div class="col col-2">
+									<div class="col-content">
+										<span>90-180</span>
+										<i class="icon icon-traigledown"></i>
+									</div>
+									<div class="subcol subcol-2">
+										<a href="javascript:">90-180</a>
+										<a href="javascript:">90</a>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col col-1">商业空间:</div>
+								<div class="col col-2">
+									<div class="col-content">
+										<span>其它</span>
+										<i class="icon icon-traigledown"></i>
+									</div>
+									<div class="subcol subcol-2">
+										<a href="javascript:">其它</a>
+										<a href="javascript:">居家</a>
+										<a href="javascript:">ktv</a>
+										<a href="javascript:">影院</a>
+										<a href="javascript:">酒吧</a>
+										<a href="javascript:">健身房</a>
+										<a href="javascript:">公寓</a>
+										<a href="javascript:">办公室</a>
+										<a href="javascript:">售楼处</a>
+										<a href="javascript:">橱窗</a>
+										<a href="javascript:">专卖店</a>
+										<a href="javascript:">展示厅</a>
+										<a href="javascript:">样板房</a>
+										<a href="javascript:">会所</a>
+										<a href="javascript:">别墅</a>
+										<a href="javascript:">酒店</a>
+									</div>
+								</div>
+							</div>
+						</dd>
+					</dl>
+					<div class="pop-bts">
+						<a class="pop-close" href="javascript:">取消</a>
+						<a href="javascript:">确定</a>
+					</div>
+				</div>
+			</div>
+		</div>-->
+
+		<!--保存方案，弹出框-->
+		<!--<div id="j-save_plan" class="pop pop-save">
+			<div class="pop-inner">
+				<h3>保存方案</h3>
+				<i class="icon icon-close pop-close"></i>
+				<div class="pop-content">
+					<dl class="clearfix">
+						<dt><img src="tmp/proc01.png"/></dt>
+						<dd>
+							<div class="row">
+								<div class="col col-1">名称:</div>
+								<div class="col col-2"><input class="col-content" type="text" value="方案名称" /></div>
+							</div>
+							<div class="row">
+								<div class="col col-1">类别:</div>
+								<div class="col col-2">
+									<div class="col-content">
+										<span>健身房</span>
+										<i class="icon icon-traigledown"></i>
+									</div>
+									<div class="subcol subcol-2">
+										<a href="javascript:">健身房</a>
+										<a href="javascript:">公寓</a>
+										<a href="javascript:">专卖店</a>
+										<a href="javascript:">俱乐部</a>
+										<a href="javascript:">橱窗</a>
+										<a href="javascript:">展示厅</a>
+										<a href="javascript:">会所</a>
+										<a href="javascript:">别墅</a>
+										<a href="javascript:">酒店</a>
+										<a href="javascript:">办公室</a>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col col-1">风格:</div>
+								<div class="col col-2">
+									<div class="col-content">
+										<span>其它</span>
+										<i class="icon icon-traigledown"></i>
+									</div>
+									<div class="subcol subcol-2">
+										<a href="javascript:">田园简欧</a>
+										<a href="javascript:">田园</a>
+										<a href="javascript:">简欧</a>
+										<a href="javascript:">简美</a>
+										<a href="javascript:">北欧</a>
+										<a href="javascript:">其他混塔</a>
+										<a href="javascript:">伊斯兰</a>
+										<a href="javascript:">地中海</a>
+										<a href="javascript:">日式</a>
+										<a href="javascript:">现代</a>
+										<a href="javascript:">浅色现代</a>
+										<a href="javascript:">现代中式</a>
+										<a href="javascript:">现代波普</a>
+										<a href="javascript:">现代北欧</a>
+										<a href="javascript:">现代奢华</a>
+										<a href="javascript:">现代极简</a>
+										<a href="javascript:">新中式</a>
+										<a href="javascript:">新中式</a>
+										<a href="javascript:">中式传统</a>
+										<a href="javascript:">美式</a>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col col-1">面积:</div>
+								<div class="col col-2">
+									<div class="col-content">
+										<span>90-180</span>
+										<i class="icon icon-traigledown"></i>
+									</div>
+									<div class="subcol subcol-2">
+										<a href="javascript:">90-180</a>
+										<a href="javascript:">90</a>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col col-1">户型:</div>
+								<div class="col col-2">
+									<div class="col-content">
+										<span>两室一厅</span>
+										<i class="icon icon-traigledown"></i>
+									</div>
+									<div class="subcol subcol-2">
+										<a href="javascript:">两室一厅</a>
+										<a href="javascript:">三室一厅</a>
+									</div>
+								</div>
+							</div>
+						</dd>
+					</dl>
+					<div class="pop-bts">
+						<a class="pop-close" href="javascript:">取消</a>
+						<a href="javascript:">确定</a>
+					</div>
+				</div>
+			</div>
+		</div>-->
+
+		<!--打开-->
+		<!--<div id="j-open_pop" class="pop pop-open">
+			<div class="pop-inner">
+				<h3>打开</h3>
+				<i class="icon icon-close pop-close"></i>
+				<div class="pop-content">
+					<div class="pop-tab">
+						<span class="active">搭配</span>
+						<span>方案</span>
+					</div>
+					<div class="clearfix">
+						<div class="cho_cond">
+							<span class="active">全部搭配</span>
+							<span>未公开搭配</span>
+							<span>公开搭配</span>
+						</div>
+						<div class="pop-search">
+							<i class="icon icon-search"></i>
+							<input type="text" placeholder="搜索" />
+						</div>
+					</div>
+					<div class="pop-con_wrap">
+						<ul id="j-pop_list" class="clearfix">
+							
+						</ul>
+						<script id="t-pop_list" type="text/template7">
+							{{#each list}}
+								<li>
+									<a href="javascript:"><img src="{{url}}"/></a>
+									<p>{{name}}</p>
+								</li>
+							{{/each}}
+						</script>
+					</div>
+					<div class="pop-bts">
+						<a class="pop-close" href="javascript:">取消</a>
+						<a href="javascript:">确定</a>
+					</div>
+				</div>
+			</div>
+		</div>-->
+		<!--<div class="pop pop-tip">
+			<div class="pop-inner">
+				<h3>提示</h3>
+				<i class="icon icon-close pop-close"></i>
+				<div class="pop-content">
+					<div class="pop-text">
+						您还未保存！						
+					</div>
+					<div class="pop-bts">
+						<a class="pop-close" href="javascript:">取消</a>
+						<a href="javascript:">确定</a>
+					</div>
+				</div>
+			</div>
+		</div>-->
 	</body>
 
 </html>
