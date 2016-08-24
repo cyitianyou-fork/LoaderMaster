@@ -532,7 +532,6 @@ $(function() {
 		}
 	})();
 
-
 	var tool = (function() {
 		function bind() {
 			showToolName();
@@ -607,8 +606,8 @@ $(function() {
 		function flipHorizontalProc() {
 			$(document).on('click', '#j-fliphorizontal', function() {
 				$('#j-cvs_set li.active').each(function(i, ele) {
-					var $ul=$(ele).find('ul');
-					var $obj=$ul.length>0?$ul:$(ele).find('.img');
+					var $ul = $(ele).find('ul');
+					var $obj = $ul.length > 0 ? $ul : $(ele).find('.img');
 					var angle = $obj.attr('data-angle'); //旋转角度
 					if(angle) {
 						angle = JSON.parse(angle);
@@ -632,8 +631,8 @@ $(function() {
 		function flipVerticalProc() {
 			$(document).on('click', '#j-flipvertical', function() {
 				$('#j-cvs_set li.active').each(function(i, ele) {
-					var $ul=$(ele).find('ul');
-					var $obj=$ul.length>0?$ul:$(ele).find('.img');
+					var $ul = $(ele).find('ul');
+					var $obj = $ul.length > 0 ? $ul : $(ele).find('.img');
 					var angle = $obj.attr('data-angle'); //旋转角度
 					if(angle) {
 						angle = JSON.parse(angle);
@@ -753,9 +752,17 @@ $(function() {
 				$('#j-cvs_set li.active').each(function(i, ele) {
 					var $img = $(ele).find('.img');
 					if($img.length > 1) {
+						var $ul = $(ele).find('ul');
+						//找到成组后ul镜像翻转的角度
+						var angleImg = getMirrorAngle($ul); //旋转角度
+
 						var angle = parseFloat($(ele).attr('data-angle'));
 						angle = angle ? angle : 0;
 						$(ele).find('li').each(function(j, eleLi) {
+							//计算成组后镜像翻转left和top的变化值
+							var mirX = angleImg.y % 360 == 0 ? 0 : (2 * ($(ele).width() / 2 - parseFloat($(eleLi).css('left')) - $(eleLi).width() / 2));
+							var mirY = angleImg.x % 360 == 0 ? 0 : (2 * ($(ele).height() / 2 - parseFloat($(eleLi).css('top')) - $(eleLi).height() / 2));
+							console.log(mirX + ',' + mirY);
 							//初始时，父级的中心点到子级Li中心点的向量AB
 							var ABx = parseFloat($(eleLi).css('left')) + $(eleLi).width() / 2 - $(ele).width() / 2;
 							var ABy = parseFloat($(eleLi).css('top')) + $(eleLi).height() / 2 - $(ele).height() / 2;
@@ -774,11 +781,14 @@ $(function() {
 							angleEle = angleEle ? angleEle : 0;
 							angleEle += angle;
 							$(eleLi).css({
-								left: parseFloat($(eleLi).css('left')) + parseFloat($(ele).css('left')) + disx,
-								top: parseFloat($(eleLi).css('top')) + parseFloat($(ele).css('top')) + disy,
+								left: parseFloat($(eleLi).css('left')) + parseFloat($(ele).css('left')) + disx + mirX,
+								top: parseFloat($(eleLi).css('top')) + parseFloat($(ele).css('top')) + disy + mirY,
 								transform: 'rotateZ(' + angleEle + 'deg)'
 							});
 							$(eleLi).attr('data-angle', angleEle);
+							var $img = $(eleLi).find('.img').eq(0);
+							var angleLiImg = getMirrorAngle($img);
+							$img.css('transform', 'rotateX(' + (angleImg.x + angleLiImg.x) + 'deg) rotateY(' + (angleImg.y + angleLiImg.y) + 'deg)');
 							var newProc = new Product($(eleLi));
 							newProc.init();
 							$('#j-cvs_set ul.active').append($(eleLi));
@@ -789,6 +799,20 @@ $(function() {
 				cvsSet.localSave();
 				return false;
 			});
+		}
+		//获取镜像转角
+		function getMirrorAngle(ele) {
+			var angle = ele.attr('data-angle'); //旋转角度
+			if(angle) {
+				angle = JSON.parse(angle);
+				angle.x = angle.x ? angle.x : 0;
+				angle.y = angle.y ? angle.y : 0;
+			} else {
+				angle = {};
+				angle.x = 0;
+				angle.y = 0;
+			}
+			return angle;
 		}
 		//获取控制点的坐标
 		function getPointPos(obj) {
