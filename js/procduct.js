@@ -355,8 +355,7 @@ var cvsSet = (function() {
 		$('#j-cvs_set >ul.active').data('version',version)
 		var max_ver=10;
 		//最大存max步，如果超出，则销毁前面的
-		sessionStorage.removeItem(_id+","+(version-10))
-		
+		sessionStorage.removeItem(_id+","+(version-10));
 	}
 
 	return {
@@ -377,7 +376,7 @@ function Product(obj) {
 	this.obj = obj;
 }
 Product.prototype.init = function() {
-		this.selected();
+	    this.selected();
 		this.drag();
 		this.rotate();
 		this.scale();
@@ -414,9 +413,10 @@ Product.prototype.addSelectItem = function(e) {
 		$('.g-relative_img').hide();
 	}
 }
-Product.prototype.selected = function() {
-		var _this = this;
-		this.obj.on('click', function(e) {
+Product.prototype.selected = function(e,_this) {
+	var _this = this;
+		//事件绑定
+		_this.obj.on('click',function(e) {
 			_this.addSelectItem(e);
 			//锁定按钮状态
 			if($('#j-cvs_set li.active').length > 0) {

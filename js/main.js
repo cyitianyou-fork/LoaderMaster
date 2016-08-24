@@ -161,7 +161,6 @@ $(function() {
 					'</div>' +
 					'</li>');
 				cvsItem.attr('id', 'cvs' + $('#j-cvs_set >ul').length);
-				//cvsItem.data('version','assda1');
 				$('#j-cvs_set').append(cvsItem);
 				$('#j-tabc').append(cvsTab);
 				cvsSet.setTabWidth();
@@ -192,16 +191,33 @@ $(function() {
 		//撤销
 		function cancelCvs() {
 			$(document).on('click', '#j-cancel', function() {
-				var key = $('#j-cvs_set >ul.active').attr('id');
-				var handle = window.sessionStorage.getItem(key);
-				if (handle) {
-					handle=handle.split('@');
-					console.log('l2='+handle.length)
-					handle.pop();
-					console.log('ll='+handle.length)
-					$('#j-cvs_set >ul.active').html(handle[handle.length-1]);
-					window.sessionStorage.setItem(key, handle.join(';'));
+				//				var key = $('#j-cvs_set >ul.active').attr('id');
+				//				var handle = window.sessionStorage.getItem(key);
+				//				if (handle) {
+				//					handle=handle.split('@');
+				//					console.log('l2='+handle.length)
+				//					handle.pop();
+				//					console.log('ll='+handle.length)
+				//					$('#j-cvs_set >ul.active').html(handle[handle.length-1]);
+				//					window.sessionStorage.setItem(key, handle.join(';'));
+				//				}
+				var _id = $('#j-cvs_set >ul.active').attr('id');
+				var version = parseInt($('#j-cvs_set >ul.active').data('version'));
+				version--;
+				var key = _id + "," + version;
+				var html = sessionStorage.getItem(key);
+				$('#j-cvs_set >ul.active').html(html);
+				$('#j-cvs_set >ul.active').data('version',version)
+				//回退后即从本地存储中删除
+				sessionStorage.removeItem(_id+","+(version-10));
+				var $li=$('#j-cvs_set >ul.active').find('>li');
+				console.log($li.length)
+				var newProc;
+				for (var i=0;i<$li.length;i++) {
+					newProc=new Product($li.eq(i));
+					newProc.init();
 				}
+
 			});
 		}
 
