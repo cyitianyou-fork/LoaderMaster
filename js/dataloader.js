@@ -13,11 +13,12 @@ DataLoader.prototype.getData = function() {
 			type: "get",
 			url: _this.obj.url,
 			async: true,
+			dataType: "json",
 			success: function(data) {
-				//console.log(data)
+				console.log(data)
 				if(data.status == 200) {
 					_this.context = data;
-					
+
 					_this.toList();
 				} else {
 					_this.obj.container.html('<h2 style="margin:30px; color:#000">' + data.msg + '</h2>');
@@ -30,7 +31,7 @@ DataLoader.prototype.getData = function() {
 	}
 	//编译模板，显示数据
 DataLoader.prototype.toList = function() {
-	
+
 		var template = this.obj.template.html();
 		var compiledTemplate = Template7.compile(template);
 		var html = compiledTemplate(this.context);
@@ -63,6 +64,7 @@ SubDataLoader.prototype.getData = function() {
 			type: "get",
 			url: _this.obj.url,
 			async: true,
+			dataType: "json",
 			success: function(data) {
 				if(data.status == 200) {
 					//根据库面列表的高度决定一页显示多少行数据，32是底部页码的高度，74为每个数据集li的高度
