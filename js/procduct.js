@@ -303,18 +303,15 @@ var cvsSet = (function() {
 				zIndex: cvsSet.zIndex++
 					//transform: 'scale(' + cvsSet.scale + ')'
 			});
-			//保存中心点
+			//保存中心点:cx和cy表示中心点，x和y表示left和top，w和h表示宽高
 			var pos = {
 				"cx": x + w / 2,
 				"cy": y + h / 2,
-				"lx": x,
-				"ly": y,
+				"x": x,
+				"y": y,
 				"w": w,
 				"h": h,
-				"extraX": 0,
-				"extraY": 0,
-				"left": 0,
-				"top": 0
+				"scale": 1 - cvsSet.scale
 			};
 			newLi.data('pos', pos);
 
@@ -335,46 +332,55 @@ var cvsSet = (function() {
 		//bool值表示是否初始化时就放大和缩小
 		var pos = ele.data('pos');
 		if(bool) {
+			var scale = cvsSet.scale + pos.scale;
+			//限制最小比例
+			scale=pos.w*scale<20?20/pos.w:scale;
+			scale=pos.h*scale<20?20/pos.h:scale;
+			//console.log(scale)
 			ele.css({
-				width: pos.w * cvsSet.scale,
-				height: pos.h * cvsSet.scale,
-				left: pos.lx + (cvsSet.trpos.cx - pos.cx) * (1 - cvsSet.scale) + pos.extraX+pos.left,
-				top: pos.ly + (cvsSet.trpos.cy - pos.cy) * (1 - cvsSet.scale) + pos.extraY+pos.top
+				width: pos.w * scale,
+				height: pos.h * scale,
+				left: pos.x + (cvsSet.trpos.cx - pos.cx) * (1 - scale),
+				top: pos.y + (cvsSet.trpos.cy - pos.cy) * (1 - scale)
 			});
-			var $img=ele.find('.img');
-			if ($img.length>0) {
-				ele.find('li').each(function(i,eleLi){
-					var posLi=$(eleLi).data('pos');
-					console.log(posLi);
+			var $img = ele.find('.img');
+			if($img.length > 1) {
+				ele.find('li').each(function(i, eleLi) {
+					var posLi = $(eleLi).data('pos');
 					$(eleLi).css({
-						width: posLi.w*cvsSet.scale,
-						height: posLi.h*cvsSet.scale
+						width: posLi.w * scale,
+						height: posLi.h * scale,
+						left: posLi.l * scale,
+						top: posLi.t * scale
 					});
 					$(eleLi).find('.img').css({
-						width: posLi.w*cvsSet.scale,
-						height: posLi.h*cvsSet.scale
+						width: posLi.w * scale,
+						height: posLi.h * scale
 					});
 				});
-			}else{
+			} else {
 				$img.css({
-					width: pos.w * cvsSet.scale,
-					height: pos.h * cvsSet.scale
+					width: pos.w * scale,
+					height: pos.h * scale
 				});
 			}
 		} else {
+			pos.w = pos.w * cvsSet.scale;
+			pos.h = pos.h * cvsSet.scale;
+			pos.x = pos.x + pos.w * (1 - cvsSet.scale) / 2;
+			pos.y = pos.y + pos.h * (1 - cvsSet.scale) / 2;
 			ele.css({
-				width: pos.w * cvsSet.scale,
-				height: pos.h * cvsSet.scale,
-				left: pos.lx + pos.w * (1 - cvsSet.scale) / 2,
-				top: pos.ly + pos.h * (1 - cvsSet.scale) / 2
+				width: pos.w,
+				height: pos.h,
+				left: pos.x,
+				top: pos.y
 			});
-			pos.extraX = pos.w * (1 - cvsSet.scale) / 2 - (cvsSet.trpos.cx - pos.cx) * (1 - cvsSet.scale);
-			pos.extraY = pos.h * (1 - cvsSet.scale) / 2 - (cvsSet.trpos.cy - pos.cy) * (1 - cvsSet.scale);
-			ele.data('pos', pos);
 			ele.find('.img').css({
-				width: pos.w * cvsSet.scale,
-				height: pos.h * cvsSet.scale
+				width: pos.w,
+				height: pos.h
 			});
+
+			ele.data('pos', pos);
 		}
 	}
 
@@ -408,6 +414,32 @@ var cvsSet = (function() {
 		var max_ver = 10;
 		//最大存max步，如果超出，则销毁前面的
 		sessionStorage.removeItem(_id + "," + (version - 10));
+	}
+	
+	//更新每个li的位置
+Product.prototype.updatePos = function() {
+		$('#j-cvs_set li.active').each(function(i,ele) {
+			var pos = $(ele).data('pos');
+			pos = {
+				"w": $(ele).width(),
+				"h": $(ele).height(),
+				"x": parseFloat($(ele).css('left')),
+				"y": parseFloat($(ele).css('top')),
+				"cx": parseFloat($(ele).css('left')) + $(ele).width() / 2,
+				"cy": parseFloat($(ele).css('top')) + $(ele).height() / 2,
+				"scale": 1 - cvsSet.scale
+			}
+			$(ele).data('pos', pos);
+			$(ele).find('li').each(function(i, eleLi) {
+				var posLi = {
+					"w": $(eleLi).width(),
+					"h": $(eleLi).height(),
+					"l": parseFloat($(eleLi).css('left')),
+					"t": parseFloat($(eleLi).css('top'))
+				}
+				$(eleLi).data('pos', posLi);
+			});
+		})
 	}
 
 	return {
@@ -484,6 +516,7 @@ Product.prototype.selected = function(e, _this) {
 			return false;
 		});
 	}
+	
 	//移动
 Product.prototype.drag = function() {
 		var _this = this;
@@ -542,14 +575,12 @@ Product.prototype.drag = function() {
 						left: parseFloat($(ele).css('left')) + x,
 						top: parseFloat($(ele).css('top')) + y
 					});
-//					var pos=JSON.parse($(ele).attr('data-pos'));
-//					pos.left+=x;
-//					pos.top+=y;
-//					$(ele).attr('data-pos',pos);
 				});
 				if(x != 0 || y != 0) {
 					//本地存储
 					cvsSet.localSave();
+					//记录位置改变
+					_this.updatePos();
 				}
 			});
 			return false;
@@ -758,6 +789,7 @@ Product.prototype.scale = function() {
 			$(document).off('.scale');
 			$('body').css('cursor', 'default');
 			cvsSet.localSave();
+			_this.updatePos();
 		});
 		return false;
 	});

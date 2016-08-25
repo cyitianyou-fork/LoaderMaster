@@ -595,22 +595,24 @@ $(function() {
 					$copy.removeClass('lock');
 					$copy.addClass('active');
 					//保证每个Li的zIndex都不重复
-					//					var $li=$copy.find('li');
-					//					if ($li.length>0) {
-					//						$copy.css('zIndex',cvsSet.zindex);
-					//						console.log(Array.isArray($li))
-					//						Array.split.apply(null,$li);
-					//						console.log(Array.isArray($li))
-					//						$li.sort(function(obj1,obj2){
-					//							return parseInt(obj1.css('zIndex'))-parseInt(obj2.css('zIndex'));
-					//						});
-					//						for (var i=0;i<$li.length;i++) {
-					//							$li[i].css('zIndex',cvsSet.zindex++);
-					//						}
-					//					}else{
-					//						$copy.css('zIndex',cvsSet.zindex++);
-					//					}
+					var $li = $copy.find('li');
+					if($li.length > 0) {
+						$copy.css('zIndex', cvsSet.zIndex);
+						var rs=[];
+						for (var i=0;i<$li.length;i++) {
+							rs.push($li.eq(i));
+						}
+						rs.sort(function(obj1, obj2) {
+							return parseInt(obj1.css('zIndex')) - parseInt(obj2.css('zIndex'));
+						});
+						for(var i = 0; i < rs.length; i++) {
+							rs[i].css('zIndex', cvsSet.zIndex++);
+						}
+					} else {
+						$copy.css('zIndex', cvsSet.zIndex++);
+					}
 					$('#j-cvs_set ul.active').append($copy);
+					updatePos($copy);
 					var newProc = new Product($copy);
 					newProc.init();
 				});
@@ -740,26 +742,35 @@ $(function() {
 					$newLi.css('zIndex', maxZIndex);
 					$newLi.addClass('active');
 					$('#j-cvs_set ul.active').append($newLi);
-					//保存中心点
-					var pos = {
-						"cx": left + $newLi.width() / 2,
-						"cy": top + $newLi.height() / 2,
-						"lx": left,
-						"ly": top,
-						"w": $newLi.width(),
-						"h": $newLi.height(),
-						"extraX": 0,
-						"extraY": 0,
-						"left": 0,
-						"top": 0
-					};
-					$newLi.data('pos', pos);
-					console.log(pos)
+					updatePos($newLi)
 					var newProc = new Product($newLi);
 					newProc.init();
 				}
 				cvsSet.localSave();
 				return false;
+			});
+		}
+		//更新pos位置
+		function updatePos(ele){
+			//保存中心点
+			var pos = {
+				"cx": parseFloat(ele.css('left')) + ele.width() / 2,
+				"cy": parseFloat(ele.css('top')) + ele.height() / 2,
+				"x": parseFloat(ele.css('left')),
+				"y": parseFloat(ele.css('top')),
+				"w": ele.width(),
+				"h": ele.height(),
+				"scale": 1 - cvsSet.scale
+			};
+			ele.data('pos', pos);
+			ele.find('li').each(function(i, eleLi) {
+				var posLi = {
+					"w": $(eleLi).width(),
+					"h": $(eleLi).height(),
+					"l": parseFloat($(eleLi).css('left')),
+					"t": parseFloat($(eleLi).css('top'))
+				}
+				$(eleLi).data('pos', posLi);
 			});
 		}
 		//分解
