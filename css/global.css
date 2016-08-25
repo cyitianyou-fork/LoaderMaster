@@ -30,6 +30,7 @@ body {
 	-webkit-user-select: none;
 	-ms-user-select: none;
 	user-select:none;
+	overflow: hidden;
 }
 ::-moz-selection { background: #ff4629; color: #fff; text-shadow: none; }
 .::selection { background: #ff4629; color: #fff; text-shadow: none; }
@@ -428,7 +429,8 @@ html,body{height: 100%;}
 .g-cvs_set >ul{display: none;}
 .g-cvs_set >ul.active{display: block;}
 .g-cvs_set ul ul{width: 100%; height: 100%;}
-.g-cvs_set li{position: absolute;left: 0; top: 0; padding: 5px; left: 100px; top: 200px; cursor: move; }
+.g-cvs_set li{position: absolute;left: 0; top: 0; padding: 5px; left: 100px; top: 200px; cursor: move; width: auto; height: auto;}
+.g-cvs_set .inner{transform-origin: 50% 50%;}
 .cvs-item-box{position: absolute;}
 /*控制点*/
 .g-pointctrl{display: none; position: absolute; left: 0; top: 0; width: 100%; height: 100%;}

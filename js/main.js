@@ -25,8 +25,8 @@ $(function() {
 			initCvsHeight();
 			initLibHeight();
 			//初始化画布的中心点
-			cvsSet.trpos.x = ($('#j-cvs_set').width() - $('#j-tools').width() - $('#j-library').width()) / 2;
-			cvsSet.trpos.y = $('#j-cvs_set').height() / 2 + $('#j-cvs_set').offset().top;
+			cvsSet.trpos.cx = ($('#j-cvs_set').width() - $('#j-tools').width() - $('#j-library').width()) / 2;
+			cvsSet.trpos.cy = $('#j-cvs_set').height() / 2 + $('#j-cvs_set').offset().top;
 		}
 
 		function bind() {
@@ -589,11 +589,27 @@ $(function() {
 					$copy.css({
 						left: parseFloat($(ele).css('left')) + 10,
 						top: parseFloat($(ele).css('top')) + 10
-					})
+					});
 
 					$(ele).removeClass('active');
 					$copy.removeClass('lock');
 					$copy.addClass('active');
+					//保证每个Li的zIndex都不重复
+					//					var $li=$copy.find('li');
+					//					if ($li.length>0) {
+					//						$copy.css('zIndex',cvsSet.zindex);
+					//						console.log(Array.isArray($li))
+					//						Array.split.apply(null,$li);
+					//						console.log(Array.isArray($li))
+					//						$li.sort(function(obj1,obj2){
+					//							return parseInt(obj1.css('zIndex'))-parseInt(obj2.css('zIndex'));
+					//						});
+					//						for (var i=0;i<$li.length;i++) {
+					//							$li[i].css('zIndex',cvsSet.zindex++);
+					//						}
+					//					}else{
+					//						$copy.css('zIndex',cvsSet.zindex++);
+					//					}
 					$('#j-cvs_set ul.active').append($copy);
 					var newProc = new Product($copy);
 					newProc.init();
@@ -676,6 +692,7 @@ $(function() {
 						'</div>' +
 						'</div>' +
 						'<ul></ul></li>');
+					$newLi.css('padding', 0);
 					var $first = $('#j-cvs_set li.active').eq(0);
 					var pos = getPointPos($first);
 					var left = pos.l,
@@ -697,33 +714,17 @@ $(function() {
 					});
 					var $ul = $newLi.find('ul');
 					$activeLi.each(function(i, ele) {
-						var $img = $(ele).find('.inner');
+						var $img = $(ele).find('.img');
 						maxZIndex = parseInt($(ele).css('zIndex')) > maxZIndex ? parseInt($(ele).css('zIndex')) : maxZIndex;
 						var angle = parseFloat($(ele).attr('data-angle'));
 						angle = angle ? angle : 0;
 						if($img.length > 1) {
-							$(ele).find('li').each(function(j, eleLi) {
-								var ABx = parseFloat($(eleLi).css('left')) + $(eleLi).width() / 2 - $(ele).width() / 2;
-								var ABy = parseFloat($(eleLi).css('top')) + $(eleLi).height() / 2 - $(ele).height() / 2;
-								var triangle = Math.atan2(ABy, ABx) * 360 / (2 * Math.PI);
-								triangle += angle;
-								var AB = Math.sqrt(Math.pow(ABx, 2) + Math.pow(ABy, 2));
-								var ACx = AB * Math.cos(triangle / 180 * Math.PI);
-								var ACy = AB * Math.sin(triangle / 180 * Math.PI);
-								var disx = ACx - ABx;
-								var disy = ACy - ABy;
-								var angleEle = parseFloat($(eleLi).attr('data-angle'));
-								angleEle = angleEle ? angleEle : 0;
-								angleEle += angle;
-								$(eleLi).css({
-									left: parseFloat($(eleLi).css('left')) + parseFloat($(ele).css('left')) - left + disx,
-									top: parseFloat($(eleLi).css('top')) + parseFloat($(ele).css('top')) - top + disy,
-									transform: 'rotateZ(' + angleEle + 'deg)'
-								});
-								$(eleLi).attr('data-angle', angleEle);
-								$ul.append($(eleLi));
+							getPartEle({
+								ele: $(ele),
+								par: $ul,
+								left: left,
+								top: top
 							});
-							$(ele).remove();
 
 						} else {
 							$(ele).css({
@@ -739,6 +740,21 @@ $(function() {
 					$newLi.css('zIndex', maxZIndex);
 					$newLi.addClass('active');
 					$('#j-cvs_set ul.active').append($newLi);
+					//保存中心点
+					var pos = {
+						"cx": left + $newLi.width() / 2,
+						"cy": top + $newLi.height() / 2,
+						"lx": left,
+						"ly": top,
+						"w": $newLi.width(),
+						"h": $newLi.height(),
+						"extraX": 0,
+						"extraY": 0,
+						"left": 0,
+						"top": 0
+					};
+					$newLi.data('pos', pos);
+					console.log(pos)
 					var newProc = new Product($newLi);
 					newProc.init();
 				}
@@ -752,54 +768,70 @@ $(function() {
 				$('#j-cvs_set li.active').each(function(i, ele) {
 					var $img = $(ele).find('.img');
 					if($img.length > 1) {
-						var $ul = $(ele).find('ul');
-						//找到成组后ul镜像翻转的角度
-						var angleImg = getMirrorAngle($ul); //旋转角度
-
-						var angle = parseFloat($(ele).attr('data-angle'));
-						angle = angle ? angle : 0;
-						$(ele).find('li').each(function(j, eleLi) {
-							//计算成组后镜像翻转left和top的变化值
-							var mirX = angleImg.y % 360 == 0 ? 0 : (2 * ($(ele).width() / 2 - parseFloat($(eleLi).css('left')) - $(eleLi).width() / 2));
-							var mirY = angleImg.x % 360 == 0 ? 0 : (2 * ($(ele).height() / 2 - parseFloat($(eleLi).css('top')) - $(eleLi).height() / 2));
-							console.log(mirX + ',' + mirY);
-							//初始时，父级的中心点到子级Li中心点的向量AB
-							var ABx = parseFloat($(eleLi).css('left')) + $(eleLi).width() / 2 - $(ele).width() / 2;
-							var ABy = parseFloat($(eleLi).css('top')) + $(eleLi).height() / 2 - $(ele).height() / 2;
-							//AB向量与X轴的夹角，注意坐标轴是向左向下为正值
-							var triangle = Math.atan2(ABy, ABx) * 360 / (2 * Math.PI);
-							//加上旋转后的角度
-							triangle += angle;
-							var AB = Math.sqrt(Math.pow(ABx, 2) + Math.pow(ABy, 2));
-							//旋转后子级中心点到父级的中心点向量AC
-							var ACx = AB * Math.cos(triangle / 180 * Math.PI);
-							var ACy = AB * Math.sin(triangle / 180 * Math.PI);
-							//disx,disy表示旋转后子级Li中心点移动的距离
-							var disx = ACx - ABx;
-							var disy = ACy - ABy;
-							var angleEle = parseFloat($(eleLi).attr('data-angle'));
-							angleEle = angleEle ? angleEle : 0;
-							angleEle += angle;
-							$(eleLi).css({
-								left: parseFloat($(eleLi).css('left')) + parseFloat($(ele).css('left')) + disx + mirX,
-								top: parseFloat($(eleLi).css('top')) + parseFloat($(ele).css('top')) + disy + mirY,
-								transform: 'rotateZ(' + angleEle + 'deg)'
-							});
-							$(eleLi).attr('data-angle', angleEle);
-							var $img = $(eleLi).find('.img').eq(0);
-							var angleLiImg = getMirrorAngle($img);
-							$img.css('transform', 'rotateX(' + (angleImg.x + angleLiImg.x) + 'deg) rotateY(' + (angleImg.y + angleLiImg.y) + 'deg)');
-							var newProc = new Product($(eleLi));
-							newProc.init();
-							$('#j-cvs_set ul.active').append($(eleLi));
+						getPartEle({
+							ele: $(ele),
+							par: $('#j-cvs_set ul.active'),
+							left: 0,
+							top: 0
 						});
-						$(ele).remove();
 					}
 				});
 				cvsSet.localSave();
 				return false;
 			});
 		}
+
+		//获取分解后的元素Li
+		function getPartEle(tar) {
+			var $ul = tar.ele.find('ul');
+			//找到成组后ul镜像翻转的角度
+			var angleImg = getMirrorAngle($ul); //旋转角度
+
+			var angle = parseFloat(tar.ele.attr('data-angle'));
+			angle = angle ? angle : 0;
+			tar.ele.find('li').each(function(j, eleLi) {
+				//计算成组后镜像翻转left和top的变化值
+				var mirX = angleImg.y % 360 == 0 ? 0 : (2 * (tar.ele.width() / 2 - parseFloat($(eleLi).css('left')) - $(eleLi).width() / 2 - 5));
+				var mirY = angleImg.x % 360 == 0 ? 0 : (2 * (tar.ele.height() / 2 - parseFloat($(eleLi).css('top')) - $(eleLi).height() / 2 - 5));
+				console.log(mirX + ',' + mirY);
+				//初始时，父级的中心点到子级Li中心点的向量AB
+				var ABx = parseFloat($(eleLi).css('left')) + $(eleLi).width() / 2 - tar.ele.width() / 2;
+				var ABy = parseFloat($(eleLi).css('top')) + $(eleLi).height() / 2 - tar.ele.height() / 2;
+				//AB向量与X轴的夹角，注意坐标轴是向左向下为正值
+				var triangle = Math.atan2(ABy, ABx) * 360 / (2 * Math.PI);
+				//加上旋转后的角度
+				triangle += angle;
+				var AB = Math.sqrt(Math.pow(ABx, 2) + Math.pow(ABy, 2));
+				//旋转后子级中心点到父级的中心点向量AC
+				var ACx = AB * Math.cos(triangle / 180 * Math.PI);
+				var ACy = AB * Math.sin(triangle / 180 * Math.PI);
+				//disx,disy表示旋转后子级Li中心点移动的距离
+				var disx = ACx - ABx;
+				var disy = ACy - ABy;
+				var angleEle = parseFloat($(eleLi).attr('data-angle'));
+				angleEle = angleEle ? angleEle : 0;
+				angleEle += angle;
+				$(eleLi).css({
+					left: parseFloat($(eleLi).css('left')) + parseFloat(tar.ele.css('left')) + disx + mirX - tar.left,
+					top: parseFloat($(eleLi).css('top')) + parseFloat(tar.ele.css('top')) + disy + mirY - tar.top,
+					transform: 'rotateZ(' + angleEle + 'deg)'
+				});
+				$(eleLi).attr('data-angle', angleEle);
+				var $img = $(eleLi).find('.img').eq(0);
+				var angleLiImg = getMirrorAngle($img);
+				angleLiImg.x += angleImg.x;
+				angleLiImg.y += angleImg.y;
+				$img.css('transform', 'rotateX(' + angleLiImg.x + 'deg) rotateY(' + angleLiImg.y + 'deg)');
+				$img.attr('data-angle', JSON.stringify(angleLiImg))
+				tar.par.append($(eleLi));
+				if(tar.left == 0) {
+					var newProc = new Product($(eleLi));
+					newProc.init();
+				}
+			});
+			tar.ele.remove();
+		}
+
 		//获取镜像转角
 		function getMirrorAngle(ele) {
 			var angle = ele.attr('data-angle'); //旋转角度
@@ -835,6 +867,13 @@ $(function() {
 					pos.b = $(ele).offset().top;
 				}
 			});
+			//将控制点的坐标转为实际元素的坐标
+			pos = {
+				l: pos.l + 5,
+				r: pos.r + 5,
+				t: pos.t + 5,
+				b: pos.b + 5
+			}
 			return pos;
 		}
 		//上移一层
@@ -996,7 +1035,6 @@ $(function() {
 					point.css('transform', 'translate3d(0,' + curL + 'px,0)');
 					console.log()
 					toZoom(curL);
-					console.log($('#j-cvs_set .inner').eq(0).offset().left + $('#j-cvs_set .inner').eq(0).width() / 2)
 				}
 			});
 			$(document).on('click', '#j-zoom .u-jian', function() {
@@ -1031,8 +1069,7 @@ $(function() {
 			function toZoom(curL) {
 				//放大倍数范伟：.5-2
 				cvsSet.scale = curL > 0 ? (1 + curL / ttL) : (1 + curL / (2 * ttL));
-				var tmpx, tmpy;
-				$('#j-cvs_set .inner').each(function(i, ele) {
+				$('#j-cvs_set >ul >li').each(function(i, ele) {
 					cvsSet.setZoom($(ele), true);
 				});
 			}

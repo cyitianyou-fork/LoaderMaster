@@ -91,11 +91,10 @@ var cvsSet = (function() {
 	var curLeft = 0; //表示位于最左边的那个tab栏的索引值
 	var zIndex = 0;
 	var scale = 1; //画布缩放倍数 .5-2
-	//声明画布中心点
 	var trpos = {
-		x: 0,
-		y: 0
-	};
+		cx: 0,
+		cy: 0
+	}
 
 	function bind() {
 		moveCvsTab();
@@ -194,16 +193,16 @@ var cvsSet = (function() {
 		//点击close关闭当前tab栏中的li
 		$(document).on('click', '.u-tabc_chbt .u-close', function() {
 
-			if ($('#j-cvs_set ul.active li').length>0) {
+			if($('#j-cvs_set ul.active li').length > 0) {
 				$.pop({
 					title: '提示',
-					content: '<div class="pop-text">'+
-								'您还未保存！'+						
-							'</div>',
+					content: '<div class="pop-text">' +
+						'您还未保存！' +
+						'</div>',
 					className: 'pop-tip',
 					sure_text: '去保存',
-					callback: function(){
-						$('.pop-bts a').eq(1).on('click',function(){
+					callback: function() {
+						$('.pop-bts a').eq(1).on('click', function() {
 							$('.pop').remove();
 							$('.u-pairs').trigger('click');
 						});
@@ -226,7 +225,7 @@ var cvsSet = (function() {
 					'left': -curLeft * cw
 				}, 300);
 			}
-			if ($('#j-cvs_set ul').length==0) {
+			if($('#j-cvs_set ul').length == 0) {
 				$('#j-new_cvs').trigger('click');
 			}
 			return false;
@@ -246,7 +245,7 @@ var cvsSet = (function() {
 	}
 
 	function addProduct(info) {
-		var w, h, x, y, $inner;
+		var w, h, x, y, $img;
 		var newLi = $('<li>' +
 			'<div class="g-pointctrl">' +
 			'<div class="m-rotatepoint">' +
@@ -270,29 +269,26 @@ var cvsSet = (function() {
 		$('#j-cvs_set ul.active').append(newLi); //这里必须先添加到父级上，再设置left和top值，不然无法获获取高宽
 		var defer = $.Deferred(); //设置延迟函数，使得图片加载完，获取宽度，再设置样式
 		if(info.isColorBlock) {
-			$inner = $('<div class="inner"><div class="u-color img"></div></div>');
-			newLi.append($inner);
-			$inner.css('background', info.color);
+			$img = $('<div class="u-color img"></div>');
+			newLi.append($img);
+			$img.css('background', info.color);
 			w = 68;
 			h = 68;
 			defer.resolve();
 		} else if(info.isWordBlock) {
-			var $inner = $('<div class="inner"><div class="u-word img">请输入文字内容</div></div>');
-			newLi.append($inner);
+			var $img = $('<div class="u-word img">请输入文字内容</div>');
+			newLi.append($img);
 			w = 136;
 			h = 68;
 			defer.resolve();
 		} else {
-			$inner = $('<div class="inner" ><img class="img" src="' + info.src + '" /></div>');
-			var $img = $inner.find('img');
+			$img = $('<img class="img" src="' + info.src + '" />');
 			$img.load(function() {
-				newLi.append($inner);
+				newLi.append($img);
 				w = $img.width();
 				h = $img.height()
 				$img.attr('data-id', info.id);
-				//保存图片最原始的高度和宽度
-				$img.attr('data-initW', w);
-				$img.attr('data-initH', h);
+
 				defer.resolve();
 			})
 		}
@@ -307,14 +303,23 @@ var cvsSet = (function() {
 				zIndex: cvsSet.zIndex++
 					//transform: 'scale(' + cvsSet.scale + ')'
 			});
-			newLi.attr('data-initW', w);
-			newLi.attr('data-initH', h);
-			newLi.attr('data-initL', x);
-			newLi.attr('data-initT', y);
-			$inner.attr('data-cx', $inner.offset().left + $inner.width() / 2)
-			$inner.attr('data-cy', $inner.offset().top + $inner.height() / 2)
-				//初始化放大缩小
-			setZoom($inner, false)
+			//保存中心点
+			var pos = {
+				"cx": x + w / 2,
+				"cy": y + h / 2,
+				"lx": x,
+				"ly": y,
+				"w": w,
+				"h": h,
+				"extraX": 0,
+				"extraY": 0,
+				"left": 0,
+				"top": 0
+			};
+			newLi.data('pos', pos);
+
+			//初始化放大缩小
+			setZoom(newLi, false)
 			cvsSet.localSave();
 		});
 		var newProc = new Product(newLi);
@@ -327,20 +332,50 @@ var cvsSet = (function() {
 	}
 
 	function setZoom(ele, bool) {
-		ele.css({
-			transform: 'scale(' + cvsSet.scale + ')'
-		});
-		var $pointctrl = ele.parents('ul').siblings('.g-pointctrl');
-		var num = 1;
-		if($pointctrl.length > 0) {
-			var num = ele.closest('ul').find('li').length;
+		//bool值表示是否初始化时就放大和缩小
+		var pos = ele.data('pos');
+		if(bool) {
+			ele.css({
+				width: pos.w * cvsSet.scale,
+				height: pos.h * cvsSet.scale,
+				left: pos.lx + (cvsSet.trpos.cx - pos.cx) * (1 - cvsSet.scale) + pos.extraX+pos.left,
+				top: pos.ly + (cvsSet.trpos.cy - pos.cy) * (1 - cvsSet.scale) + pos.extraY+pos.top
+			});
+			var $img=ele.find('.img');
+			if ($img.length>0) {
+				ele.find('li').each(function(i,eleLi){
+					var posLi=$(eleLi).data('pos');
+					console.log(posLi);
+					$(eleLi).css({
+						width: posLi.w*cvsSet.scale,
+						height: posLi.h*cvsSet.scale
+					});
+					$(eleLi).find('.img').css({
+						width: posLi.w*cvsSet.scale,
+						height: posLi.h*cvsSet.scale
+					});
+				});
+			}else{
+				$img.css({
+					width: pos.w * cvsSet.scale,
+					height: pos.h * cvsSet.scale
+				});
+			}
 		} else {
-			$pointctrl = ele.siblings('.g-pointctrl');
+			ele.css({
+				width: pos.w * cvsSet.scale,
+				height: pos.h * cvsSet.scale,
+				left: pos.lx + pos.w * (1 - cvsSet.scale) / 2,
+				top: pos.ly + pos.h * (1 - cvsSet.scale) / 2
+			});
+			pos.extraX = pos.w * (1 - cvsSet.scale) / 2 - (cvsSet.trpos.cx - pos.cx) * (1 - cvsSet.scale);
+			pos.extraY = pos.h * (1 - cvsSet.scale) / 2 - (cvsSet.trpos.cy - pos.cy) * (1 - cvsSet.scale);
+			ele.data('pos', pos);
+			ele.find('.img').css({
+				width: pos.w * cvsSet.scale,
+				height: pos.h * cvsSet.scale
+			});
 		}
-		$pointctrl.css({
-			transform: 'scale(' + 1* cvsSet.scale + ')'
-		});
-		//$pointctrl.find('span').css('transform', 'scale(' + 1 / cvsSet.scale + ')');
 	}
 
 	function setLockStatus(flag) {
@@ -361,18 +396,18 @@ var cvsSet = (function() {
 		//本地数据存储 用于存储当前画布的 的所有html节点数据  用于返回和提交后台数据
 		// key值为 当前画布id加版本号 ： id +","+version;
 		// velue为 画布所有的html节点；
-		
+
 		//本地存储
 		var _id = $('#j-cvs_set >ul.active').attr('id');
-		var version =parseInt( $('#j-cvs_set >ul.active').data('version'));
+		var version = parseInt($('#j-cvs_set >ul.active').data('version'));
 		version++;
-		var html=$('#j-cvs_set >ul.active').html()
-		var key=_id+","+version;
-		window.sessionStorage.setItem(key,html);	
-		$('#j-cvs_set >ul.active').data('version',version)
-		var max_ver=10;
+		var html = $('#j-cvs_set >ul.active').html()
+		var key = _id + "," + version;
+		window.sessionStorage.setItem(key, html);
+		$('#j-cvs_set >ul.active').data('version', version)
+		var max_ver = 10;
 		//最大存max步，如果超出，则销毁前面的
-		sessionStorage.removeItem(_id+","+(version-10));
+		sessionStorage.removeItem(_id + "," + (version - 10));
 	}
 
 	return {
@@ -393,7 +428,7 @@ function Product(obj) {
 	this.obj = obj;
 }
 Product.prototype.init = function() {
-	    this.selected();
+		this.selected();
 		this.drag();
 		this.rotate();
 		this.scale();
@@ -430,10 +465,10 @@ Product.prototype.addSelectItem = function(e) {
 		$('.g-relative_img').hide();
 	}
 }
-Product.prototype.selected = function(e,_this) {
-	var _this = this;
+Product.prototype.selected = function(e, _this) {
+		var _this = this;
 		//事件绑定
-		_this.obj.on('click',function(e) {
+		_this.obj.on('click', function(e) {
 			_this.addSelectItem(e);
 			//锁定按钮状态
 			if($('#j-cvs_set li.active').length > 0) {
@@ -507,8 +542,12 @@ Product.prototype.drag = function() {
 						left: parseFloat($(ele).css('left')) + x,
 						top: parseFloat($(ele).css('top')) + y
 					});
+//					var pos=JSON.parse($(ele).attr('data-pos'));
+//					pos.left+=x;
+//					pos.top+=y;
+//					$(ele).attr('data-pos',pos);
 				});
-				if (x!=0||y!=0) {
+				if(x != 0 || y != 0) {
 					//本地存储
 					cvsSet.localSave();
 				}
@@ -740,18 +779,14 @@ Product.prototype.scale = function() {
 			left: bases[tar.index].left + tar.disl,
 			top: bases[tar.index].top + tar.dist,
 		});
-		var $inner = tar.ele.find('.inner');
-		var $img = $inner.find('.img');
-		if($inner.length > 1) {
+		var $img = tar.ele.find('.img');
+		if($img.length > 1) {
 			tar.ele.find('li').each(function(j, eleLi) {
 
 				var w = parseFloat($(eleLi).attr('data-width'));
 				var h = parseFloat($(eleLi).attr('data-height'));
 				var l = parseFloat($(eleLi).attr('data-left'));
 				var t = parseFloat($(eleLi).attr('data-top'));
-				var angle = parseFloat($(eleLi).attr('data-angle'));
-				angle = angle ? angle : 0;
-				angle = angle * Math.PI / 180;
 
 				w += tar.disw / bases[tar.index].width * w;
 				h += tar.dish / bases[tar.index].height * h
@@ -763,10 +798,11 @@ Product.prototype.scale = function() {
 					left: l,
 					top: t
 				})
+
 				$(eleLi).find('.img').css({
 					width: w,
 					height: h
-				})
+				});
 			});
 		} else {
 			$img.css({
@@ -776,4 +812,3 @@ Product.prototype.scale = function() {
 		}
 	}
 }
-
