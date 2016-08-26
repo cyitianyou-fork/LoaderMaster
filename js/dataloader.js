@@ -95,8 +95,8 @@
 				'<i class="icon icon-close pop-close"></i>' +
 				'<div class="pop-content">' + rs.content +
 				'<div class="pop-bts">' +
-				'<a class="pop-close" href="javascript:">'+rs.cancel_text+'</a>' +
-				'<a href="javascript:">'+rs.sure_text+'</a>' +
+				'<a class="pop-close pop-cancel" href="javascript:">'+rs.cancel_text+'</a>' +
+				'<a class="pop-sure" href="javascript:">'+rs.sure_text+'</a>' +
 				'</div>' +
 				'</div>' +
 				'</div>' +
