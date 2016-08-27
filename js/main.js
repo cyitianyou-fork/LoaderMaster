@@ -804,7 +804,6 @@ $(function() {
 				//计算成组后镜像翻转left和top的变化值
 				var mirX = angleImg.y % 360 == 0 ? 0 : (2 * (tar.ele.width() / 2 - parseFloat($(eleLi).css('left')) - $(eleLi).width() / 2 - 5));
 				var mirY = angleImg.x % 360 == 0 ? 0 : (2 * (tar.ele.height() / 2 - parseFloat($(eleLi).css('top')) - $(eleLi).height() / 2 - 5));
-				console.log(mirX + ',' + mirY);
 				//初始时，父级的中心点到子级Li中心点的向量AB
 				var ABx = parseFloat($(eleLi).css('left')) + $(eleLi).width() / 2 - tar.ele.width() / 2;
 				var ABy = parseFloat($(eleLi).css('top')) + $(eleLi).height() / 2 - tar.ele.height() / 2;
