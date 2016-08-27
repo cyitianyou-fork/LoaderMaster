@@ -145,7 +145,7 @@ $(function() {
 				}, 300);
 			});
 		}
-
+		//新建
 		function newCvs() {
 			$(document).on('click', '#j-new_cvs', function() {
 				var cvsItem = $('<ul data-version="0">');
